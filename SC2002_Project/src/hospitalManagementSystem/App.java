@@ -1,6 +1,8 @@
+package hospitalManagementSystem;
+
 import java.util.Scanner;
 
-public class HospitalManagementSystemApp {
+public class App {
     private static final String UserID = "admin";
     private static final String PASSWORD = "pw123";
     public static void main(String[] args) {
