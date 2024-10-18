@@ -1,6 +1,10 @@
 package hospitalManagementSystem;
 
+<<<<<<< Updated upstream
 public abstract class Staff extends Alluser {
+=======
+public class Staff extends User {
+>>>>>>> Stashed changes
     private String role;
     private int age;
 

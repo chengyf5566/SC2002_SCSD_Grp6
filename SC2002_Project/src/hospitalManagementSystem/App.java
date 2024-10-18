@@ -192,6 +192,7 @@ public class App {
             switch(input){
                 case 1: 
                     System.out.println("View Appointment Outcome Record");
+<<<<<<< Updated upstream
                     viewAppointmentOutcomeRecord();
                     break;
                 case 2: 
@@ -205,6 +206,32 @@ public class App {
                 case 4: 
                     System.out.println("Submit Replenishment Request");
                     submitReplenishmentRequest();
+=======
+                    //Pharmacist.viewAppointmentOutcomeRecord();
+                    break;
+                case 2: 
+                    System.out.println("Update Prescription Status");
+                    //Pharmacist.updatePrescriptionStatus();
+                    break;
+                case 3: 
+                    System.out.println("View Medication Inventory");
+                    //Pharmacist.viewInventory();
+                    break;
+                case 4: 
+                    System.out.println("Submit Replenishment Request");
+                    
+                    // Ask the user for medication name
+                    System.out.print("Enter medicine name: ");
+                    String medicine = scanner.nextLine();
+
+                    // Ask the user for quantity
+                    System.out.print("Enter quantity: ");
+                    int quantity = scanner.nextInt();
+                    scanner.nextLine();
+
+                    //Pharmacist.submitReplenishmentRequest(medicine, quantity);
+
+>>>>>>> Stashed changes
                     break;
                 case 5: 
                     System.out.println("Logout");
