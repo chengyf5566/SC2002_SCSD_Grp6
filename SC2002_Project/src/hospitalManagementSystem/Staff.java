@@ -1,10 +1,6 @@
 package hospitalManagementSystem;
 
-<<<<<<< Updated upstream
-public abstract class Staff extends Alluser {
-=======
-public class Staff extends User {
->>>>>>> Stashed changes
+public class Staff extends User{
     private String role;
     private int age;
 
@@ -14,7 +10,7 @@ public class Staff extends User {
         this.age = age;
     }
 
-    public String getRole() {
+	public String getRole() {
         return role;
     }
 
@@ -22,13 +18,6 @@ public class Staff extends User {
         this.role = role;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
     public int getAge() {
         return age;
     }
