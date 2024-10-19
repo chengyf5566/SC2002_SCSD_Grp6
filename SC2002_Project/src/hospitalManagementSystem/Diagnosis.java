@@ -2,7 +2,7 @@ package hospitalManagementSystem;
 
 import java.util.Date;
 
-public class Diasnosis {
+public class Diagnosis {
     private String diagnosisID;
 
     private String description;
