@@ -60,4 +60,17 @@ public class Appointment{
     public String getTimeSlot() {
         return timeslot;
     }
+    
+    //setter 
+    public void setStatus(String status) {
+    	this.status = status;
+    }
+    
+    public void setAppointmentID(String appointmentID) {
+    	this.appointmentID = appointmentID;
+    }
+    
+    public void setTimeSlot(String timeslot) {
+    	this.timeslot = timeslot;
+    }
 }
