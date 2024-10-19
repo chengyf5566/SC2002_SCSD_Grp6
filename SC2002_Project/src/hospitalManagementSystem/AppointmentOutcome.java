@@ -23,49 +23,50 @@ public class AppointmentOutcome {
         this.outcome = outcome;
     }
 
-    // Getters and Setters
+    // Getters
     public Appointment getAppointment() {
         return appointment;
     }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
-
+    
     public Date getDate() {
         return date;
+    }
+    
+    public String getServiceType() {
+        return serviceType;
+    }
+    
+    public List<Prescription> getPrescriptions() {
+        return prescriptions;
+    }
+    
+    public String getConsultationNotes() {
+        return consultationNotes;
+    }
+    
+    public String getOutcome() {
+        return outcome;
+    }
+    
+    //setters
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
     public void setDate(Date date) {
         this.date = date;
     }
 
-    public String getServiceType() {
-        return serviceType;
-    }
-
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
-    }
-
-    public List<Prescription> getPrescriptions() {
-        return prescriptions;
     }
 
     public void setPrescriptions(List<Prescription> prescriptions) {
         this.prescriptions = prescriptions;
     }
 
-    public String getConsultationNotes() {
-        return consultationNotes;
-    }
-
     public void setConsultationNotes(String consultationNotes) {
         this.consultationNotes = consultationNotes;
-    }
-
-    public String getOutcome() {
-        return outcome;
     }
 
     public void setOutcome(String outcome) {
