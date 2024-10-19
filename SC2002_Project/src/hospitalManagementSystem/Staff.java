@@ -1,21 +1,15 @@
 package hospitalManagementSystem;
 
 public class Staff extends User{
-    private String role;
     private int age;
+    private String name;
+    private char gender;
 
-    public Staff(String name, String userID, String password, char gender, String role, int age) {
-        super(name, userID, password, gender);
-        this.role = role;
+    public Staff(String userID, String password, String role, char gender, String name, int age) {
+        super(userID, password, role);
+        this.gender = gender;
+        this.name = name;
         this.age = age;
-    }
-
-	public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public int getAge() {
@@ -25,4 +19,21 @@ public class Staff extends User{
     public void setAge(int age) {
         this.age = age;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public char getGender() {
+        return gender;
+    }
+
+    public void setGender(char gender) {
+        this.gender = gender;
+    }
+    
 }

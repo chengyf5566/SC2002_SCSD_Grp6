@@ -1,24 +1,14 @@
 package hospitalManagementSystem;
 
 public class User{
-    private String name;
     private String userID;
     private String password;
-    private char gender;
+    private String role;
 
-    public User(String name, String userID, String password, char gender) {
-        this.name = name;
+    public User(String userID, String password, String role) {
         this.userID = userID;
         this.password = password;
-        this.gender = gender;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.role = role;
     }
 
     public String getUserID() {
@@ -37,11 +27,12 @@ public class User{
         this.password = password;
     }
 
-    public char getGender() {
-        return gender;
+    public String getRole() {
+        return role;
     }
 
-    public void setGender(char gender) {
-        this.gender = gender;
+    public void setRole(String role) {
+        this.role = role;
     }
+
 }
