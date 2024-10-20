@@ -1,6 +1,8 @@
 package hospitalManagementSystem;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReplenishmentRequest{
 
@@ -8,6 +10,7 @@ public class ReplenishmentRequest{
     private int quantityRequested;
     private LocalDate requestDate;
     private String status; // e.g., "Pending", "Approved", "Rejected"
+    private static final List<ReplenishmentRequest> requestList = new ArrayList<>();  // Static list for all requests
 
     // Constructor
     public ReplenishmentRequest(Medication medication, int quantityRequested) {
@@ -26,7 +29,7 @@ public class ReplenishmentRequest{
     public void setMedication(Medication medication) {
         this.medication = medication;
     }
-
+    
     // Getter for quantityRequested
     public int getQuantityRequested() {
         return quantityRequested;
@@ -60,6 +63,15 @@ public class ReplenishmentRequest{
     // Method to reject the request
     public void rejectRequest() {
         this.status = "Rejected";
+    }
+
+    // Method to get list of requests
+    public static List<ReplenishmentRequest> getRequestList() {
+        return requestList;
+    }
+
+    public static void addRequest(ReplenishmentRequest request) {
+        requestList.add(request);
     }
 
 }

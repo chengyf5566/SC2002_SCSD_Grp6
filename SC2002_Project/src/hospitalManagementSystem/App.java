@@ -181,28 +181,42 @@ public class App {
             System.out.println("\nPharmacist Menu:");
             System.out.println("1. View Appointment Outcome Record");
             System.out.println("2. Update Prescription Status");
-            System.out.println("3. View Personal Schedule");
-            System.out.println("4. Set Availability for Appointments");
-            System.out.println("5. Logout");
+            System.out.println("3. View Medical inventory");
+            System.out.println("4. Submit Replenishment Request");
+            System.out.println("5. View Replenishment Request");
+            System.out.println("6. Logout");
 
             System.out.println("Select Option: ");
             int input = scanner.nextInt();
             scanner.nextLine();
-
+            
             switch(input){
                 case 1: 
                     System.out.println("View Appointment Outcome Record");
                     break;
                 case 2: 
                     System.out.println("Update Prescription Status");
+                    //pharmacist.updatePrescriptionStatus("RX001", "Dispensed", Appointment.getAppointment());
                     break;
                 case 3: 
                     System.out.println("View Medication Inventory");
+                    //pharmacist.viewInventory(inventory.getMedications());
                     break;
                 case 4: 
                     System.out.println("Submit Replenishment Request");
+                    System.out.println("Enter medicine");
+                    String name = scanner.next();
+                    scanner.nextLine();
+                    System.out.println("Enter medicine quantity");
+                    int quantity = scanner.nextInt();
+                    scanner.nextLine();
+                    //pharmacist.submitReplenishmentRequest(name, quantity, inventory.getMedications());
                     break;
                 case 5: 
+                    System.out.println("View ReplenishmentRequests");
+                    //pharmacist.viewReplenishmentRequests(ReplenishmentRequest.getRequestList());
+                    break;    
+                case 6: 
                     System.out.println("Logout");
                     System.out.println("");
                     exit = true;
