@@ -1,23 +1,24 @@
 package hospitalManagementSystem;
+
 import java.util.Date;
 
-public class Treatment {
-    private String treatmentId;
+public class Diagnosis {
+    private String diagnosisId;
     private String description;
     private Date date;
 
-    public Treatment(String treatmentId, String description, Date date) {
-        this.treatmentId = treatmentId;
+    public Diagnosis(String diagnosisId, String description, Date date) {
+        this.diagnosisId = diagnosisId;
         this.description = description;
         this.date = date;
     }
 
-    public String getTreatmentId() {  // Add this method
-        return treatmentId;
+    public String getDiagnosisId() {  // Add this method
+        return diagnosisId;
     }
 
-    public void setTreatmentId(String treatmentId) {  // Optional setter
-        this.treatmentId = treatmentId;
+    public void setDiagnosisId(String diagnosisId) {  // Optional setter
+        this.diagnosisId = diagnosisId;
     }
 
     public String getDescription() {
