@@ -2,7 +2,7 @@ package hospitalManagementSystem;
 
 import java.util.Scanner;
 
-public class App{
+public class App implements UserRoleMenu{
     private static final String UserID = "admin";
     private static final String PASSWORD = "pw123";
 
@@ -55,4 +55,10 @@ public class App{
     private static boolean authenticate(String username, String password) {
         return UserID.equals(username) && PASSWORD.equals(password);
     }
+
+	@Override
+	public void displayMenu(Scanner scanner) {
+		// TODO Auto-generated method stub
+		
+	}
 }
