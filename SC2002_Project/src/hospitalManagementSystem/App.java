@@ -2,7 +2,7 @@ package hospitalManagementSystem;
 
 import java.util.Scanner;
 
-public class App {
+public class App{
     private static final String UserID = "admin";
     private static final String PASSWORD = "pw123";
 
