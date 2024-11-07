@@ -5,7 +5,7 @@ import java.util.List;
 public class Pharmacist extends Staff {
 
     // Constructor for the Pharmacist class
-    public Pharmacist(String name, String userID, String password, char gender, String role, int age) {
+    public Pharmacist(String name, String userID, String password, String gender, String role, int age) {
         super(name, userID, password, gender, role, age);
     }
 

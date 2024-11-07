@@ -3,9 +3,9 @@ package hospitalManagementSystem;
 public class Staff extends User{
     private int age;
     private String name;
-    private char gender;
+    private String gender;
 
-    public Staff(String userID, String password, String role, char gender, String name, int age) {
+    public Staff(String userID, String password, String role, String gender, String name, int age) {
         super(userID, password, role);
         this.gender = gender;
         this.name = name;
@@ -20,19 +20,23 @@ public class Staff extends User{
         this.age = age;
     }
 
+    @Override
     public String getName() {
         return name;
     }
-
+    
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    public char getGender() {
+    @Override
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    @Override
+    public void setGender(String gender) {
         this.gender = gender;
     }
     
