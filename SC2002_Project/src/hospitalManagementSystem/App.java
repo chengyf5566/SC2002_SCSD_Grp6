@@ -2,9 +2,17 @@ package hospitalManagementSystem;
 
 import java.util.Scanner;
 
-public class App {
+public class App implements UserRoleMenu{
     private static final String UserID = "admin";
     private static final String PASSWORD = "pw123";
+
+    @Override
+    public void displayMenu(Scanner scanner) {
+    // Implement the method, if applicable
+    System.out.println("This is the main menu.");
+    // Additional logic for the App's specific menu (if any)
+    }
+
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
