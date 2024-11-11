@@ -7,10 +7,12 @@ public class User{
     private String name;
     private String gender;
 
-    public User(String userID, String password, String role) {
+    public User(String userID, String password, String role, String gender, String name) {
         this.userID = userID;
         this.password = password;
         this.role = role;
+        this.gender = gender;
+        this.name = name;
     }
 
     public String getUserId() {
