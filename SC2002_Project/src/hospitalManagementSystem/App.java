@@ -9,6 +9,11 @@ public class App implements UserRoleMenu{
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
+
+        // Create a Pharmacist instance
+        Pharmacist pharmacist = new Pharmacist("Pharmacist Name", "pharm123", "pharmPass", "Female", "Pharmacist", 30);
+
+
         while (!exit) {
             System.out.println("==Please enter Login Details==");
 
@@ -35,7 +40,7 @@ public class App implements UserRoleMenu{
                 switch (role) {
                     case 1: menu = new PatientMenu(); break;
                     case 2: menu = new DoctorMenu(); break;
-                    case 3: menu = new PharmacistMenu(); break;
+                    case 3: menu = new PharmacistMenu(pharmacist); break;
                     case 4: menu = new AdministratorMenu(); break;
                     case 5: System.out.println("Logging out..."); exit = true; break;
                     default: System.out.println("Invalid option. Try again.");
@@ -58,7 +63,5 @@ public class App implements UserRoleMenu{
 
 	@Override
 	public void displayMenu(Scanner scanner) {
-		// TODO Auto-generated method stub
-		
 	}
 }
