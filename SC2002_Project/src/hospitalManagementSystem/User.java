@@ -14,8 +14,10 @@ public class User{
         this.gender = gender;
         this.name = name;
     }
+    
 
-    public String getUserId() {
+    //getters and setters
+    public String getUserID() {
         return userID;
     }
 
@@ -31,11 +33,11 @@ public class User{
         this.password = password;
     }
 
-    public String getName() {  // Add this method
+    public String getName() {  
         return name;
     }
 
-    public void setName(String name) {  // Add this setter for name
+    public void setName(String name) {  
         this.name = name;
     }
 
@@ -47,11 +49,11 @@ public class User{
         this.role = role;
     }
 
-    public String getGender() {  // Add this method
+    public String getGender() {  
         return gender;
     }
 
-    public void setGender(String gender) {  // Add this setter for name
+    public void setGender(String gender) {  
         this.gender = gender;
     }
 
