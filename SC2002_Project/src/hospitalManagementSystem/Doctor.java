@@ -1,33 +1,39 @@
 package hospitalManagementSystem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class Doctor extends User {
-    private String specialty;
-    private List<AppointmentSlot> availableSlots;
-
-    public Doctor(String userID, String password, String specialty) {
-        super(userID, password, "Doctor"); // Assuming "Doctor" is the role
-        this.specialty = specialty;
-        this.availableSlots = new ArrayList<>(); // Initialize the list of available slots
+public class Doctor extends Staff {
+	
+	private DoctorAvailability availability; 
+	private DoctorAppointments appointments; 
+	
+	public Doctor(String userID, String password, String role, char gender, String name, int age) {
+		super(userID, password, role, gender, name, age);
+		
+	}
+	
+	public DoctorAvailability getAvailability() {
+        return availability;
+    }
+	
+	public DoctorAppointments getAppointments() {
+        return appointments;
     }
 
-    public String getSpecialty() {
-        return specialty;
-    }
+	
+	// get doctor details
+	public void getAllDetails() {
+		String userID = getUserID();
+		String role = getRole();
+		char gender = getGender();
+		String name = getName();
+		int age = getAge();
+		
+		System.out.println("Here is the information about user " + userID);
+		System.out.println("Role: " + role);
+		System.out.println("Name: " + name);
+		System.out.println("Age: " + age);
+		System.out.println("Gender: " + gender + "\n");
+	}
 
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
-
-    public List<AppointmentSlot> getAvailableSlots() {
-        return availableSlots;
-    }
-
-    public void addAvailableSlot(AppointmentSlot slot) {
-        availableSlots.add(slot);
-    }
-
-    // Additional methods related to the Doctor's functionality
 }

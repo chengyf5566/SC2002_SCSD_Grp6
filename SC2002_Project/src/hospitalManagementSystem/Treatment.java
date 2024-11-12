@@ -1,25 +1,29 @@
 package hospitalManagementSystem;
+
 import java.util.Date;
 
 public class Treatment {
-    private String treatmentId;
+    private String treatmentID;
     private String description;
-    private Date date;
+    private Date localDate;
 
-    public Treatment(String treatmentId, String description, Date date) {
-        this.treatmentId = treatmentId;
+    // Constructor
+    public Treatment(String treatmentID, String description, Date localDate) {
+        this.treatmentID = treatmentID;
         this.description = description;
-        this.date = date;
+        this.localDate = localDate;
     }
 
-    public String getTreatmentId() {  // Add this method
-        return treatmentId;
+    // Getter and Setter for treatmentID
+    public String getTreatmentID() {
+        return treatmentID;
     }
 
-    public void setTreatmentId(String treatmentId) {  // Optional setter
-        this.treatmentId = treatmentId;
+    public void setTreatmentID(String treatmentID) {
+        this.treatmentID = treatmentID;
     }
 
+    // Getter and Setter for description
     public String getDescription() {
         return description;
     }
@@ -28,11 +32,12 @@ public class Treatment {
         this.description = description;
     }
 
-    public Date getDate() {
-        return date;
+    // Getter and Setter for localDate
+    public Date getLocalDate() {
+        return localDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setLocalDate(Date localDate) {
+        this.localDate = localDate;
     }
 }

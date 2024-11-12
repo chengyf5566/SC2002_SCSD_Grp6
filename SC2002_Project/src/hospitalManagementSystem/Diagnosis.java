@@ -3,22 +3,25 @@ package hospitalManagementSystem;
 import java.util.Date;
 
 public class Diagnosis {
-    private String diagnosisId;
+
+    private String diagnosisID;
     private String description;
     private Date date;
 
-    public Diagnosis(String diagnosisId, String description, Date date) {
-        this.diagnosisId = diagnosisId;
+    // Constructor
+    public Diagnosis(String diagnosisID, String description, Date date) {
+        this.diagnosisID = diagnosisID;
         this.description = description;
         this.date = date;
     }
 
-    public String getDiagnosisId() {  // Add this method
-        return diagnosisId;
+    // Getter and Setter for diagnosisID
+    public String getDiagnosisID() {
+        return diagnosisID;
     }
 
-    public void setDiagnosisId(String diagnosisId) {  // Optional setter
-        this.diagnosisId = diagnosisId;
+    public void setDiagnosisID(String diagnosisID) {
+        this.diagnosisID = diagnosisID;
     }
 
     public String getDescription() {
@@ -29,6 +32,7 @@ public class Diagnosis {
         this.description = description;
     }
 
+    // Getter and Setter for date
     public Date getDate() {
         return date;
     }
