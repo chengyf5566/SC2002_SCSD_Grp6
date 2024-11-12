@@ -124,7 +124,7 @@ public class DoctorAppointments implements AppointmentManager{
 		
 		for(Appointment appointment : confirmedUpcoming) {
 			// appointment details
-			System.out.println("Here are the Appointment details for the patient " + appointment.getPatient());
+			//System.out.println("Here are the Appointment details for the patient " + appointment.getPatient());
 			System.out.println("Appointment ID " + appointment.getAppointmentID());
 			System.out.println("Appointment Status " + appointment.getStatus());
 			System.out.println("Appointment Date " + appointment.getDate());

@@ -1,0 +1,4 @@
+Doctor ID,Patient ID,Date of Appointment,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status (Pending/Dispensed),Consultation Notes
+D001,P001,1/12/2024 2pm,Completed,consultation,panadol,dispensed,headache
+D002,P002,1/12/2024 2pm,Completed,consultation,antibiotics,dispensed,infection
+D003,P003,1/12/2024 2pm,Completed,consultation,panadol,dispensed,headache

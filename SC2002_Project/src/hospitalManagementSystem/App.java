@@ -7,9 +7,12 @@ public class App {
     private List<Staff> staffList;
     private int role = 0;
     boolean authenticated = false;
-    String userID = "";
-    String password = "";
+    String userID = "1234";
+    String password = "1234";
 
+    // Define the file path for the CSV file
+    String FilePath_Staff = "Staff_List.csv";
+    
     public static void main(String[] args) {
         App app = new App();
         app.initializeStaff();  // Initialize staff from the CSV file at the start
@@ -87,15 +90,15 @@ public class App {
 
     // Method to initialize staff objects from the CSV file
     public void initializeStaff() {
-        CsvReaderStaff csvReaderStaff = new CsvReaderStaff();
-        csvReaderStaff.readAndInitializeStaff("C:\\Users\\User\\OneDrive\\Documents\\GitHub\\SC2002_SCSD_Grp6\\SC2002_Project\\src\\data\\Staff_List 1.csv");
+        CsvReaderStaff csvReaderStaff = new CsvReaderStaff(FilePath_Staff);
+        csvReaderStaff.readAndInitializeStaff(FilePath_Staff);
         staffList = csvReaderStaff.getStaffList();
     }
 
     // Method to find and return the Pharmacist by userID
     public Pharmacist findPharmacist(String userID) {
         for (Staff staff : staffList) {
-            if (staff instanceof Pharmacist && staff.getUserId().equals(userID)) {
+            if (staff instanceof Pharmacist && staff.getUserID().equals(userID)) {
                 return (Pharmacist) staff;
             }
         }
