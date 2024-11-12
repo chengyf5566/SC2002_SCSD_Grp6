@@ -1,64 +1,104 @@
 package hospitalManagementSystem;
 
+import java.util.List;
 import java.util.Scanner;
 
-public class App implements UserRoleMenu{
-    private static final String UserID = "admin";
-    private static final String PASSWORD = "pw123";
+public class App {
+    private List<Staff> staffList;
+    private int role = 0;
+    boolean authenticated = false;
+    String userID = "";
+    String password = "";
 
     public static void main(String[] args) {
+        App app = new App();
+        app.initializeStaff();  // Initialize staff from the CSV file at the start
+        app.run();  // Run the main program loop
+    }
+
+    // Main program loop
+    public void run() {
         Scanner scanner = new Scanner(System.in);
-        boolean exit = false;
-        while (!exit) {
-            System.out.println("==Please enter Login Details==");
+        Login login = new Login();  // Create an instance of Login to handle authentication
 
+        // Authentication loop
+        while (!authenticated) {
             System.out.print("Enter User ID: ");
-            String inputUsername = scanner.nextLine();
-
+            userID = scanner.nextLine();
             System.out.print("Enter Password: ");
-            String inputPassword = scanner.nextLine();
+            password = scanner.nextLine();
 
-            if (authenticate(inputUsername, inputPassword)) {
-                System.out.println("Login successful! Welcome, " + inputUsername + "!");
-                System.out.println("\nWelcome to Hospital Management System");
-                System.out.println("=====================================");
-                System.out.println("1. Patient");
-                System.out.println("2. Doctor");
-                System.out.println("3. Pharmacist");
-                System.out.println("4. Administrator");
-                System.out.println("5. Logout");
-                System.out.print("Select your role: ");
-                int role = scanner.nextInt();
-                scanner.nextLine();
+            // Authenticate user and get the role
+            role = login.authenticate(staffList, userID, password);
 
-                UserRoleMenu menu = null;
-                switch (role) {
-                    case 1: menu = new PatientMenu(); break;
-                    case 2: menu = new DoctorMenu(); break;
-                    case 3: menu = new PharmacistMenu(); break;
-                    case 4: menu = new AdministratorMenu(); break;
-                    case 5: System.out.println("Logging out..."); exit = true; break;
-                    default: System.out.println("Invalid option. Try again.");
-                }
-
-                if (menu != null) {
-                    menu.displayMenu(scanner);
-                }
+            if (role != 0) {
+                System.out.println("Authentication successful. Role: " + role);
+                authenticated = true;
             } else {
-                System.out.println("Authentication failed. Please try again.\n");
+                System.out.println("Authentication failed. Please try again.");
+            }
+        }
+
+        // Main menu loop
+        boolean exit = false;
+        
+        while (!exit) {
+
+            UserRoleMenu menu = null;
+            // Determine the appropriate menu based on the user's role
+            switch (role) {
+                case 1:
+                    menu = new PatientMenu();
+                    break;
+                case 2:
+                    menu = new DoctorMenu();
+                    break;
+                case 3:
+                    Pharmacist pharmacist = findPharmacist(userID);
+                    if (pharmacist != null) {
+                        menu = new PharmacistMenu(pharmacist);
+                    } else {
+                        System.out.println("Pharmacist not found.");
+                        exit = true;
+                    }
+                    exit = true;
+                    break;
+                case 4:
+                    menu = new AdministratorMenu();
+                    break;
+                case 5:
+                    System.out.println("Logging out...");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid role. Exiting.");
+                    exit = true;
+                    break;
+            }
+
+            // Display the role-specific menu if applicable
+            if (menu != null) {
+                menu.displayMenu(scanner);
             }
         }
 
         scanner.close();
     }
 
-    private static boolean authenticate(String username, String password) {
-        return UserID.equals(username) && PASSWORD.equals(password);
+    // Method to initialize staff objects from the CSV file
+    public void initializeStaff() {
+        CsvReaderStaff csvReaderStaff = new CsvReaderStaff();
+        csvReaderStaff.readAndInitializeStaff("C:\\Users\\User\\OneDrive\\Documents\\GitHub\\SC2002_SCSD_Grp6\\SC2002_Project\\src\\data\\Staff_List 1.csv");
+        staffList = csvReaderStaff.getStaffList();
     }
 
-	@Override
-	public void displayMenu(Scanner scanner) {
-		// TODO Auto-generated method stub
-		
-	}
+    // Method to find and return the Pharmacist by userID
+    public Pharmacist findPharmacist(String userID) {
+        for (Staff staff : staffList) {
+            if (staff instanceof Pharmacist && staff.getUserId().equals(userID)) {
+                return (Pharmacist) staff;
+            }
+        }
+        return null;  // Return null if pharmacist is not found
+    }
 }

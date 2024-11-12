@@ -1,12 +1,13 @@
 package hospitalManagementSystem;
 import java.util.*;
 
-public class Patient extends AllUser {
+public class Patient extends User {
 
 	private String emailAddress;
 	private String contactNum;
 	private String dateOfBirth;
 	private String bloodType;
+    private String gender;
 	private List<Treatment> treatmentList; //list of treatment objects
 	private List<Diagnosis> diagnosisList; //list of diagnosis objects
 	private List<Appointment> appointmentList; // list of appointment objects
@@ -15,7 +16,8 @@ public class Patient extends AllUser {
 	private List<AppointmentOutcome> appointmentOutcomeList; //list of appointmentOutcomes
 	
 	public Patient(String name, String userId,String password, String gender, String emailAddress, String contactNum, String dateOfBirth, String bloodType) {
-		super(name,userId,password,gender); //need to add password?
+		super(name, userId,password); //need to add password?
+        this.gender = gender;
 		this.emailAddress = emailAddress;
 		this.contactNum = contactNum;
 		this.dateOfBirth = dateOfBirth;

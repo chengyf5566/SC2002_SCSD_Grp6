@@ -5,9 +5,10 @@ import java.util.List;
 public class Pharmacist extends Staff {
 
     // Constructor for the Pharmacist class
-    public Pharmacist(String name, String userID, String password, char gender, String role, int age) {
+    public Pharmacist(String name, String userID, String password, String gender, String role, int age) {
         super(name, userID, password, gender, role, age);
     }
+
 
     // Method to view all prescriptions from appointment outcomes
     public void viewAppointmentOutcomeRecords(List<AppointmentOutcome> outcomes) {
@@ -51,10 +52,13 @@ public class Pharmacist extends Staff {
     // Method to view the current medication inventory
     public void viewInventory(List<Medication> inventory) {
         System.out.println("Medication Inventory:");
-        // Iterate through each medication in the inventory
-        for (Medication med : inventory) {
-            // Display the medication name and available stock
-            System.out.println("Medication Name: " + med.getName() + ", Stock: " + med.getQuantity());
+        if (inventory.isEmpty()) {
+            System.out.println("No medications found in inventory.");
+        } else {
+            for (Medication med : inventory) {
+                System.out.println("Medication Name: " + med.getName() + ", Stock: " + med.getQuantity() +
+                                   ", Low Stock Alert: " + med.getLowStockAlert());
+            }
         }
     }
 
