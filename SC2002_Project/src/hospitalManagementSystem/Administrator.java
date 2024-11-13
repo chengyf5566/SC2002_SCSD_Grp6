@@ -15,7 +15,7 @@ public class Administrator extends Staff {
     private CsvReaderAppointment csvReaderAppointment;
     
     
- // Define the file paths for CSV files
+    // Define the file paths for CSV files
     private String staffFilePath = "Staff_List.csv";
     private String inventoryFilePath = "Medicine_List.csv";
     private String filePath_Appointment = "Appointment_Outcome.csv"; 
@@ -240,7 +240,7 @@ public class Administrator extends Staff {
 	                updateLowStockAlertLevel(scanner);
 	                break;
 	            case 6:
-	                approveReplenishmentRequest(scanner);
+	                approveReplenishmentRequest();
 	                break;
 	            case 7:
 	                back = true;
@@ -263,12 +263,17 @@ public class Administrator extends Staff {
 	    String name = scanner.nextLine().trim();
 	    System.out.print("Enter Initial Stock: ");
 	    int initialStock = scanner.nextInt();
+	    System.out.print("Enter Current Stock: ");
+	    int currentStock = scanner.nextInt();
 	    System.out.print("Enter Low Stock Alert Level: ");
 	    int lowStockAlert = scanner.nextInt();
 	    scanner.nextLine(); // Consume the newline character
 
 	    // Default replenishRequest to "false"
 	    String replenishRequest = "No";  // Default value is "false"
+	    
+	 // Default replenishRequest to "false"
+	   int replenishRequestAmount = 0;  // Default value is 0
 
 	    // Check if medication with this name already exists
 	    boolean exists = medicationList.stream().anyMatch(med -> med.getMedicineName().equalsIgnoreCase(name));
@@ -278,7 +283,7 @@ public class Administrator extends Staff {
 	    }
 
 	    // Create new medication with replenishRequest set to "false"
-	    Medication newMedication = new Medication(name, initialStock, lowStockAlert, replenishRequest);
+	    Medication newMedication = new Medication(name, initialStock, currentStock, lowStockAlert, replenishRequest, replenishRequestAmount);
 
 	    // Add new medication to the list
 	    medicationList.add(newMedication);
@@ -345,41 +350,31 @@ public class Administrator extends Staff {
 	    }
 	}
 	
-	private void approveReplenishmentRequest(Scanner scanner) {
-	    System.out.print("Enter Medicine Name for replenishment approval: ");
-	    String name = scanner.nextLine().trim();
+	private void approveReplenishmentRequest() {
+	    // Loop through all medications to find those with replenishRequest set to "Yes"
+	    medicationList.forEach(medication -> {
+	        if ("Yes".equalsIgnoreCase(medication.getReplenishRequest())) {
+	            // Add replenish amount to current stock
+	            int newCurrentStock = medication.getCurrentStock() + medication.getReplenishRequestAmount();
+	            medication.setCurrentStock(newCurrentStock);
 
-	    // Find the medication by its name
-	    Medication medicationToApprove = medicationList.stream()
-	            .filter(med -> med.getMedicineName().equalsIgnoreCase(name))
-	            .findFirst()
-	            .orElse(null);
+	            // Set initial stock to the new current stock
+	            medication.setInitialStock(newCurrentStock);
 
-	    if (medicationToApprove != null) {
-	        // Check if the replenishRequest is "true"
-	        if ("Yes".equalsIgnoreCase(medicationToApprove.getReplenishRequest())) {
-	            // Ask for the replenishment amount
-	            System.out.print("Enter the amount to replenish: ");
-	            int replenishAmount = scanner.nextInt();
+	            // Set replenishRequest to "No" as it has been approved
+	            medication.setReplenishRequest("No");
+	            
+	            // Set replenishRequestAmount to 0" as it has been restock
+	            medication.setReplenishRequestAmount(0);
 
-	            // Update the stock
-	            medicationToApprove.setInitialStock(medicationToApprove.getInitialStock() + replenishAmount);
-
-	            // Set replenishRequest to "false" as it has been approved
-	            medicationToApprove.setReplenishRequest("No");
-
-	            System.out.println("Replenishment approved and stock updated.");
-
-	            // Write the updated inventory to CSV
-	            csvReaderInventory.writeInventoryToCSV(inventoryFilePath);
-	        } else {
-	            System.out.println("Replenishment request for this medication is not required");
+	            System.out.println("Replenishment approved and stock updated for: " + medication.getMedicineName());
 	        }
-	    } else {
-	        System.out.println("No medication found with this name.");
-	    }
+	    });
+
+	    // Write the updated inventory to CSV
+	    csvReaderInventory.writeInventoryToCSV(inventoryFilePath);
 	}
-	
+
 
     // Method to view all appointments
     public void viewAppointments() {

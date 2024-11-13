@@ -26,7 +26,7 @@ public class CsvReaderInventory {
                 String[] values = line.split(",");
 
                 // Check if the record contains all expected columns
-                if (values.length < 4) {  // 4 columns expected now
+                if (values.length < 6) {  // 6 columns expected now
                     System.out.println("Incomplete record: " + line);
                     continue;
                 }
@@ -34,20 +34,24 @@ public class CsvReaderInventory {
                 // Extract and trim the values from the CSV
                 String name = values[0].trim();
                 int initialStock;
+                int currentStock;
                 int lowStockLevelAlert;
-                String replenishRequest = values[3].trim();  // Expecting a string ("true"/"false")
+                String replenishRequest = values[4].trim();
+                int replenishRequestAmount;
 
-                // Try parsing the initial stock and low stock alert levels
+                // Try parsing the initial stock, current stock, low stock alert levels, and replenish amount
                 try {
                     initialStock = Integer.parseInt(values[1].trim());
-                    lowStockLevelAlert = Integer.parseInt(values[2].trim());
+                    currentStock = Integer.parseInt(values[2].trim());
+                    lowStockLevelAlert = Integer.parseInt(values[3].trim());
+                    replenishRequestAmount = Integer.parseInt(values[5].trim());
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid stock data for medication: " + name);
                     continue;
                 }
 
                 // Create a Medication object with the data
-                Medication medication = new Medication(name, initialStock, lowStockLevelAlert, replenishRequest);
+                Medication medication = new Medication(name, initialStock, currentStock, lowStockLevelAlert, replenishRequest, replenishRequestAmount);
 
                 // Add the created medication object to the medication list
                 medicationList.add(medication);
@@ -69,19 +73,21 @@ public class CsvReaderInventory {
         // Check if the file exists
         if (!file.exists()) {
             System.out.println("File does not exist at path: " + filePath);
-            return; // Do not attempt to create new directories or files
+            return;
         }
 
         try (FileWriter writer = new FileWriter(file)) {
             // Write the header
-            writer.write("Medicine Name,Initial Stock,Low Stock Level Alert,Replenish Request\n");
+            writer.write("Medicine Name,Initial Stock,Current Stock,Low Stock Level Alert,Replenish Request,Replenish Request Amount\n");
 
             // Write each medication's data
             for (Medication med : medicationList) {
                 writer.write(med.getMedicineName() + ","
                         + med.getInitialStock() + ","
+                        + med.getCurrentStock() + ","
                         + med.getLowStockLevelAlert() + ","
-                        + med.getReplenishRequest() + "\n");
+                        + med.getReplenishRequest() + ","
+                        + med.getReplenishRequestAmount() + "\n");
             }
 
             System.out.println("Inventory list updated in CSV.");

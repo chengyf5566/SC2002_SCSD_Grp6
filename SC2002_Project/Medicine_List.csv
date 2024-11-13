@@ -1,6 +1,7 @@
-Medicine Name,Initial Stock,Low Stock Level Alert,Replenish Request
-Paracetamol,100,20,No
-Ibuprofen,50,10,No
-Amoxicillin,75,15,No
-Panadol,2000,200,No
-Steroids,1000,10,No
+Medicine Name,Initial Stock,Current Stock,Low Stock Level Alert,Replenish Request,Replenish Request Amount
+Paracetamol,100,100,20,No,0
+Ibuprofen,50,40,10,No,0
+Amoxicillin,75,70,15,No,0
+Panadol,700,700,200,No,0
+Steroids,70,70,10,No,0
+Antibiotic,700,700,100,No,0
