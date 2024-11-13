@@ -3,15 +3,19 @@ package hospitalManagementSystem;
 public class Medication {
     private String medicineName;
     private int initialStock;
+    private int currentStock;
     private int lowStockLevelAlert;
-    private String replenishRequest;  // Changed to String
+    private String replenishRequest;
+    private int replenishRequestAmount;
 
     // Constructor to initialize the medication
-    public Medication(String medicineName, int initialStock, int lowStockLevelAlert, String replenishRequest) {
+    public Medication(String medicineName, int initialStock, int currentStock, int lowStockLevelAlert, String replenishRequest, int replenishRequestAmount) {
         this.medicineName = medicineName;
         this.initialStock = initialStock;
+        this.currentStock = currentStock;
         this.lowStockLevelAlert = lowStockLevelAlert;
-        this.replenishRequest = replenishRequest != null ? replenishRequest : "false";  // Default to "false"
+        this.replenishRequest = replenishRequest != null ? replenishRequest : "No";
+        this.replenishRequestAmount = replenishRequestAmount;
     }
 
     // Getters and Setters
@@ -25,6 +29,14 @@ public class Medication {
 
     public void setInitialStock(int initialStock) {
         this.initialStock = initialStock;
+    }
+
+    public int getCurrentStock() {
+        return currentStock;
+    }
+
+    public void setCurrentStock(int currentStock) {
+        this.currentStock = currentStock;
     }
 
     public int getLowStockLevelAlert() {
@@ -43,13 +55,23 @@ public class Medication {
         this.replenishRequest = replenishRequest;
     }
 
+    public int getReplenishRequestAmount() {
+        return replenishRequestAmount;
+    }
+
+    public void setReplenishRequestAmount(int replenishRequestAmount) {
+        this.replenishRequestAmount = replenishRequestAmount;
+    }
+
     @Override
     public String toString() {
         return "Medication{" +
                "medicineName='" + medicineName + '\'' +
                ", initialStock=" + initialStock +
+               ", currentStock=" + currentStock +
                ", lowStockLevelAlert=" + lowStockLevelAlert +
                ", replenishRequest='" + replenishRequest + '\'' +
+               ", replenishRequestAmount=" + replenishRequestAmount +
                '}';
     }
 }
