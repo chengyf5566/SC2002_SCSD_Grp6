@@ -1,5 +1,5 @@
-Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status (Pending/Dispensed),Consultation Notes
-D001,,P001,,01 12 2024,1400,,Comfirmed,consultation,panadol,dispensed,headache
-D002,,P002,,01 12 2024,1400,,Pending,consultation,antibiotics,dispensed,infection
-D003,,P003,,01 12 2024,1400,,Completed,consultation,panadol,dispensed,headache
-,,,,,,,Canceled,,,,
+Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consulation Notes
+D001,,P001,,01 12 2024,1400,,Comfirmed,consultation,panadol,dispensed,headache,
+D002,,P002,,01 12 2024,1400,,Pending,consultation,antibiotics,dispensed,infection,
+D003,,P003,,01 12 2024,1400,,Completed,consultation,panadol,dispensed,headache,
+,,,,,,,Canceled,,,,,
