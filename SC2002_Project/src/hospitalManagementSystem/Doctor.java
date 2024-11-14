@@ -155,6 +155,8 @@ public class Doctor extends Staff {
             System.out.println("No pending appointments found for Doctor ID " + doctorId);
         }
 
+        // After updating the status, write the changes back to the CSV
+
         csvReaderAppointment.writeAppointmentFile();
     }
 

@@ -6,13 +6,12 @@ import java.util.List;
 
 public class CsvReaderInventory {
 
-    private String filePath = "Medicine_List.csv"; // Path to the medication CSV file
+    private final String filePath = "Medicine_List.csv"; // Path to the medication CSV file
+    private List<Medication> medicationList = new ArrayList<>();
 
     public CsvReaderInventory() {
-        readAndInitializeInventory();
+        readAndInitializeInventory();  // Load inventory data at initialization
     }
-
-    private List<Medication> medicationList = new ArrayList<>();
 
     // Method to read data from CSV and create Medication objects
     public void readAndInitializeInventory() {
@@ -66,7 +65,8 @@ public class CsvReaderInventory {
         return medicationList;
     }
 
-    // Method to write medication data to CSV without needing to pass a filePath parameter
+
+    // Method to write medication data to CSV
     public void writeInventoryToCSV() {
         File file = new File(filePath);
 

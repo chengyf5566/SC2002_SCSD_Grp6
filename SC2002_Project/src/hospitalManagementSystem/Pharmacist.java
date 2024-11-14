@@ -12,7 +12,6 @@ public class Pharmacist extends Staff {
     private List<Appointment> appointmentList;
     private CsvReaderAppointment csvReaderAppointment;
     
-    
     // Method to initialize medication inventory from CSV
     public void initializeInventoryFromCSV() {
         this.csvReaderInventory = new CsvReaderInventory();
@@ -104,6 +103,7 @@ public class Pharmacist extends Staff {
         // Write the updated inventory to CSV
         csvReaderInventory.writeInventoryToCSV();
     }
+
     
     // Constructor for the Pharmacist class
     public Pharmacist(String userID, String password, String role, String gender, String name, int age) {

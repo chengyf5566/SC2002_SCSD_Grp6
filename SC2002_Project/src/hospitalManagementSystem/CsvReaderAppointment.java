@@ -13,6 +13,7 @@ public class CsvReaderAppointment {
 
     public CsvReaderAppointment() {
         readAndInitializeAppointments();
+
     }
 
     // Read and initialize appointments from CSV
@@ -72,6 +73,7 @@ public class CsvReaderAppointment {
         appointmentList.add(newAppointment);
         return writeAppointmentFile();
     }
+
 
     // Delete an appointment record by exact match
     public boolean deleteAppointmentRecord(String appointmentRecord) {

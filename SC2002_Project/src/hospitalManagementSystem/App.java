@@ -11,6 +11,7 @@ public class App {
         App app = new App();
         app.initializeData();  // Initialize both staff and patient data
         app.run();  // Run the main program loop
+
     }
 
     public void run() {
@@ -19,13 +20,13 @@ public class App {
 
         // Display login menu and authenticate the user
         loginMenu.displayMenu(scanner);
-
         scanner.close();
     }
-
+  
     // Method to initialize staff and patient data
     public void initializeData() {
         staffList = new CsvReaderStaff().getStaffList();
         patientList = new CsvReaderPatient().getPatientList();
+
     }
 }

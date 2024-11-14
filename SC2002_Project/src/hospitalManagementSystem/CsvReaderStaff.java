@@ -10,11 +10,13 @@ import java.util.List;
 
 public class CsvReaderStaff {
     
+
     private String filePath = "Staff_List.csv";
 
     // Constructor to initialize and read the staff list
     public CsvReaderStaff() {
         readAndInitializeStaff();
+
     }
 
     // List to store staff members
@@ -85,7 +87,7 @@ public class CsvReaderStaff {
         return staffList;
     }
 
-    // Method to write staff to CSV without needing to pass a filePath parameter
+    // Method to write staff to CSV
     public void writeStaffToCSV() {
         File file = new File(filePath);
 

@@ -11,9 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public class CsvReaderPatient {
 
-    private String filePath = "Patient_List.csv";
+    private final String filePath = "Patient_List.csv"; 
     private List<Patient> patientList = new ArrayList<>();
     private boolean isInitialized = false;
 
@@ -105,7 +104,6 @@ public class CsvReaderPatient {
         return patientList;
     }
 
-    // Method to write patient data to CSV without needing to pass a filePath parameter
     public void writePatientDataToCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the header row

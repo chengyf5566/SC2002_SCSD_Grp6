@@ -54,10 +54,10 @@ public class AdministratorMenu implements UserRoleMenu {
 		Administrator admin = new Administrator("admin01", "adminPassword", "Administrator", "Male", "John Doe", 35);
 		
 		// Initialize csv files
-		admin.readAndInitializePatient("Patient_List.csv");
-		admin.readAndInitializeAppointments("Appointment_Outcome.csv");
-		admin.initializeStaffFromCSV("Staff_List.csv");
-		admin.initializeInventoryFromCSV("Medicine_List.csv");
+		admin.readAndInitializePatient();
+		admin.readAndInitializeAppointments();
+		admin.initializeStaffFromCSV();
+		admin.initializeInventoryFromCSV();
 		
         // Creating an instance of the AdministratorMenu class and passing the admin object
         AdministratorMenu adminMenu = new AdministratorMenu(admin);
