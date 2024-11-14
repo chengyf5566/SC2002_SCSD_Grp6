@@ -12,6 +12,7 @@ public class DoctorAppointments implements AppointmentManager{
 	public DoctorAppointments(Doctor doctor) 
 	{
 		this.doctor = doctor;
+		private List<Appointment> appointments = new ArrayList<>();
 	
 	}
 	
