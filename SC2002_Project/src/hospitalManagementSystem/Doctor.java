@@ -9,8 +9,11 @@ public class Doctor extends Staff {
 	
     public Doctor(String userID, String password, String role, String gender, String name, int age) {
         super(userID, password, role, gender, name, age);  // Pass data to Staff constructor
-    }						
+    }			
+    
+    
 	
+    /*
 	public DoctorAvailability getAvailability() {
         return availability;
     }
@@ -34,5 +37,7 @@ public class Doctor extends Staff {
 		System.out.println("Age: " + age);
 		System.out.println("Gender: " + gender + "\n");
 	}
+	
+	*/
 
 }

@@ -35,7 +35,6 @@ public class Administrator extends Staff {
        
         // Assign the read staff list
         this.staffList = csvReader.getStaffList();  // Assign the read staff list
-        
     }
     
     // Method to initialize medication inventory from CSV
@@ -45,7 +44,7 @@ public class Administrator extends Staff {
         this.medicationList = csvReaderInventory.getMedicationList();
     }
     
- // Method to initialize appointment outcome from CSV
+    // Method to initialize appointment outcome from CSV
     public void readAndInitializeAppointments(String filePath_Appointment) {
         this.csvReaderAppointment = new CsvReaderAppointment(filePath_Appointment);
         csvReaderAppointment.readAndInitializeAppointments();
@@ -60,8 +59,7 @@ public class Administrator extends Staff {
     
     
     
-  //manageHospitalStaff 
-
+    //manageHospitalStaff 
     // Method to display and manage staff menu
     public void manageHospitalStaff(Scanner scanner) {
         boolean back = false;
