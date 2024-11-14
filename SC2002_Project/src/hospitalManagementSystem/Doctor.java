@@ -9,6 +9,8 @@ public class Doctor extends Staff {
 	
     public Doctor(String userID, String password, String role, String gender, String name, int age) {
         super(userID, password, role, gender, name, age);  // Pass data to Staff constructor
+	this.availability = new DoctorAvailability(this);
+    	this.appointments = new DoctorAppointments(this);
     }			
     
     
