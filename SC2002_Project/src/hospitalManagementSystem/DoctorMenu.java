@@ -62,8 +62,8 @@ public class DoctorMenu implements UserRoleMenu {
         Doctor doctor = new Doctor("D001", "password123", "Doctor", "Male", "Dr. Smith", 40);
 
         // Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
-        doctor.readAndInitializePatient("Patient_List.csv");
-        doctor.readAndInitializeAppointments("Appointment_Outcome.csv");
+        doctor.readAndInitializePatient();
+        doctor.readAndInitializeAppointments();
 
         // Now we create the DoctorMenu object and pass the doctor object to it
         DoctorMenu doctorMenu = new DoctorMenu(doctor);

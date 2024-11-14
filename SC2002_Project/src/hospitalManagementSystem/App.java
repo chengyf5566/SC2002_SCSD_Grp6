@@ -5,103 +5,27 @@ import java.util.Scanner;
 
 public class App {
     private List<Staff> staffList;
-    private int role = 0;
-    boolean authenticated = false;
-    String userID = "1234";
-    String password = "1234";
+    private List<Patient> patientList;
 
-    // Define the file path for the CSV file
-    String FilePath_Staff = "Staff_List.csv";
-    
     public static void main(String[] args) {
         App app = new App();
-        app.initializeStaff();  // Initialize staff from the CSV file at the start
+        app.initializeData();  // Initialize both staff and patient data
         app.run();  // Run the main program loop
     }
 
-    // Main program loop
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        Login login = new Login();  // Create an instance of Login to handle authentication
+        LoginMenu loginMenu = new LoginMenu(staffList, patientList); // Create the LoginMenu instance
 
-        // Authentication loop
-        while (!authenticated) {
-            System.out.print("Enter User ID: ");
-            userID = scanner.nextLine();
-            System.out.print("Enter Password: ");
-            password = scanner.nextLine();
-
-            // Authenticate user and get the role
-            role = login.authenticate(staffList, userID, password);
-
-            if (role != 0) {
-                System.out.println("Authentication successful. Role: " + role);
-                authenticated = true;
-            } else {
-                System.out.println("Authentication failed. Please try again.");
-            }
-        }
-
-        // Main menu loop
-        boolean exit = false;
-        
-        while (!exit) {
-
-            UserRoleMenu menu = null;
-            // Determine the appropriate menu based on the user's role
-            switch (role) {
-                case 1:
-                    menu = new PatientMenu();
-                    break;
-                case 2:
-                    menu = new DoctorMenu();
-                    break;
-                case 3:
-                    Pharmacist pharmacist = findPharmacist(userID);
-                    if (pharmacist != null) {
-                        menu = new PharmacistMenu(pharmacist);
-                    } else {
-                        System.out.println("Pharmacist not found.");
-                        exit = true;
-                    }
-                    exit = true;
-                    break;
-                case 4:
-                    menu = new AdministratorMenu();
-                    break;
-                case 5:
-                    System.out.println("Logging out...");
-                    exit = true;
-                    break;
-                default:
-                    System.out.println("Invalid role. Exiting.");
-                    exit = true;
-                    break;
-            }
-
-            // Display the role-specific menu if applicable
-            if (menu != null) {
-                menu.displayMenu(scanner);
-            }
-        }
+        // Display login menu and authenticate the user
+        loginMenu.displayMenu(scanner);
 
         scanner.close();
     }
 
-    // Method to initialize staff objects from the CSV file
-    public void initializeStaff() {
-        CsvReaderStaff csvReaderStaff = new CsvReaderStaff(FilePath_Staff);
-        csvReaderStaff.readAndInitializeStaff(FilePath_Staff);
-        staffList = csvReaderStaff.getStaffList();
-    }
-
-    // Method to find and return the Pharmacist by userID
-    public Pharmacist findPharmacist(String userID) {
-        for (Staff staff : staffList) {
-            if (staff instanceof Pharmacist && staff.getUserID().equals(userID)) {
-                return (Pharmacist) staff;
-            }
-        }
-        return null;  // Return null if pharmacist is not found
+    // Method to initialize staff and patient data
+    public void initializeData() {
+        staffList = new CsvReaderStaff().getStaffList();
+        patientList = new CsvReaderPatient().getPatientList();
     }
 }

@@ -8,22 +8,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class CsvReaderStaff {
-	
-	private String filePath = "Staff_List.csv";
-	
-    // Constructor to pass file path
-    public CsvReaderStaff(String filePath) {
-        this.filePath = filePath;
+    
+    private String filePath = "Staff_List.csv";
+
+    // Constructor to initialize and read the staff list
+    public CsvReaderStaff() {
+        readAndInitializeStaff();
     }
 
     // List to store staff members
     private List<Staff> staffList = new ArrayList<>();
 
     // Method to read data from CSV and create staff objects
-    public void readAndInitializeStaff(String filePath) {
+    public void readAndInitializeStaff() {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             // Skip the header row
@@ -46,9 +44,6 @@ public class CsvReaderStaff {
                 String role = values[3].trim();
                 String gender = values[4].trim();
                 int age;
-
-                // Debugging: Print out the values being parsed from the CSV file
-                //System.out.println("Parsed CSV values - UserID: " + userID + ", Password: " + password + ", Name: " + name + ", Role: " + role + ", Gender: " + gender + ", Age: " + values[5]);
 
                 // Try parsing the age and handle invalid data
                 try {
@@ -75,9 +70,6 @@ public class CsvReaderStaff {
                         continue;
                 }
 
-                // Debugging: Print the staff object to ensure it's created correctly
-                //System.out.println("Created Staff: " + staff);
-
                 // Add the created staff member to the staff list
                 if (staff != null) {
                     staffList.add(staff);
@@ -88,15 +80,13 @@ public class CsvReaderStaff {
         }
     }
 
-
-
     // Getter for the staff list
     public List<Staff> getStaffList() {
         return staffList;
     }
-    
-    // Method to write staff to CSV
-    public void writeStaffToCSV(String filePath) {
+
+    // Method to write staff to CSV without needing to pass a filePath parameter
+    public void writeStaffToCSV() {
         File file = new File(filePath);
 
         // Check if the file exists
@@ -126,4 +116,3 @@ public class CsvReaderStaff {
         }
     }
 }
-

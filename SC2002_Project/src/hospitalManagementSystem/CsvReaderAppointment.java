@@ -2,58 +2,49 @@ package hospitalManagementSystem;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CsvReaderAppointment {
-    private String filePath_Appointment = "Appointment_Outcome.csv"; // Path to the Appointment_Outcome_Record CSV file
+    private String filePath_Appointment = "Appointment_Outcome.csv";
     private List<Appointment> appointmentList = new ArrayList<>();
 
-    public CsvReaderAppointment(String filePath_Appointment) {
-        this.filePath_Appointment = filePath_Appointment;
+    public CsvReaderAppointment() {
+        readAndInitializeAppointments();
     }
 
-    // Method to read and initialize appointments from CSV
+    // Read and initialize appointments from CSV
     public void readAndInitializeAppointments() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath_Appointment), StandardCharsets.UTF_8))) {
-            // Skip BOM if present
             if (br.ready()) {
-                br.mark(3); // Mark the first 3 bytes
+                br.mark(3);
                 if (br.read() != 0xEF || br.read() != 0xBB || br.read() != 0xBF) {
-                    br.reset(); // No BOM, reset to the start
+                    br.reset();
                 }
             }
 
             String line;
             boolean isHeader = true;
             while ((line = br.readLine()) != null) {
-                line = line.trim();  // Remove any extra spaces or newlines
+                line = line.trim();
                 if (isHeader) {
-                    isHeader = false;  // Skip the header row
+                    isHeader = false;
                     continue;
                 }
 
                 String[] data = line.split(",");
-                if (data.length == 13) {  // Ensure there are 13 columns (doctorId, patientId, etc.)
+                if (data.length == 13) {
                     Appointment appointment = new Appointment(
-                        cleanString(data[0]),  // doctorId
-                        cleanString(data[1]),  // doctorName
-                        cleanString(data[2]),  // patientId
-                        cleanString(data[3]),  // patientName
-                        cleanString(data[4]),  // appointmentDate
-                        cleanString(data[5]),  // appointmentStartTime
-                        cleanString(data[6]),  // appointmentEndTime
-                        cleanString(data[7]),  // appointmentStatus
-                        cleanString(data[8]),  // typeOfService
-                        cleanString(data[9]),  // prescribedMedications
-                        cleanString(data[10]), // prescribedMedicationsStatus
-                        cleanString(data[11]), // diagnosis
-                        cleanString(data[12])  // consultationNotes
+                        cleanString(data[0]), cleanString(data[1]), cleanString(data[2]), cleanString(data[3]),
+                        cleanString(data[4]), cleanString(data[5]), cleanString(data[6]), cleanString(data[7]),
+                        cleanString(data[8]), cleanString(data[9]), cleanString(data[10]), cleanString(data[11]),
+                        cleanString(data[12])
                     );
                     appointmentList.add(appointment);
                 } else {
-                    System.out.println("Skipping invalid line: " + line);  // Debugging
+                    System.out.println("Skipping invalid line: " + line);
                 }
             }
         } catch (IOException e) {
@@ -61,31 +52,79 @@ public class CsvReaderAppointment {
         }
     }
 
-    // Helper method to clean strings (strip unnecessary spaces or quotes)
-    private String cleanString(String input) {
-        return input.replaceAll("\"", "").trim();  // Remove any quotes and trim whitespace
-    }
-
-    public List<Appointment> getAppointmentList() {
-        return appointmentList;
-    }
-
-    // Method to update the appointment file after changes
-    public void writeAppointmentFile(String filePath_Appointment) {
-        File file = new File(filePath_Appointment);
-
-        // Check if the file exists
-        if (!file.exists()) {
-            System.out.println("File does not exist at path: " + filePath_Appointment);
-            return; // Do not attempt to create new directories or files
+    // Check if a specific appointment slot is available
+    public boolean checkAvailability(String doctorID, String date, String time) {
+        for (Appointment appointment : appointmentList) {
+            if (appointment.getDoctorId().equals(doctorID) &&
+                appointment.getDateOfAppointment().equals(date) &&
+                appointment.getAppointmentStartTime().equals(time) &&
+                !appointment.getAppointmentStatus().equalsIgnoreCase("Canceled")) {
+                return false;
+            }
         }
+        return true;
+    }
 
-        // Proceed with writing to the existing file
-        try (FileWriter writer = new FileWriter(file)) {
-            // Write the header with the new columns
+    // Add an appointment record
+    public boolean addAppointmentRecord(String doctorID, String doctorName, String patientID, String patientName,
+                                        String date, String startTime, String endTime, String status) {
+    	Appointment newAppointment = new Appointment(doctorID, doctorName, patientID, patientName, date, startTime, endTime, status, "", "", "", "", "");
+        appointmentList.add(newAppointment);
+        return writeAppointmentFile();
+    }
+
+    // Delete an appointment record by exact match
+    public boolean deleteAppointmentRecord(String appointmentRecord) {
+        boolean isRemoved = appointmentList.removeIf(app -> app.toString().trim().equals(appointmentRecord.trim()));
+        return isRemoved && writeAppointmentFile();
+    }
+
+    // Get a list of appointments by patient ID with specific statuses
+    public List<String> getAppointmentsByPatientID(String patientID, String... statuses) {
+        List<String> result = new ArrayList<>();
+        for (Appointment appointment : appointmentList) {
+            for (String status : statuses) {
+                if (appointment.getPatientId().equals(patientID) && appointment.getAppointmentStatus().equalsIgnoreCase(status)) {
+                    result.add(appointment.toString());
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    // Helper to extract details from appointment string
+    public String extractAppointmentDetail(String appointmentRecord, String field) {
+        String[] fields = appointmentRecord.split(", ");
+        switch (field) {
+            case "Date": return fields[4].split(": ")[1];
+            case "Time": return fields[5].split(": ")[1];
+            default: return "";
+        }
+    }
+
+    // Replace appointment record
+    public boolean replaceAppointmentRecord(String patientID, String oldDate, String oldTime, String newDate, String newTime, String newStatus, String oldStatus) {
+        for (Appointment appointment : appointmentList) {
+            if (appointment.getPatientId().equals(patientID) &&
+                appointment.getDateOfAppointment().equals(oldDate) &&
+                appointment.getAppointmentStartTime().equals(oldTime) &&
+                appointment.getAppointmentStatus().equalsIgnoreCase(oldStatus)) {
+
+                appointment.setDateOfAppointment(newDate);
+                appointment.setAppointmentStartTime(newTime);
+                appointment.setAppointmentEndTime(LocalTime.parse(newTime, DateTimeFormatter.ofPattern("HHmm")).plusMinutes(30).format(DateTimeFormatter.ofPattern("HHmm")));
+                appointment.setAppointmentStatus(newStatus);
+                return writeAppointmentFile();
+            }
+        }
+        return false;
+    }
+
+    // Write appointment list to CSV file
+    public boolean writeAppointmentFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath_Appointment))) {
             writer.write("Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consultation Notes\n");
-
-            // Write each appointment's data
             for (Appointment appointment : appointmentList) {
                 writer.write(appointment.getDoctorId() + ","
                         + appointment.getDoctorName() + ","
@@ -101,10 +140,20 @@ public class CsvReaderAppointment {
                         + appointment.getDiagnosis() + ","
                         + appointment.getConsultationNotes() + "\n");
             }
-
             System.out.println("Appointment list updated in CSV.");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+    }
+
+    // Helper method to clean strings
+    private String cleanString(String input) {
+        return input.replaceAll("\"", "").trim();
+    }
+
+    public List<Appointment> getAppointmentList() {
+        return appointmentList;
     }
 }
