@@ -65,6 +65,7 @@ public class CsvReaderInventory {
         return medicationList;
     }
 
+
     // Method to write medication data to CSV
     public void writeInventoryToCSV() {
         File file = new File(filePath);

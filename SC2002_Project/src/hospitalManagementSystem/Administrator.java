@@ -18,6 +18,7 @@ public class Administrator extends Staff {
     private List<Patient> patientList;
     private CsvReaderPatient csvReaderPatient;
 
+
     public Administrator(String userID, String password, String role, String gender, String name, int age) {
         super(userID, password, role, gender, name, age);
         this.staffList = new ArrayList<>();
@@ -26,25 +27,27 @@ public class Administrator extends Staff {
         this.patientList = new ArrayList<>();
     }
 
-    // Initialize data from CSVs
-    public void initializeStaffFromCSV() {
-        this.csvReader = new CsvReaderStaff();
-        csvReader.readAndInitializeStaff();
-        this.staffList = csvReader.getStaffList();
+    // Method to initialize staff list  from CSV
+    public void initializeStaffFromCSV() {        
+        this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
+        csvReader.readAndInitializeStaff(); // Read and initialize staff from the CSV
+        this.staffList = csvReader.getStaffList();  // Assign the read staff list
     }
-
+    
     public void initializeInventoryFromCSV() {
         this.csvReaderInventory = new CsvReaderInventory();
         csvReaderInventory.readAndInitializeInventory();
         this.medicationList = csvReaderInventory.getMedicationList();
     }
-
+    
+    // Method to initialize appointment outcome from CSV
     public void readAndInitializeAppointments() {
         this.csvReaderAppointment = new CsvReaderAppointment();
         csvReaderAppointment.readAndInitializeAppointments();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
     }
-
+  
+    // Method to initialize patient list from CSV
     public void readAndInitializePatient() {
         this.csvReaderPatient = new CsvReaderPatient();
         csvReaderPatient.readAndInitializePatient();
@@ -112,6 +115,7 @@ public class Administrator extends Staff {
         if (newStaff != null) {
             staffList.add(newStaff);
             System.out.println("Staff member added successfully.");
+            // Save the updated staff list to the CSV file
             csvReader.writeStaffToCSV();
         }
     }
@@ -122,6 +126,7 @@ public class Administrator extends Staff {
         
         boolean removed = staffList.removeIf(staff -> staff.getUserID().equalsIgnoreCase(staffID));
         if (removed) {
+            // Save the updated staff list to the CSV file
             csvReader.writeStaffToCSV();
             System.out.println("Staff member removed and list updated in CSV.");
         } else {
@@ -152,6 +157,7 @@ public class Administrator extends Staff {
         scanner.nextLine();
 
         System.out.println("Staff member updated successfully.");
+        // After updating, write the updated list to CSV
         csvReader.writeStaffToCSV();
     }
 
@@ -247,57 +253,176 @@ public class Administrator extends Staff {
     private void updateStockLevels(Scanner scanner) {
         System.out.print("Enter Medicine Name to update stock levels: ");
         String name = scanner.nextLine().trim();
+      
+	// Method to display and manage medication inventory menu
+	public void manageMedicationInventory(Scanner scanner) {
+	    boolean back = false;
+	    while (!back) {
+	        System.out.println("\nManage Medication Inventory:");
+	        System.out.println("1. View Medication Inventory");
+	        System.out.println("2. Add Medication");
+	        System.out.println("3. Remove Medication");
+	        System.out.println("4. Update Stock Levels");
+	        System.out.println("5. Update Low Stock Alert Level");
+	        System.out.println("6. Approve Replenishment Request");
+	        System.out.println("7. Back to Main Menu");
+	
+	        System.out.print("Select Option: ");
+	        int choice = scanner.nextInt();
+	        scanner.nextLine();
+	
+	        switch (choice) {
+	            case 1:
+	                viewMedicationInventory();
+	                break;
+	            case 2:
+	                addMedication(scanner);
+	                break;
+	            case 3:
+	                removeMedication(scanner);
+	                break;
+	            case 4:
+	                updateStockLevels(scanner);
+	                break;
+	            case 5:
+	                updateLowStockAlertLevel(scanner);
+	                break;
+	            case 6:
+	                approveReplenishmentRequest();
+	                break;
+	            case 7:
+	                back = true;
+	                break;
+	            default:
+	                System.out.println("Invalid option. Try again.");
+	        }
+	    }
+	}
+	
+	private void viewMedicationInventory() {
+	    System.out.println("\nMedication Inventory:");
+	    for (Medication medication : medicationList) {
+	        System.out.println(medication); // Assuming the Medication class has a properly overridden toString method
+	    }
+	}
+	
+	private void addMedication(Scanner scanner) {
+	    System.out.print("Enter Medicine Name: ");
+	    String name = scanner.nextLine().trim();
+	    System.out.print("Enter Initial Stock: ");
+	    int initialStock = scanner.nextInt();
+	    System.out.print("Enter Current Stock: ");
+	    int currentStock = scanner.nextInt();
+	    System.out.print("Enter Low Stock Alert Level: ");
+	    int lowStockAlert = scanner.nextInt();
+	    scanner.nextLine(); // Consume the newline character
 
-        Medication medicationToUpdate = medicationList.stream()
-                .filter(med -> med.getMedicineName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
+	    // Default replenishRequest to "false"
+	    String replenishRequest = "No";  // Default value is "false"
+	    
+	 // Default replenishRequest to "false"
+	   int replenishRequestAmount = 0;  // Default value is 0
 
-        if (medicationToUpdate != null) {
-            System.out.print("Enter new stock level: ");
-            medicationToUpdate.setInitialStock(scanner.nextInt());
-            scanner.nextLine();
-            System.out.println("Stock level updated successfully.");
-            csvReaderInventory.writeInventoryToCSV();
-        } else {
-            System.out.println("No medication found with this name.");
-        }
-    }
+	    // Check if medication with this name already exists
+	    boolean exists = medicationList.stream().anyMatch(med -> med.getMedicineName().equalsIgnoreCase(name));
+	    if (exists) {
+	        System.out.println("Medication with this name already exists. Please update the stock if needed.");
+	        return;
+	    }
 
-    private void updateLowStockAlertLevel(Scanner scanner) {
-        System.out.print("Enter Medicine Name to update low stock alert level: ");
-        String name = scanner.nextLine().trim();
+	    // Create new medication with replenishRequest set to "false"
+	    Medication newMedication = new Medication(name, initialStock, currentStock, lowStockAlert, replenishRequest, replenishRequestAmount);
 
-        Medication medicationToUpdate = medicationList.stream()
-                .filter(med -> med.getMedicineName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
+	    // Add new medication to the list
+	    medicationList.add(newMedication);
+	    System.out.println("Medication added successfully.");
 
-        if (medicationToUpdate != null) {
-            System.out.print("Enter new low stock alert level: ");
-            medicationToUpdate.setLowStockLevelAlert(scanner.nextInt());
-            scanner.nextLine();
-            System.out.println("Low stock alert level updated successfully.");
-            csvReaderInventory.writeInventoryToCSV();
-        } else {
-            System.out.println("No medication found with this name.");
-        }
-    }
+	    // Write the updated inventory to CSV
+	    csvReaderInventory.writeInventoryToCSV();
+	}
+	
+	private void removeMedication(Scanner scanner) {
+	    System.out.print("Enter Medicine Name to remove: ");
+	    String name = scanner.nextLine().trim();
+	
+	    boolean removed = medicationList.removeIf(med -> med.getMedicineName().equalsIgnoreCase(name));
+	    if (removed) {
+	        System.out.println("Medication removed successfully.");
+	        csvReaderInventory.writeInventoryToCSV(); // Write the updated inventory to CSV
+	    } else {
+	        System.out.println("No medication found with this name.");
+	    }
+	}
+	
+	private void updateStockLevels(Scanner scanner) {
+	    System.out.print("Enter Medicine Name to update stock levels: ");
+	    String name = scanner.nextLine().trim();
+	
+	    Medication medicationToUpdate = medicationList.stream()
+	            .filter(med -> med.getMedicineName().equalsIgnoreCase(name))
+	            .findFirst()
+	            .orElse(null);
+	
+	    if (medicationToUpdate != null) {
+	        System.out.print("Enter new stock level: ");
+	        int newStock = scanner.nextInt();
+	        medicationToUpdate.setInitialStock(newStock);
+	        System.out.println("Stock level updated successfully.");
+	
+	        // Write the updated inventory to CSV
+	        csvReaderInventory.writeInventoryToCSV();
+	    } else {
+	        System.out.println("No medication found with this name.");
+	    }
+	}
+	
+	private void updateLowStockAlertLevel(Scanner scanner) {
+	    System.out.print("Enter Medicine Name to update low stock alert level: ");
+	    String name = scanner.nextLine().trim();
+	
+	    Medication medicationToUpdate = medicationList.stream()
+	            .filter(med -> med.getMedicineName().equalsIgnoreCase(name))
+	            .findFirst()
+	            .orElse(null);
+	
+	    if (medicationToUpdate != null) {
+	        System.out.print("Enter new low stock alert level: ");
+	        int newAlertLevel = scanner.nextInt();
+	        medicationToUpdate.setLowStockLevelAlert(newAlertLevel);
+	        System.out.println("Low stock alert level updated successfully.");
+	
+	        // Write the updated inventory to CSV
+	        csvReaderInventory.writeInventoryToCSV();
+	    } else {
+	        System.out.println("No medication found with this name.");
+	    }
+	}
+	
+	private void approveReplenishmentRequest() {
+	    // Loop through all medications to find those with replenishRequest set to "Yes"
+	    medicationList.forEach(medication -> {
+	        if ("Yes".equalsIgnoreCase(medication.getReplenishRequest())) {
+	            // Add replenish amount to current stock
+	            int newCurrentStock = medication.getCurrentStock() + medication.getReplenishRequestAmount();
+	            medication.setCurrentStock(newCurrentStock);
 
-    private void approveReplenishmentRequest() {
-        medicationList.forEach(medication -> {
-            if ("Yes".equalsIgnoreCase(medication.getReplenishRequest())) {
-                medication.setCurrentStock(medication.getCurrentStock() + medication.getReplenishRequestAmount());
-                medication.setInitialStock(medication.getCurrentStock());
-                medication.setReplenishRequest("No");
-                medication.setReplenishRequestAmount(0);
-                System.out.println("Replenishment approved and stock updated for: " + medication.getMedicineName());
-            }
-        });
-        csvReaderInventory.writeInventoryToCSV();
-    }
+	            // Set initial stock to the new current stock
+	            medication.setInitialStock(newCurrentStock);
 
-    // Appointment management
+	            // Set replenishRequest to "No" as it has been approved
+	            medication.setReplenishRequest("No");
+	            
+	            // Set replenishRequestAmount to 0" as it has been restock
+	            medication.setReplenishRequestAmount(0);
+
+	            System.out.println("Replenishment approved and stock updated for: " + medication.getMedicineName());
+	        }
+	    });
+
+	    // Write the updated inventory to CSV
+	    csvReaderInventory.writeInventoryToCSV();
+	}
+      
     public void viewAppointments() {
         if (appointmentList.isEmpty()) {
             System.out.println("No appointments available.");
@@ -372,9 +497,14 @@ public class Administrator extends Staff {
                                          contactNum, email, assignedDoctorID, assignedDoctorName, 
                                          new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        patientList.add(newPatient);
-        System.out.println("New Patient added successfully.");
-        csvReaderPatient.writePatientDataToCSV();
+        // Add the new patient to the list and update the CSV
+        if (newPatient != null) {
+            patientList.add(newPatient);  // Add new patient to the list
+            System.out.println("New Patient added successfully.");
+
+            // Save the updated patient list to the CSV file
+            csvReaderPatient.writePatientDataToCSV();
+        }
     }
 
     private void removePatient(Scanner scanner) {
@@ -383,6 +513,8 @@ public class Administrator extends Staff {
 
         boolean removed = patientList.removeIf(patient -> patient.getPatientID().equalsIgnoreCase(patientID));
         if (removed) {
+
+            // Save the updated patient list to the CSV file
             csvReaderPatient.writePatientDataToCSV();
             System.out.println("Patient removed and list updated in CSV.");
         } else {

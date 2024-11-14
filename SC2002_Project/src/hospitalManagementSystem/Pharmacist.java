@@ -1,12 +1,12 @@
 package hospitalManagementSystem;
 
 import java.util.List;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Pharmacist extends Staff {
 
-	private List<Medication> medicationList; // Medication list for inventory management
+    private List<Medication> medicationList; // Medication list for inventory management
     private CsvReaderInventory csvReaderInventory; // Inventory csv file reader
     
     private List<Appointment> appointmentList;
@@ -31,7 +31,6 @@ public class Pharmacist extends Staff {
             System.out.println(appointment); // Assuming the toString method in Appointment prints useful details
         }
     }
-    
     
     public void manageInventoryStock(Scanner scanner) {
         boolean exit = false;
@@ -62,51 +61,49 @@ public class Pharmacist extends Staff {
         }
     }
     
-	public void viewMedicationInventory() {
-	    System.out.println("\nMedication Inventory:");
-	    for (Medication medication : medicationList) {
-	        System.out.println(medication); // Assuming the Medication class has a properly overridden toString method
-	    }
-	}
-	
-	public void setReplenishRequest(Scanner scanner) {
-	    System.out.println("\n--- Medication Inventory ---");
-	    for (int i = 0; i < medicationList.size(); i++) {
-	        System.out.println((i + 1) + ". " + medicationList.get(i).getMedicineName());
-	    }
+    public void viewMedicationInventory() {
+        System.out.println("\nMedication Inventory:");
+        for (Medication medication : medicationList) {
+            System.out.println(medication); // Assuming the Medication class has a properly overridden toString method
+        }
+    }
+    
+    public void setReplenishRequest(Scanner scanner) {
+        System.out.println("\n--- Medication Inventory ---");
+        for (int i = 0; i < medicationList.size(); i++) {
+            System.out.println((i + 1) + ". " + medicationList.get(i).getMedicineName());
+        }
 
-	    System.out.print("Enter the number of the medication to set replenish request: ");
-	    int medicationChoice = scanner.nextInt();
-	    scanner.nextLine(); // Consume newline character
+        System.out.print("Enter the number of the medication to set replenish request: ");
+        int medicationChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline character
 
-	    // Validate the user's choice
-	    if (medicationChoice < 1 || medicationChoice > medicationList.size()) {
-	        System.out.println("Invalid selection. Please try again.");
-	        return;
-	    }
+        // Validate the user's choice
+        if (medicationChoice < 1 || medicationChoice > medicationList.size()) {
+            System.out.println("Invalid selection. Please try again.");
+            return;
+        }
 
-	    // Get the selected medication based on user choice
-	    Medication medicationToUpdate = medicationList.get(medicationChoice - 1);
+        // Get the selected medication based on user choice
+        Medication medicationToUpdate = medicationList.get(medicationChoice - 1);
 
-	    // Set the replenish request to "Yes"
-	    medicationToUpdate.setReplenishRequest("Yes");
+        // Set the replenish request to "Yes"
+        medicationToUpdate.setReplenishRequest("Yes");
 
-	    // Ask for the replenish amount
-	    System.out.print("Enter Replenish Request Amount: ");
-	    int replenishAmount = scanner.nextInt();
-	    scanner.nextLine(); // Consume the newline character
+        // Ask for the replenish amount
+        System.out.print("Enter Replenish Request Amount: ");
+        int replenishAmount = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
 
-	    // Set the replenish request amount in the medication
-	    medicationToUpdate.setReplenishRequestAmount(replenishAmount);
+        // Set the replenish request amount in the medication
+        medicationToUpdate.setReplenishRequestAmount(replenishAmount);
 
-	    System.out.println("Replenish request updated for " + medicationToUpdate.getMedicineName());
+        System.out.println("Replenish request updated for " + medicationToUpdate.getMedicineName());
 
-	    // Write the updated inventory to CSV
-	    csvReaderInventory.writeInventoryToCSV();
-	}
-	
-	
-	
+        // Write the updated inventory to CSV
+        csvReaderInventory.writeInventoryToCSV();
+    }
+
     
     // Constructor for the Pharmacist class
     public Pharmacist(String userID, String password, String role, String gender, String name, int age) {

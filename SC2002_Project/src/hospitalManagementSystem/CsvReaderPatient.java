@@ -1,14 +1,18 @@
 package hospitalManagementSystem;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public class CsvReaderPatient {
-    
-    private final String filePath = "Patient_List.csv"; // Path to the Patient_List CSV file
+
+    private final String filePath = "Patient_List.csv"; 
     private List<Patient> patientList = new ArrayList<>();
     private boolean isInitialized = false;
 
@@ -29,20 +33,23 @@ public class CsvReaderPatient {
             String line;
             boolean isHeader = true;
             while ((line = br.readLine()) != null) {
-
                 line = line.trim();  // Remove any extra spaces or newlines
+                if (line.isEmpty()) {
+                    continue;  // Skip empty lines
+                }
+
                 if (isHeader) {
                     isHeader = false;  // Skip the header row
                     continue;
                 }
 
-                String[] values = line.split(","); // Assuming the CSV is comma-separated
+                String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Split by comma, but skip commas inside quotes
 
                 // Ensure the record has the expected number of columns (14 in this case)
                 if (values.length == 14) {
                     // Extract and clean the values
                     String patientID = cleanString(values[0]);
-                    String password = cleanString(values[1]); // Password column
+                    String password = cleanString(values[1]);
                     String name = cleanString(values[2]);
                     String dobString = cleanString(values[3]); // Date as string in format dd/MM/yyyy
                     String gender = cleanString(values[4]);
@@ -74,7 +81,8 @@ public class CsvReaderPatient {
             e.printStackTrace();
         }
     }
-  
+
+
     // Method to get a patient by ID
     public Patient getPatientByID(String patientID) {
         for (Patient patient : patientList) {
@@ -126,3 +134,6 @@ public class CsvReaderPatient {
         }
     }
 }
+		
+	
+	

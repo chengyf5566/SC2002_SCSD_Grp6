@@ -8,10 +8,11 @@ public class PatientMenu implements UserRoleMenu {
     private CsvReaderPatient csvReaderPatient;
     private String appointmentFilePath;
 
-    // Constructor to initialize Patient and CSV readers
+    // Constructor to initialize Patient and CsvReaderPatient
     public PatientMenu(Patient patient) {
         this.patient = patient;
-        this.csvReaderPatient.readAndInitializePatient(); // Load patient data
+        this.csvReaderPatient = new CsvReaderPatient();
+
     }
 
     @Override
@@ -95,6 +96,7 @@ public class PatientMenu implements UserRoleMenu {
         System.out.println("Personal information updated successfully.");
     }
 
+
     private void changePassword(Scanner scanner) {
         System.out.print("Enter new password: ");
         String newPassword = scanner.nextLine();
@@ -119,31 +121,44 @@ public class PatientMenu implements UserRoleMenu {
         System.out.print("Enter the desired appointment time (HHMM): ");
         String time = scanner.nextLine();
 
-        boolean isScheduled = patient.scheduleAppointment(date, time, appointmentFilePath);
-        System.out.println(isScheduled ? "Appointment successfully scheduled for " + date + " at " + time + "." 
-                                       : "Failed to schedule appointment. The slot might be unavailable.");
+        boolean isScheduled = patient.scheduleAppointment(date, time);
+        if (isScheduled) {
+            System.out.println("Appointment successfully scheduled for " + date + " at " + time + ".");
+        } else {
+            System.out.println("Failed to schedule appointment. The slot might be unavailable.");
+        }
+
     }
 
     private void viewScheduledAppointments() {
         System.out.println("Scheduled Appointments:");
-        patient.viewScheduledAppointments(appointmentFilePath).forEach(System.out::println);
+        patient.viewScheduledAppointments().forEach(System.out::println);
     }
 
     private void rescheduleAppointment(Scanner scanner) {
-        boolean isRescheduled = patient.rescheduleAppointment(appointmentFilePath, scanner);
-        System.out.println(isRescheduled ? "Appointment successfully rescheduled." 
-                                         : "Failed to reschedule appointment. Please try again.");
+        boolean isRescheduled = patient.rescheduleAppointment(scanner);
+        if (isRescheduled) {
+            System.out.println("Appointment successfully rescheduled.");
+        } else {
+            System.out.println("Failed to reschedule appointment. Please try again.");
+        }
+
     }
 
     private void cancelAppointment(Scanner scanner) {
-        boolean isCancelled = patient.cancelAppointment(appointmentFilePath, scanner);
-        System.out.println(isCancelled ? "Appointment successfully canceled." 
-                                       : "Failed to cancel appointment. Please try again.");
+
+        boolean isCancelled = patient.cancelAppointment(scanner);
+        if (isCancelled) {
+            System.out.println("Appointment successfully canceled.");
+        } else {
+            System.out.println("Failed to cancel appointment. Please try again.");
+        }
+
     }
 
     private void viewPastAppointmentOutcomeRecords() {
         System.out.println("Past Appointment Outcome Records:");
-        List<String> pastRecords = patient.viewPastAppointmentRecords(appointmentFilePath);
+        List<String> pastRecords = patient.viewPastAppointmentRecords();
 
         if (pastRecords.isEmpty()) {
             System.out.println("No past appointment outcome records found.");

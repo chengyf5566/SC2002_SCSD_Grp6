@@ -4,20 +4,29 @@ import java.util.List;
 
 public class Login {
 
-    // Method to authenticate a user and return role-specific values
-    public static int authenticate(List<Staff> staffList, String userID, String password) {
+    // Method to authenticate a user by checking both the Staff and Patient lists
+    public static String authenticate(String userID, String password, List<Staff> staffList, List<Patient> patientList) {
+        // Check if the userID exists in staffList
         for (Staff staff : staffList) {
-            // Check if userID and password match using inherited methods
-            if (staff.getUserId().equals(userID) && staff.getPassword().equals(password)) {
-                if (staff.getRole().equalsIgnoreCase("Doctor")) {
-                    return 2;
-                } else if (staff.getRole().equalsIgnoreCase("Pharmacist")) {
-                    return 3;
-                } else if (staff.getRole().equalsIgnoreCase("Administrator")) {
-                    return 4;
+            if (staff.getUserID().equals(userID)) {
+                // If a match is found, check the password
+                if (staff.getPassword().equals(password)) {
+                    return "staff"; // Return "staff" if valid staff
                 }
             }
         }
-        return 0;
+
+        // Check if the userID exists in patientList
+        for (Patient patient : patientList) {
+            if (patient.getPatientID().equals(userID)) {
+                // If a match is found, check the password
+                if (patient.getPatientPassword().equals(password)) {
+                    return "patient"; // Return "patient" if valid patient
+                }
+            }
+        }
+
+        // If no match is found
+        return "invalid";  // Return "invalid" if no match
     }
 }
