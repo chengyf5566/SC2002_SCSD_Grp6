@@ -1,4 +1,4 @@
-﻿Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Dcotor,Assigned Doctor Name,Past diagnoses,Prescriped Medicine,Consulation Notes,Type of Service
-P1001,Alice Brown,14/5/1980,Female,A+,990,alice.brown@example.com,D001,,headache,Pandaol,headache,consultation
-P1002,Bob Stone,22/11/1975,Male,B+,991,bob.stone@example.com,D002,,headache fever,Panadol,fever,consultation
-P1003,Charlie White,8/7/1990,Male,O-,992,charlie.white@example.com,D003,,headache,Panadol,headache,consultation
+Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Doctor,Assigned Doctor Name,Past Diagnoses,Prescribed Medicine,Consultation Notes,Type of Service
+P1001,Alice Brown,14/5/1980,Female,A+,666,hell,D001,Dr House,headache,Pandaol,headache,consultation
+P1002,Bob Stone,22/11/1975,Male,B+,991,bob.stone@example.com,D002,Dr Strange,headache fever,Panadol,fever,consultation
+P1003,Charlie White,8/7/1990,Male,O-,992,charlie.white@example.com,D003,Dr Who,headache,Panadol,headache,consultation

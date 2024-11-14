@@ -7,20 +7,29 @@ import java.util.List;
 
 public class CsvReaderPatient {
 
-    private String filePath = "Patient_List.csv";;
+    private String filePath;
     private List<Patient> patientList = new ArrayList<>();
+    private boolean isInitialized = false;
 
     public CsvReaderPatient(String filePath) {
         this.filePath = filePath;
+        readAndInitializePatient();  // Load patient data at initialization
     }
 
     // Method to read data from CSV and create Patient objects
     public void readAndInitializePatient() {
+        if (isInitialized) return; // Exit if already initialized
+
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             br.readLine(); // Skip the header row
 
             while ((line = br.readLine()) != null) {
+                line = line.trim(); // Trim whitespace to check if the line is empty
+                if (line.isEmpty()) {
+                    continue; // Skip empty lines
+                }
+
                 String[] values = line.split(",");
 
                 // Ensure the record has the expected number of columns (13 in this case)
@@ -51,9 +60,21 @@ public class CsvReaderPatient {
 
                 patientList.add(patient);
             }
+            isInitialized = true; // Mark as initialized to avoid re-reading
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Method to get a patient by ID
+    public Patient getPatientByID(String patientID) {
+        for (Patient patient : patientList) {
+            if (patient.getPatientID().equals(patientID)) {
+                return patient;
+            }
+        }
+        System.out.println("No patient found with ID: " + patientID);
+        return null;
     }
 
     // Getter for the patient list
@@ -63,7 +84,7 @@ public class CsvReaderPatient {
 
     // Method to write patient data back to CSV
     public void writePatientDataToCSV() {
-        try (FileWriter writer = new FileWriter(filePath)) {
+        try (FileWriter writer = new FileWriter(filePath, false)) { // Open in overwrite mode
             // Write the header row
             writer.write("Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Doctor," +
                          "Assigned Doctor Name,Past Diagnoses,Prescribed Medicine,Consultation Notes,Type of Service\n");
