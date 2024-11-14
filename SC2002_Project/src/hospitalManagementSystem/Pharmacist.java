@@ -9,9 +9,13 @@ public class Pharmacist extends Staff {
 	private List<Medication> medicationList; // Medication list for inventory management
     private CsvReaderInventory csvReaderInventory; // Inventory csv file reader
     
+    private List<Appointment> appointmentList;
+    private CsvReaderAppointment csvReaderAppointment;
+    
     // Define the file paths for CSV files
     private String inventoryFilePath = "Medicine_List.csv";
     
+    private String filePath_Appointment = "Appointment_Outcome.csv";
     
     // Method to initialize medication inventory from CSV
     public void initializeInventoryFromCSV(String inventoryFilePath) {
@@ -20,13 +24,27 @@ public class Pharmacist extends Staff {
         this.medicationList = csvReaderInventory.getMedicationList();
     }
     
+    // Method to initialize appointment outcome from CSV
+    public void readAndInitializeAppointments(String filePath_Appointment) {
+        this.csvReaderAppointment = new CsvReaderAppointment(filePath_Appointment);
+        csvReaderAppointment.readAndInitializeAppointments();
+        this.appointmentList = csvReaderAppointment.getAppointmentList();
+        
+        // Debugging: Print out the appointments after initialization
+        System.out.println("Appointments loaded: " + appointmentList.size());
+        for (Appointment appointment : appointmentList) {
+            System.out.println(appointment); // Assuming the toString method in Appointment prints useful details
+        }
+    }
+    
+    
     public void manageInventoryStock(Scanner scanner) {
         boolean exit = false;
         while (!exit) {
             System.out.println("\n--- Manage Inventory Stock ---");
             System.out.println("1. View Medication Inventory");
             System.out.println("2. Set Replenish Request");
-            System.out.println("3. Exit");
+            System.out.println("3. Return to Menu");
 
             System.out.print("Select an option: ");
             int choice = scanner.nextInt();
@@ -57,35 +75,40 @@ public class Pharmacist extends Staff {
 	}
 	
 	public void setReplenishRequest(Scanner scanner) {
-        System.out.print("Enter Medicine Name to set replenish request: ");
-        String name = scanner.nextLine().trim();
+	    System.out.println("\n--- Medication Inventory ---");
+	    for (int i = 0; i < medicationList.size(); i++) {
+	        System.out.println((i + 1) + ". " + medicationList.get(i).getMedicineName());
+	    }
 
-        // Find the medication by its name
-        Medication medicationToUpdate = medicationList.stream()
-                .filter(med -> med.getMedicineName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
+	    System.out.print("Enter the number of the medication to set replenish request: ");
+	    int medicationChoice = scanner.nextInt();
+	    scanner.nextLine(); // Consume newline character
 
-        if (medicationToUpdate != null) {
-            // Set the replenish request to "Yes"
-            medicationToUpdate.setReplenishRequest("Yes");
+	    // Validate the user's choice
+	    if (medicationChoice < 1 || medicationChoice > medicationList.size()) {
+	        System.out.println("Invalid selection. Please try again.");
+	        return;
+	    }
 
-            // Ask for the replenish amount
-            System.out.print("Enter Replenish Request Amount: ");
-            int replenishAmount = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+	    // Get the selected medication based on user choice
+	    Medication medicationToUpdate = medicationList.get(medicationChoice - 1);
 
-            // Set the replenish request amount in the medication
-            medicationToUpdate.setReplenishRequestAmount(replenishAmount);
+	    // Set the replenish request to "Yes"
+	    medicationToUpdate.setReplenishRequest("Yes");
 
-            System.out.println("Replenish request updated for " + medicationToUpdate.getMedicineName());
+	    // Ask for the replenish amount
+	    System.out.print("Enter Replenish Request Amount: ");
+	    int replenishAmount = scanner.nextInt();
+	    scanner.nextLine(); // Consume the newline character
 
-            // Write the updated inventory to CSV
-            csvReaderInventory.writeInventoryToCSV(inventoryFilePath);
-        } else {
-            System.out.println("No medication found with this name.");
-        }
-    }
+	    // Set the replenish request amount in the medication
+	    medicationToUpdate.setReplenishRequestAmount(replenishAmount);
+
+	    System.out.println("Replenish request updated for " + medicationToUpdate.getMedicineName());
+
+	    // Write the updated inventory to CSV
+	    csvReaderInventory.writeInventoryToCSV(inventoryFilePath);
+	}
 	
 	
 	
@@ -95,94 +118,87 @@ public class Pharmacist extends Staff {
         super(userID, password, role, gender, name, age);  // Pass data to Staff constructor
     }
 
-    
-    /*
-    // Method to view all prescriptions from appointment outcomes
-    public void viewAppointmentOutcomeRecords(List<AppointmentOutcome> outcomes) {
-    }
-
-   
-    // Method to update the status of a specific prescription by ID
-    public void updatePrescriptionStatus(String appointmentID, String prescriptionID, String newStatus, List<AppointmentOutcome> outcomes) {
-        boolean appointmentFound = false;
-        boolean found = false; 
-    
-        // Iterate through each AppointmentOutcome
-        for (AppointmentOutcome outcome : outcomes) {
-            // Check if the appointment ID matches the given ID
-            if (outcome.getAppointment().getAppointmentID().equals(appointmentID)) {
-                appointmentFound = true; // Appointment ID found
-                // Iterate through prescriptions within the current AppointmentOutcome
-                for (Prescription prescription : outcome.getPrescriptions()) {
-                    // Check if the prescription ID matches the given ID
-                    if (prescription.getPrescriptionID().equals(prescriptionID)) {
-                        // Update the prescription's status
-                        prescription.setPrescriptionStatus(newStatus);
-                        System.out.println("Updated Prescription ID " + prescriptionID + " in Appointment ID " + appointmentID + " to status: " + newStatus);
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) 
-                    break;
-            }
-        } 
-    
-        // Error message if appointment ID was not found
-        if (!appointmentFound) {
-            System.out.println("Appointment ID " + appointmentID + " not found.");
-        } else if (!found) {
-            // Error message if the appointment was found but the prescription ID was not updated
-            System.out.println("Prescription ID " + prescriptionID + " not found in Appointment ID " + appointmentID + ".");
+    // Method to view all appointments
+    public void viewAppointments() {
+        System.out.println("\nAppointments:");
+        for (Appointment appointment : csvReaderAppointment.getAppointmentList()) {
+            System.out.println(appointment);
         }
     }
-
-    // Method to view the current medication inventory
-    public void viewInventory(List<Medication> inventory) {
-        System.out.println("Medication Inventory:");
-        if (inventory.isEmpty()) {
-            System.out.println("No medications found in inventory.");
-        } else {
-            for (Medication med : inventory) {
-                System.out.println("Medication Name: " + med.getName() + ", Stock: " + med.getQuantity() +
-                                   ", Low Stock Alert: " + med.getLowStockAlert());
+    
+    public void dispenseMedication(Scanner scanner) {
+        // Step 1: Display appointments with "Completed" status and "Pending" medication status
+        List<Appointment> pendingAppointments = new ArrayList<>();
+        for (Appointment appointment : appointmentList) {
+            if (appointment.getAppointmentStatus().equalsIgnoreCase("Completed") &&
+                appointment.getPrescribedMedicationsStatus().equalsIgnoreCase("Pending")) {
+                pendingAppointments.add(appointment);
             }
         }
-    }
 
-    // Method to request replenishment of a specific medicine
-    public void submitReplenishmentRequest(String medicineName, int quantity, List<Medication> inventory) {
-        boolean found = false;
-        
-        // Iterate through the medication inventory
-        for (Medication med : inventory) {
-            // Check for a case-insensitive match with the medication name
-            if (med.getName().equalsIgnoreCase(medicineName)) {
-                // Medication found, create a replenishment request
-                ReplenishmentRequest request = new ReplenishmentRequest(med, quantity);
-                ReplenishmentRequest.addRequest(request); // Submit the replenishment request
-                System.out.println("Replenishment for " + quantity + " units of " + medicineName + " submitted.");
-                found = true;
-                break;
-            }
+        // Check if there are any pending appointments that meet the criteria
+        if (pendingAppointments.isEmpty()) {
+            System.out.println("No pending appointments with completed status found.");
+            return;
         }
-        // Error messageif the medication was not found in the inventory
-        if (!found) {
-            System.out.println("Medication " + medicineName + " not found in the inventory.");
-        }
-    }
 
-    // Method to view all replenishment requests
-    public void viewReplenishmentRequests(List<ReplenishmentRequest> requestList) {
-        System.out.println("Listing all replenishment requests:");
-        // Iterate through each replenishment request in the request list
-        for (ReplenishmentRequest request : requestList) {
-            // Display details about each replenishment request
-            System.out.println("Medication: " + request.getMedication().getName() 
-                + ", Quantity: " + request.getQuantityRequested() 
-                + ", Date: " + request.getRequestDate() 
-                + ", Status: " + request.getStatus());
+        // Show pending appointments to pharmacist
+        System.out.println("\n--- Pending Appointments ---");
+        for (int i = 0; i < pendingAppointments.size(); i++) {
+            System.out.println((i + 1) + ". " + pendingAppointments.get(i));
         }
+
+        System.out.print("\nChoose which appointment to dispense medication for: ");
+        int appointmentChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (appointmentChoice < 1 || appointmentChoice > pendingAppointments.size()) {
+            System.out.println("Invalid selection.");
+            return;
+        }
+
+        Appointment selectedAppointment = pendingAppointments.get(appointmentChoice - 1);
+
+        // Step 2: Choose Medication
+        System.out.println("\n--- Medication Inventory ---");
+        for (int i = 0; i < medicationList.size(); i++) {
+            System.out.println((i + 1) + ". " + medicationList.get(i).getMedicineName());
+        }
+
+        System.out.print("\nEnter the number of the medication to dispense: ");
+        int medicationChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (medicationChoice < 1 || medicationChoice > medicationList.size()) {
+            System.out.println("Invalid selection.");
+            return;
+        }
+
+        Medication selectedMedication = medicationList.get(medicationChoice - 1);
+
+        // Step 3: Choose Medication Amount
+        System.out.print("Enter the amount of " + selectedMedication.getMedicineName() + " to dispense: ");
+        int dispenseAmount = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (dispenseAmount > selectedMedication.getCurrentStock()) {
+            System.out.println("Insufficient stock to dispense this amount.");
+            return;
+        }
+
+        // Step 4: Update Appointment Status
+        selectedAppointment.setPrescribedMedicationsStatus("Dispensed");
+
+        // Update the appointment CSV with the new status
+        csvReaderAppointment.writeAppointmentFile(filePath_Appointment);
+
+        // Step 5: Decrease Stock Level in Inventory
+        selectedMedication.setCurrentStock(selectedMedication.getCurrentStock() - dispenseAmount);
+
+        // Write updated inventory back to CSV
+        csvReaderInventory.writeInventoryToCSV(inventoryFilePath);
+
+        System.out.println("Medication dispensed successfully for Patient ID: " + selectedAppointment.getPatientId());
+        System.out.println("Updated stock for " + selectedMedication.getMedicineName() + ": " + selectedMedication.getCurrentStock());
     }
-    */
 }

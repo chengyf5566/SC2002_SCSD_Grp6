@@ -1,10 +1,7 @@
-Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consulation Notes
-D001,Dr House,P1001,Alice Brown,01 12 2024,1400,,Comfirmed,consultation,panadol,dispensed,headache,
-D002,Dr Strage,P1002,Luffy,01 12 2024,1400,,Pending,consultation,antibiotics,dispensed,infection,
-D003,Dr Who,P1003,Ace,01 12 2024,1400,,Completed,consultation,panadol,dispensed,headache,
-D001,Dr House,P1001,Alice Brown,12 13 1234,1400,1430,Pending,,,,,
-D001,Dr House,P1001,Alice Brown,22 11 3333,1245,1315,Pending
-D001,Dr House,P1001,Alice Brown,30 11 2034,1530,1600,Completed,,,,,
-D001,Dr House,P1001,Alice Brown,12 13 1234,1234,1304,Completed,,,,,
-D001,Dr House,P1001,Alice Brown,22 11 3333,1245,1315,Canceled,,,,,
-D001,Dr House,P1001,Alice Brown,11 12 2013,2400,0030,Pending
+Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consultation Notes
+D001,John Smith,P1001,Alice Brown,01 12 2024,1400,1430,Confirmed,null,null,null,null,null
+D002,Megan,P1002,Bob Stone,02 12 2024,1400,1430,Completed,X-Ray,FluMedicine,Dispensed,Pneumonia,ChestPain
+D003,John Wick,P1003,Charlie White,03 12 2024,1400,1430,Completed,consultation,panadol,Dispensed,headache,headache
+D001,John Smith,P1002,Bob Stone,04 12 2024,1400,1430,Completed,Consultation,Charcoal,Dispensed,FoodPoisoning,Stomachache
+D002,Megan,P1003,Charlie White,05 12 2024,1400,1430,Cancelled,null,null,null,null,null
+D002,Megan,P1001,Alice Brown,02 12 2024,1400,1430,Completed,Consultation,Chemo,Pending,Cancer,Cancer
