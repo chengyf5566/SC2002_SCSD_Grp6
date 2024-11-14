@@ -5,15 +5,13 @@ import java.util.Scanner;
 public class PatientMenuTest {
 
     public static void main(String[] args) {
-        // Define file paths
-        String appointmentFilePath = "Appointment_Outcome.csv";
-        String patientListFilePath = "Patient_List.csv";
+        
 
         // Specify the patient ID to load
         String patientID = "P1001";
 
         // Load the patient data using CsvReaderPatient
-        CsvReaderPatient csvReader = new CsvReaderPatient(patientListFilePath);
+        CsvReaderPatient csvReader = new CsvReaderPatient();
         csvReader.readAndInitializePatient();
 
         // Retrieve the specific patient based on patient ID
@@ -25,7 +23,7 @@ public class PatientMenuTest {
         }
 
         // Initialize the PatientMenu with the patient, appointment file path, and patient list file path
-        PatientMenu patientMenu = new PatientMenu(patient, appointmentFilePath, patientListFilePath);
+        PatientMenu patientMenu = new PatientMenu(patient);
 
         // Create a scanner for user input
         Scanner scanner = new Scanner(System.in);

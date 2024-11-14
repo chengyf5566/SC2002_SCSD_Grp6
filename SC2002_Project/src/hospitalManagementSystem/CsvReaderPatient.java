@@ -1,12 +1,6 @@
 package hospitalManagementSystem;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -14,15 +8,15 @@ import java.util.ArrayList;
 
 public class CsvReaderPatient {
     
-    private String filePath = "Patient_List.csv";
+    private final String filePath = "Patient_List.csv"; // Path to the Patient_List CSV file
     private List<Patient> patientList = new ArrayList<>();
     private boolean isInitialized = false;
 
-    public CsvReaderPatient(String filePath) {
-        this.filePath = filePath;
+    public CsvReaderPatient() {
         readAndInitializePatient();  // Load patient data at initialization
     }
-    public void readAndInitializePatient(String filePath) {
+
+    public void readAndInitializePatient() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             // Skip BOM if present
             if (br.ready()) {
@@ -92,8 +86,6 @@ public class CsvReaderPatient {
         return null;
     }
 
-
-
     // Helper method to clean strings (strip unnecessary spaces or quotes)
     private String cleanString(String input) {
         return input.replaceAll("\"", "").trim();  // Remove any quotes and trim whitespace
@@ -104,8 +96,7 @@ public class CsvReaderPatient {
         return patientList;
     }
 
-
-    public void writePatientDataToCSV(String filePath) {
+    public void writePatientDataToCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the header row
             writer.write("Patient ID,Password,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Doctor ID," +
@@ -134,5 +125,4 @@ public class CsvReaderPatient {
             e.printStackTrace();
         }
     }
-
 }

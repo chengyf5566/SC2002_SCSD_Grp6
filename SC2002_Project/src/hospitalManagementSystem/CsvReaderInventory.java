@@ -6,16 +6,15 @@ import java.util.List;
 
 public class CsvReaderInventory {
 
-    private String filePath = "Medicine_List.csv"; // Path to the medication CSV file
-
-    public CsvReaderInventory(String filePath) {
-        this.filePath = filePath;
-    }
-
+    private final String filePath = "Medicine_List.csv"; // Path to the medication CSV file
     private List<Medication> medicationList = new ArrayList<>();
 
+    public CsvReaderInventory() {
+        readAndInitializeInventory();  // Load inventory data at initialization
+    }
+
     // Method to read data from CSV and create Medication objects
-    public void readAndInitializeInventory(String filePath) {
+    public void readAndInitializeInventory() {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             // Skip the header row
@@ -67,7 +66,7 @@ public class CsvReaderInventory {
     }
 
     // Method to write medication data to CSV
-    public void writeInventoryToCSV(String filePath) {
+    public void writeInventoryToCSV() {
         File file = new File(filePath);
 
         // Check if the file exists

@@ -6,8 +6,7 @@ public class AdministratorStaffManagementAndAppointmentTest {
     public static void main(String[] args) {
     	
     	// Define the file path for the CSV files
-        String staffFilePath = "Staff_List.csv";
-        String appointmentFilePath = "Appointment_Outcome.csv";
+
 
         Scanner scanner = new Scanner(System.in);
 
@@ -19,7 +18,7 @@ public class AdministratorStaffManagementAndAppointmentTest {
         //System.out.println("Staff initialized.");
         
         // Initialize appointments from the CSV file (ensure this file exists and is in the correct path)
-        admin.readAndInitializeAppointments(appointmentFilePath);
+        admin.readAndInitializeAppointments();
         System.out.println("Appointments initialized.");
         
         // Test viewAppointments method

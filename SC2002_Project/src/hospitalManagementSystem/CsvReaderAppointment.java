@@ -2,16 +2,15 @@ package hospitalManagementSystem;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CsvReaderAppointment {
-    private String filePath_Appointment = "Appointment_Outcome.csv"; // Path to the Appointment_Outcome_Record CSV file
+    private final String filePath_Appointment = "Appointment_Outcome.csv"; // Path to the Appointment_Outcome_Record CSV file
     private List<Appointment> appointmentList = new ArrayList<>();
 
-    public CsvReaderAppointment(String filePath_Appointment) {
-        this.filePath_Appointment = filePath_Appointment;
+    public CsvReaderAppointment() {
+    	readAndInitializeAppointments();
     }
 
     // Method to read and initialize appointments from CSV
@@ -71,7 +70,7 @@ public class CsvReaderAppointment {
     }
 
     // Method to update the appointment file after changes
-    public void writeAppointmentFile(String filePath_Appointment) {
+    public void writeAppointmentFile() {
         File file = new File(filePath_Appointment);
 
         // Check if the file exists

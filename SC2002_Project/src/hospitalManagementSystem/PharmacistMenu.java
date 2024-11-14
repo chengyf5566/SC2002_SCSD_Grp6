@@ -54,8 +54,8 @@ public class PharmacistMenu implements UserRoleMenu {
         Pharmacist pharmacist = new Pharmacist("P001", "securePassword", "Pharmacist", "Female", "Jane Doe", 35);
 
         // Initialize pharmacist's inventory and appointments from CSV files
-        pharmacist.initializeInventoryFromCSV("Medicine_List.csv");
-        pharmacist.readAndInitializeAppointments("Appointment_Outcome.csv");
+        pharmacist.initializeInventoryFromCSV();
+        pharmacist.readAndInitializeAppointments();
 
         // Create the PharmacistMenu and pass the pharmacist instance
         PharmacistMenu pharmacistMenu = new PharmacistMenu(pharmacist);

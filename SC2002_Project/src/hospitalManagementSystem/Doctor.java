@@ -17,15 +17,15 @@ public class Doctor extends Staff {
     private String filePath_Appointment = "Appointment_Outcome.csv"; 
 	
     // Method to initialize patient from CSV
-    public void readAndInitializePatient(String filePath_Patient) {
-        this.csvReaderPatient = new CsvReaderPatient(filePath_Patient);
-        csvReaderPatient.readAndInitializePatient(filePath_Patient);
+    public void readAndInitializePatient() {
+        this.csvReaderPatient = new CsvReaderPatient();
+        csvReaderPatient.readAndInitializePatient();
         this.patientList = csvReaderPatient.getPatientList();  // Assign the read patient list
     }
     
     // Method to initialize appointment outcome from CSV
-    public void readAndInitializeAppointments(String filePath_Appointment) {
-        this.csvReaderAppointment = new CsvReaderAppointment(filePath_Appointment);
+    public void readAndInitializeAppointments() {
+        this.csvReaderAppointment = new CsvReaderAppointment();
         csvReaderAppointment.readAndInitializeAppointments();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
         
@@ -168,7 +168,7 @@ public class Doctor extends Staff {
         }
 
         // After updating the status, write the changes back to the CSV
-        csvReaderAppointment.writeAppointmentFile(filePath_Appointment);
+        csvReaderAppointment.writeAppointmentFile();
     }
     
     public void recordAppointmentOutcome() {
@@ -266,8 +266,8 @@ public class Doctor extends Staff {
         patientToUpdate.setTypeOfService(updatedTypeOfService);
 
         // Step 5: Write changes back to CSV files
-        csvReaderAppointment.writeAppointmentFile(filePath_Appointment);
-        csvReaderPatient.writePatientDataToCSV(filePath_Patient);
+        csvReaderAppointment.writeAppointmentFile();
+        csvReaderPatient.writePatientDataToCSV();
 
         System.out.println("Appointment outcome recorded successfully for Patient ID " + patientId);
     }
@@ -279,8 +279,8 @@ public class Doctor extends Staff {
         Doctor doctor = new Doctor("D001", "password123", "Doctor", "Male", "Dr. Smith", 45);
 
         // Initialize patient and appointment data from CSV files
-        doctor.readAndInitializePatient("Patient_List.csv");  // Load patient data
-        doctor.readAndInitializeAppointments("Appointment_Outcome.csv");  // Load appointment data
+        doctor.readAndInitializePatient();  // Load patient data
+        doctor.readAndInitializeAppointments();  // Load appointment data
 
         // Use the Doctor's methods to view records
         Scanner scanner = new Scanner(System.in);
@@ -337,4 +337,3 @@ public class Doctor extends Staff {
 	}
 	
 	*/
-

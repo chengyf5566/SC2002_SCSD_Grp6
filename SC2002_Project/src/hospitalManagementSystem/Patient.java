@@ -419,8 +419,6 @@ public class Patient {
     public List<String> getPrescribedMedicines() { return prescribedMedicines; }
     public List<String> getConsultationNotes() { return consultationNotes; }
     public List<String> getTypeOfService() { return typeOfService; }
-    public void setContactNum(String contactNum) { this.contactNum = contactNum;}
-    public void setEmail(String email) {this.email = email;}
 
     // Setters
     public void setPatientID(String patientID) { this.patientID = patientID; }
