@@ -1,60 +1,89 @@
 package hospitalManagementSystem;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 public class CsvReaderPatient {
-
-    private String filePath;
+    
+    private String filePath = "Patient_List.csv";
     private List<Patient> patientList = new ArrayList<>();
 
     public CsvReaderPatient(String filePath) {
         this.filePath = filePath;
     }
 
-    // Method to read data from CSV and create Patient objects
-    public void readAndInitializePatient() {
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            br.readLine(); // Skip the header row
+    public void readAndInitializePatient(String filePath) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
+            // Skip BOM if present
+            if (br.ready()) {
+                br.mark(3); // Mark the first 3 bytes
+                if (br.read() != 0xEF || br.read() != 0xBB || br.read() != 0xBF) {
+                    br.reset(); // No BOM, reset to the start
+                }
+            }
 
+            String line;
+            boolean isHeader = true;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-
-                // Ensure the record has the expected number of columns (13 in this case)
-                if (values.length < 13) {
-                    System.out.println("Incomplete record: " + line);
+                line = line.trim();  // Remove any extra spaces or newlines
+                if (isHeader) {
+                    isHeader = false;  // Skip the header row
                     continue;
                 }
 
-                // Extract and trim the values from the CSV
-                String patientID = values[0].trim();
-                String name = values[1].trim();
-                String dateOfBirth = values[2].trim();
-                String gender = values[3].trim();
-                String bloodType = values[4].trim();
-                String contactNumber = values[5].trim();
-                String email = values[6].trim();
-                String assignedDoctorID = values[7].trim();
-                String assignedDoctorName = values[8].trim();
-                List<String> pastDiagnoses = Arrays.asList(values[9].trim().split(" "));
-                List<String> prescribedMedicines = Arrays.asList(values[10].trim().split(" "));
-                String consultationNotes = values[11].trim();
-                String typeOfService = values[12].trim();
+                String[] values = line.split(","); // Assuming the CSV is comma-separated
 
-                // Create a Patient object
-                Patient patient = new Patient(patientID, "", name, gender, patientID, dateOfBirth, bloodType,
-                        contactNumber, email, assignedDoctorID, assignedDoctorName,
-                        pastDiagnoses, prescribedMedicines, consultationNotes, typeOfService);
+                // Ensure the record has the expected number of columns (14 in this case)
+                if (values.length == 14) {
+                    // Extract and clean the values
+                    String patientID = cleanString(values[0]);
+                    String password = cleanString(values[1]); // Password column
+                    String name = cleanString(values[2]);
+                    String dobString = cleanString(values[3]); // Date as string in format dd/MM/yyyy
+                    String gender = cleanString(values[4]);
+                    String bloodType = cleanString(values[5]);
+                    String contactNumber = cleanString(values[6]);
+                    String email = cleanString(values[7]);
+                    String assignedDoctorID = cleanString(values[8]);
+                    String assignedDoctorName = cleanString(values[9]);
 
-                patientList.add(patient);
+                    // Handle lists (split by space or comma as needed)
+                    List<String> pastDiagnoses = new ArrayList<>(Arrays.asList(cleanString(values[10]).split(" ")));
+                    List<String> prescribedMedicines = new ArrayList<>(Arrays.asList(cleanString(values[11]).split(" ")));
+                    List<String> consultationNotes = new ArrayList<>(Arrays.asList(cleanString(values[12]).split(" ")));
+                    List<String> typeOfService = new ArrayList<>(Arrays.asList(cleanString(values[13]).split(" ")));
+
+                    // Create a Patient object with the data
+                    Patient patient = new Patient(patientID, password, name, dobString, gender, bloodType,
+                            contactNumber, email, assignedDoctorID, assignedDoctorName,
+                            pastDiagnoses, prescribedMedicines, consultationNotes, typeOfService);
+
+                    // Add patient to the patientList
+                    patientList.add(patient);
+                } else {
+                    System.out.println("Skipping invalid line: " + line);  // Debugging
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+    // Helper method to clean strings (strip unnecessary spaces or quotes)
+    private String cleanString(String input) {
+        return input.replaceAll("\"", "").trim();  // Remove any quotes and trim whitespace
+    }
+
 
     // Getter for the patient list
     public List<Patient> getPatientList() {
@@ -62,15 +91,16 @@ public class CsvReaderPatient {
     }
 
     // Method to write patient data back to CSV
-    public void writePatientDataToCSV() {
-        try (FileWriter writer = new FileWriter(filePath)) {
+    public void writePatientDataToCSV(String filePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the header row
-            writer.write("Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Doctor," +
+            writer.write("Patient ID,Password,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Doctor ID," +
                          "Assigned Doctor Name,Past Diagnoses,Prescribed Medicine,Consultation Notes,Type of Service\n");
 
             // Write each patient's data
             for (Patient patient : patientList) {
                 writer.write(patient.getPatientID() + ","
+                        + patient.getPatientPassword() + "," // Include Password if needed
                         + patient.getName() + ","
                         + patient.getDateOfBirth() + ","
                         + patient.getGender() + ","
@@ -81,8 +111,8 @@ public class CsvReaderPatient {
                         + patient.getAssignedDoctorName() + ","
                         + String.join(" ", patient.getPastDiagnoses()) + ","
                         + String.join(" ", patient.getPrescribedMedicines()) + ","
-                        + patient.getConsultationNotes() + ","
-                        + patient.getTypeOfService() + "\n");
+                        + String.join(" ", patient.getConsultationNotes()) + ","
+                        + String.join(" ", patient.getTypeOfService()) + "\n");
             }
 
             System.out.println("Patient data successfully written to CSV.");
@@ -90,4 +120,5 @@ public class CsvReaderPatient {
             e.printStackTrace();
         }
     }
+
 }
