@@ -5,18 +5,21 @@ import java.util.Scanner;
 
 public class App {
     private List<Staff> staffList;
+    private List<Patient> patientList; // Separate list for patients
+    private boolean authenticated = false;
     private int role = 0;
-    boolean authenticated = false;
-    String userID = "1234";
-    String password = "1234";
+    private String userID;
+    private String password;
 
-    // Define the file path for the CSV file
-    String FilePath_Staff = "Staff_List.csv";
+    // Define file paths
+    private String FilePath_Staff = "Staff_List.csv";
+    private String FilePath_Patient = "Patient_List.csv";
     
     public static void main(String[] args) {
         App app = new App();
-        app.initializeStaff();  // Initialize staff from the CSV file at the start
-        app.run();  // Run the main program loop
+        app.initializeStaff();     // Initialize staff from CSV
+        app.initializePatients();  // Initialize patients from CSV
+        app.run();                 // Run the main program loop
     }
 
     // Main program loop
@@ -31,43 +34,67 @@ public class App {
             System.out.print("Enter Password: ");
             password = scanner.nextLine();
 
-            // Authenticate user and get the role
-            role = login.authenticate(staffList, userID, password);
-
-            if (role != 0) {
-                System.out.println("Authentication successful. Role: " + role);
+            // Check if the user exists in patient list
+            Patient patient = findPatient(userID);
+            if (patient != null && patient.getPassword().equals(password)) {
+                role = 1;
                 authenticated = true;
+                System.out.println("Authentication successful. Role: Patient");
             } else {
-                System.out.println("Authentication failed. Please try again.");
+                // Check if the user exists in staff list
+                Staff staff = findStaff(userID);
+                if (staff != null && staff.getPassword().equals(password)) {
+                    role = assignRole(staff);
+                    authenticated = true;
+                    System.out.println("Authentication successful. Role: " + staff.getRole());
+                } else {
+                    System.out.println("Authentication failed. Please try again.");
+                }
             }
         }
 
         // Main menu loop
         boolean exit = false;
-        
         while (!exit) {
-
             UserRoleMenu menu = null;
+
             // Determine the appropriate menu based on the user's role
             switch (role) {
                 case 1:
-                    menu = new PatientMenu();
+                    Patient patient = findPatient(userID);
+                    if (patient != null) {
+                        menu = new PatientMenu(patient);
+                    } else {
+                        System.out.println("Patient not found.");
+                        exit = true;
+                    }
                     break;
                 case 2:
-                    menu = new DoctorMenu();
+                    Doctor doctor = (Doctor) findStaff(userID);
+                    if (doctor != null) {
+                        menu = new DoctorMenu(doctor);
+                    } else {
+                        System.out.println("Doctor not found.");
+                        exit = true;
+                    }
                     break;
                 case 3:
-                    Pharmacist pharmacist = findPharmacist(userID);
+                    Pharmacist pharmacist = (Pharmacist) findStaff(userID);
                     if (pharmacist != null) {
                         menu = new PharmacistMenu(pharmacist);
                     } else {
                         System.out.println("Pharmacist not found.");
                         exit = true;
                     }
-                    exit = true;
                     break;
                 case 4:
-                    menu = new AdministratorMenu();
+                    Administrator admin = (Administrator) findStaff(userID);
+                    if (admin != null) {
+                        menu = new AdministratorMenu(admin);
+                    } else {
+                        System.out.println("Administrator not found.");
+                        exit = true;
+                    }
                     break;
                 case 5:
                     System.out.println("Logging out...");
@@ -90,18 +117,43 @@ public class App {
 
     // Method to initialize staff objects from the CSV file
     public void initializeStaff() {
-        CsvReaderStaff csvReaderStaff = new CsvReaderStaff(FilePath_Staff);
-        csvReaderStaff.readAndInitializeStaff(FilePath_Staff);
+        CsvReaderStaff csvReaderStaff = new CsvReaderStaff();
+        csvReaderStaff.readAndInitializeStaff();
         staffList = csvReaderStaff.getStaffList();
     }
 
-    // Method to find and return the Pharmacist by userID
-    public Pharmacist findPharmacist(String userID) {
-        for (Staff staff : staffList) {
-            if (staff instanceof Pharmacist && staff.getUserID().equals(userID)) {
-                return (Pharmacist) staff;
+    // Method to initialize patient objects from the CSV file
+    public void initializePatients() {
+        CsvReaderPatient csvReaderPatient = new CsvReaderPatient();
+        csvReaderPatient.readAndInitializePatient();
+        patientList = csvReaderPatient.getPatientList();
+    }
+
+    // Method to find and return the Patient by userID
+    public Patient findPatient(String userID) {
+        for (Patient patient : patientList) {
+            if (patient.getUserID().equals(userID)) {
+                return patient;
             }
         }
-        return null;  // Return null if pharmacist is not found
+        return null;  // Return null if patient is not found
+    }
+
+    // Method to find and return the Staff by userID
+    public Staff findStaff(String userID) {
+        for (Staff staff : staffList) {
+            if (staff.getUserID().equals(userID)) {
+                return staff;
+            }
+        }
+        return null;  // Return null if staff is not found
+    }
+
+    // Method to assign role based on staff type
+    private int assignRole(Staff staff) {
+        if (staff instanceof Doctor) return 2;
+        if (staff instanceof Pharmacist) return 3;
+        if (staff instanceof Administrator) return 4;
+        return 0;
     }
 }

@@ -1,15 +1,17 @@
 package hospitalManagementSystem;
 
 import java.util.Scanner;
+import java.util.List;
 
 public class PatientMenu implements UserRoleMenu {
     private Patient patient;
+    private CsvReaderPatient csvReaderPatient;
     private String appointmentFilePath;
 
-    // Constructor to initialize Patient and file path
-    public PatientMenu(Patient patient, String appointmentFilePath) {
+    // Constructor to initialize Patient and CSV readers
+    public PatientMenu(Patient patient) {
         this.patient = patient;
-        this.appointmentFilePath = appointmentFilePath;
+        this.csvReaderPatient.readAndInitializePatient(); // Load patient data
     }
 
     @Override
@@ -19,7 +21,7 @@ public class PatientMenu implements UserRoleMenu {
             System.out.println("\nPatient Menu:");
             System.out.println("1. View Medical Record");
             System.out.println("2. Update Personal Information");
-            System.out.println("3. View Available Appointment Slots");
+            System.out.println("3. Change Password");
             System.out.println("4. Schedule an Appointment");
             System.out.println("5. Reschedule an Appointment");
             System.out.println("6. Cancel an Appointment");
@@ -32,53 +34,121 @@ public class PatientMenu implements UserRoleMenu {
             scanner.nextLine();
 
             switch (input) {
-                case 1:
-                    System.out.println("View Medical Record");
-                    break;
-                case 2:
-                    System.out.println("Update Personal Information");
-                    break;
-                case 3:
-                    System.out.println("View Available Appointment Slots");
-                    break;
-                case 4:
-                    scheduleAppointment(scanner);
-                    break;
-                case 5:
-                    System.out.println("Reschedule an Appointment");
-                    break;
-                case 6:
-                    System.out.println("Cancel an Appointment");
-                    break;
-                case 7:
-                    System.out.println("View Scheduled Appointments");
-                    break;
-                case 8:
-                    System.out.println("View Past Appointment Outcome Records");
-                    break;
-                case 9:
+                case 1 -> viewMedicalRecord();
+                case 2 -> updatePersonalInformation(scanner);
+                case 3 -> changePassword(scanner);
+                case 4 -> scheduleAppointment(scanner);
+                case 5 -> rescheduleAppointment(scanner);
+                case 6 -> cancelAppointment(scanner);
+                case 7 -> viewScheduledAppointments();
+                case 8 -> viewPastAppointmentOutcomeRecords();
+                case 9 -> {
                     System.out.println("Logout\n");
                     exit = true;
-                    break;
-                default:
-                    System.out.println("Invalid option. Try again.");
+                }
+                default -> System.out.println("Invalid option. Try again.");
             }
         }
     }
 
-    // Method to handle scheduling an appointment
+    private void viewMedicalRecord() {
+        Patient patientDetails = csvReaderPatient.getPatientByID(patient.getPatientID());
+
+        if (patientDetails != null) {
+            System.out.println("Medical Record:");
+            System.out.println("Name: " + patientDetails.getName());
+            System.out.println("Date of Birth: " + patientDetails.getDateOfBirth());
+            System.out.println("Gender: " + patientDetails.getGender());
+            System.out.println("Blood Type: " + patientDetails.getBloodType());
+            System.out.println("Contact Number: " + patientDetails.getContactNum());
+            System.out.println("Email: " + patientDetails.getEmail());
+            System.out.println("Assigned Doctor Name: " + patientDetails.getAssignedDoctorName());
+            System.out.println("Past Diagnoses: " + (patientDetails.getPastDiagnoses().isEmpty() ? "None" : String.join(", ", patientDetails.getPastDiagnoses())));
+            System.out.println("Prescribed Medicines: " + (patientDetails.getPrescribedMedicines().isEmpty() ? "None" : String.join(", ", patientDetails.getPrescribedMedicines())));
+            System.out.println("Consultation Notes: " + (patientDetails.getConsultationNotes().isEmpty() ? "None" : String.join(", ", patientDetails.getConsultationNotes())));
+            System.out.println("Type of Service: " + (patientDetails.getTypeOfService().isEmpty() ? "None" : String.join(", ", patientDetails.getTypeOfService())));
+        } else {
+            System.out.println("Patient details not found.");
+        }
+    }
+
+    private void updatePersonalInformation(Scanner scanner) {
+        System.out.print("Enter new contact number: ");
+        String newContactNumber = scanner.nextLine();
+
+        System.out.print("Enter new email address: ");
+        String newEmail = scanner.nextLine();
+
+        patient.setContactNum(newContactNumber);
+        patient.setEmail(newEmail);
+
+        List<Patient> patients = csvReaderPatient.getPatientList();
+        for (Patient p : patients) {
+            if (p.getPatientID().equals(patient.getPatientID())) {
+                p.setContactNum(newContactNumber);
+                p.setEmail(newEmail);
+                break;
+            }
+        }
+
+        csvReaderPatient.writePatientDataToCSV();
+        System.out.println("Personal information updated successfully.");
+    }
+
+    private void changePassword(Scanner scanner) {
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.nextLine();
+
+        patient.setPatientPassword(newPassword);
+
+        List<Patient> patients = csvReaderPatient.getPatientList();
+        for (Patient p : patients) {
+            if (p.getPatientID().equals(patient.getPatientID())) {
+                p.setPatientPassword(newPassword);
+                break;
+            }
+        }
+
+        csvReaderPatient.writePatientDataToCSV();
+        System.out.println("Password updated successfully.");
+    }
+
     private void scheduleAppointment(Scanner scanner) {
         System.out.print("Enter the desired appointment date (DD MM YYYY): ");
         String date = scanner.nextLine();
         System.out.print("Enter the desired appointment time (HHMM): ");
         String time = scanner.nextLine();
 
-        // Attempt to schedule the appointment
         boolean isScheduled = patient.scheduleAppointment(date, time, appointmentFilePath);
-        if (isScheduled) {
-            System.out.println("Appointment successfully scheduled for " + date + " at " + time + ".");
+        System.out.println(isScheduled ? "Appointment successfully scheduled for " + date + " at " + time + "." 
+                                       : "Failed to schedule appointment. The slot might be unavailable.");
+    }
+
+    private void viewScheduledAppointments() {
+        System.out.println("Scheduled Appointments:");
+        patient.viewScheduledAppointments(appointmentFilePath).forEach(System.out::println);
+    }
+
+    private void rescheduleAppointment(Scanner scanner) {
+        boolean isRescheduled = patient.rescheduleAppointment(appointmentFilePath, scanner);
+        System.out.println(isRescheduled ? "Appointment successfully rescheduled." 
+                                         : "Failed to reschedule appointment. Please try again.");
+    }
+
+    private void cancelAppointment(Scanner scanner) {
+        boolean isCancelled = patient.cancelAppointment(appointmentFilePath, scanner);
+        System.out.println(isCancelled ? "Appointment successfully canceled." 
+                                       : "Failed to cancel appointment. Please try again.");
+    }
+
+    private void viewPastAppointmentOutcomeRecords() {
+        System.out.println("Past Appointment Outcome Records:");
+        List<String> pastRecords = patient.viewPastAppointmentRecords(appointmentFilePath);
+
+        if (pastRecords.isEmpty()) {
+            System.out.println("No past appointment outcome records found.");
         } else {
-            System.out.println("Failed to schedule appointment. The slot might be unavailable.");
+            pastRecords.forEach(System.out::println);
         }
     }
 }

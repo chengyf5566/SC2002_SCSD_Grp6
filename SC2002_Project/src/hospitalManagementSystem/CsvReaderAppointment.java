@@ -2,16 +2,15 @@ package hospitalManagementSystem;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CsvReaderAppointment {
-    private String filePath_Appointment = "Appointment_Outcome.csv"; // Path to the Appointment_Outcome_Record CSV file
+    private final String filePath_Appointment = "Appointment_Outcome.csv"; // Path to the Appointment_Outcome_Record CSV file
     private List<Appointment> appointmentList = new ArrayList<>();
 
-    public CsvReaderAppointment(String filePath_Appointment) {
-        this.filePath_Appointment = filePath_Appointment;
+    public CsvReaderAppointment() {
+    	readAndInitializeAppointments();
     }
 
     // Method to read and initialize appointments from CSV
@@ -35,16 +34,21 @@ public class CsvReaderAppointment {
                 }
 
                 String[] data = line.split(",");
-                if (data.length == 8) {  // Ensure there are 8 columns (doctorId, patientId, etc.)
+                if (data.length == 13) {  // Ensure there are 13 columns (doctorId, patientId, etc.)
                     Appointment appointment = new Appointment(
                         cleanString(data[0]),  // doctorId
-                        cleanString(data[1]),  // patientId
-                        cleanString(data[2]),  // dateOfAppointment
-                        cleanString(data[3]),  // appointmentStatus
-                        cleanString(data[4]),  // typeOfService
-                        cleanString(data[5]),  // prescribedMedications
-                        cleanString(data[6]),  // prescribedMedicationsStatus
-                        cleanString(data[7])   // consultationNotes
+                        cleanString(data[1]),  // doctorName
+                        cleanString(data[2]),  // patientId
+                        cleanString(data[3]),  // patientName
+                        cleanString(data[4]),  // appointmentDate
+                        cleanString(data[5]),  // appointmentStartTime
+                        cleanString(data[6]),  // appointmentEndTime
+                        cleanString(data[7]),  // appointmentStatus
+                        cleanString(data[8]),  // typeOfService
+                        cleanString(data[9]),  // prescribedMedications
+                        cleanString(data[10]), // prescribedMedicationsStatus
+                        cleanString(data[11]), // diagnosis
+                        cleanString(data[12])  // consultationNotes
                     );
                     appointmentList.add(appointment);
                 } else {
@@ -65,9 +69,8 @@ public class CsvReaderAppointment {
         return appointmentList;
     }
 
-
     // Method to update the appointment file after changes
-    public void writeAppointmentFile(String filePath_Appointment) {
+    public void writeAppointmentFile() {
         File file = new File(filePath_Appointment);
 
         // Check if the file exists
@@ -78,18 +81,23 @@ public class CsvReaderAppointment {
 
         // Proceed with writing to the existing file
         try (FileWriter writer = new FileWriter(file)) {
-            // Write the header
-            writer.write("Doctor ID,Patient ID,Date of appointment,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Consultation Notes\n");
+            // Write the header with the new columns
+            writer.write("Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consultation Notes\n");
 
             // Write each appointment's data
             for (Appointment appointment : appointmentList) {
                 writer.write(appointment.getDoctorId() + ","
+                        + appointment.getDoctorName() + ","
                         + appointment.getPatientId() + ","
+                        + appointment.getPatientName() + ","
                         + appointment.getDateOfAppointment() + ","
-                        + appointment.getAppointmentStatus() + "," // Write appointment status
+                        + appointment.getAppointmentStartTime() + ","
+                        + appointment.getAppointmentEndTime() + ","
+                        + appointment.getAppointmentStatus() + ","
                         + appointment.getTypeOfService() + ","
                         + appointment.getPrescribedMedications() + ","
                         + appointment.getPrescribedMedicationsStatus() + ","
+                        + appointment.getDiagnosis() + ","
                         + appointment.getConsultationNotes() + "\n");
             }
 
@@ -98,6 +106,4 @@ public class CsvReaderAppointment {
             e.printStackTrace();
         }
     }
-
-
 }
