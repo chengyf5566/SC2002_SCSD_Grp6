@@ -16,11 +16,12 @@ public class CsvReaderPatient {
     
     private String filePath = "Patient_List.csv";
     private List<Patient> patientList = new ArrayList<>();
+    private boolean isInitialized = false;
 
     public CsvReaderPatient(String filePath) {
         this.filePath = filePath;
+        readAndInitializePatient();  // Load patient data at initialization
     }
-
     public void readAndInitializePatient(String filePath) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             // Skip BOM if present
@@ -34,6 +35,7 @@ public class CsvReaderPatient {
             String line;
             boolean isHeader = true;
             while ((line = br.readLine()) != null) {
+
                 line = line.trim();  // Remove any extra spaces or newlines
                 if (isHeader) {
                     isHeader = false;  // Skip the header row
@@ -73,10 +75,23 @@ public class CsvReaderPatient {
                     System.out.println("Skipping invalid line: " + line);  // Debugging
                 }
             }
+            isInitialized = true; // Mark as initialized to avoid re-reading
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+  
+    // Method to get a patient by ID
+    public Patient getPatientByID(String patientID) {
+        for (Patient patient : patientList) {
+            if (patient.getPatientID().equals(patientID)) {
+                return patient;
+            }
+        }
+        System.out.println("No patient found with ID: " + patientID);
+        return null;
+    }
+
 
 
     // Helper method to clean strings (strip unnecessary spaces or quotes)
@@ -84,13 +99,12 @@ public class CsvReaderPatient {
         return input.replaceAll("\"", "").trim();  // Remove any quotes and trim whitespace
     }
 
-
     // Getter for the patient list
     public List<Patient> getPatientList() {
         return patientList;
     }
 
-    // Method to write patient data back to CSV
+
     public void writePatientDataToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the header row
