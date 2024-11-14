@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CsvReaderPatient {
 
-    private String filePath;
+    private String filePath = "Patient_List.csv";;
     private List<Patient> patientList = new ArrayList<>();
 
     public CsvReaderPatient(String filePath) {
