@@ -24,7 +24,7 @@ public class LoginMenu {
 
             // Authentication loop
             while (!authenticated) {
-                System.out.println("\n--- Login Menu ---");
+                System.out.println("--- Login Menu ---");
                 System.out.print("Enter User ID: ");
                 userID = scanner.nextLine();
                 System.out.print("Enter Password: ");
