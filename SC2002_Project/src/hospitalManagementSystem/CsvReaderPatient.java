@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
+public class CsvReaderPatient {  // Missing class declaration
 
     private final String filePath = "Patient_List.csv"; 
     private List<Patient> patientList = new ArrayList<>();
@@ -65,6 +66,7 @@ import java.util.ArrayList;
                     List<String> consultationNotes = new ArrayList<>(Arrays.asList(cleanString(values[12]).split(" ")));
                     List<String> typeOfService = new ArrayList<>(Arrays.asList(cleanString(values[13]).split(" ")));
 
+
                     // Create a Patient object with the data
                     Patient patient = new Patient(patientID, password, name, dobString, gender, bloodType,
                             contactNumber, email, assignedDoctorID, assignedDoctorName,
@@ -81,7 +83,6 @@ import java.util.ArrayList;
             e.printStackTrace();
         }
     }
-
 
     // Method to get a patient by ID
     public Patient getPatientByID(String patientID) {
@@ -112,19 +113,19 @@ import java.util.ArrayList;
 
             // Write each patient's data
             for (Patient patient : patientList) {
-                writer.write(patient.getPatientID() + ","
+                writer.write(patient.getPatientID() + "," 
                         + patient.getPatientPassword() + "," // Include Password if needed
-                        + patient.getName() + ","
-                        + patient.getDateOfBirth() + ","
-                        + patient.getGender() + ","
-                        + patient.getBloodType() + ","
-                        + patient.getContactNum() + ","
-                        + patient.getEmail() + ","
-                        + patient.getAssignedDoctorID() + ","
-                        + patient.getAssignedDoctorName() + ","
-                        + String.join(" ", patient.getPastDiagnoses()) + ","
-                        + String.join(" ", patient.getPrescribedMedicines()) + ","
-                        + String.join(" ", patient.getConsultationNotes()) + ","
+                        + patient.getName() + "," 
+                        + patient.getDateOfBirth() + "," 
+                        + patient.getGender() + "," 
+                        + patient.getBloodType() + "," 
+                        + patient.getContactNum() + "," 
+                        + patient.getEmail() + "," 
+                        + patient.getAssignedDoctorID() + "," 
+                        + patient.getAssignedDoctorName() + "," 
+                        + String.join(" ", patient.getPastDiagnoses()) + "," 
+                        + String.join(" ", patient.getPrescribedMedicines()) + "," 
+                        + String.join(" ", patient.getConsultationNotes()) + "," 
                         + String.join(" ", patient.getTypeOfService()) + "\n");
             }
 
@@ -134,6 +135,3 @@ import java.util.ArrayList;
         }
     }
 }
-		
-	
-	
