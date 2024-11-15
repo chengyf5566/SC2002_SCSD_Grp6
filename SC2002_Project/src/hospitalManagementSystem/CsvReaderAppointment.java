@@ -35,18 +35,25 @@ public class CsvReaderAppointment {
                     continue;
                 }
 
-                String[] data = line.split(",");
-                if (data.length == 13) {
-                    Appointment appointment = new Appointment(
-                        cleanString(data[0]), cleanString(data[1]), cleanString(data[2]), cleanString(data[3]),
-                        cleanString(data[4]), cleanString(data[5]), cleanString(data[6]), cleanString(data[7]),
-                        cleanString(data[8]), cleanString(data[9]), cleanString(data[10]), cleanString(data[11]),
-                        cleanString(data[12])
-                    );
-                    appointmentList.add(appointment);
-                } else {
-                    System.out.println("Skipping invalid line: " + line);
+                String[] data = line.split(",", -1); // Use -1 to keep trailing empty fields
+                if (data.length < 8) {
+                    System.out.println("Skipping invalid line due to insufficient fields: " + line);
+                    continue;
                 }
+
+                // Ensure we have at least 13 fields, filling missing ones with empty strings if necessary
+                String[] fullData = new String[13];
+                for (int i = 0; i < fullData.length; i++) {
+                    fullData[i] = (i < data.length) ? cleanString(data[i]) : "";
+                }
+
+                // Create an appointment with all fields (empty ones will default to "")
+                Appointment appointment = new Appointment(
+                    fullData[0], fullData[1], fullData[2], fullData[3],
+                    fullData[4], fullData[5], fullData[6], fullData[7],
+                    fullData[8], fullData[9], fullData[10], fullData[11], fullData[12]
+                );
+                appointmentList.add(appointment);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,16 +62,25 @@ public class CsvReaderAppointment {
 
     // Check if a specific appointment slot is available
     public boolean checkAvailability(String doctorID, String date, String time) {
+        LocalTime requestedTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"));
+
         for (Appointment appointment : appointmentList) {
             if (appointment.getDoctorId().equals(doctorID) &&
                 appointment.getDateOfAppointment().equals(date) &&
-                appointment.getAppointmentStartTime().equals(time) &&
                 !appointment.getAppointmentStatus().equalsIgnoreCase("Canceled")) {
-                return false;
+
+                LocalTime appointmentStartTime = LocalTime.parse(appointment.getAppointmentStartTime(), DateTimeFormatter.ofPattern("HHmm"));
+                LocalTime appointmentEndTime = LocalTime.parse(appointment.getAppointmentEndTime(), DateTimeFormatter.ofPattern("HHmm"));
+
+                // Check if the requested time overlaps with any existing appointment
+                if (!requestedTime.isBefore(appointmentStartTime) && !requestedTime.isAfter(appointmentEndTime)) {
+                    return false;
+                }
             }
         }
         return true;
     }
+
 
     // Add an appointment record
     public boolean addAppointmentRecord(String doctorID, String doctorName, String patientID, String patientName,
@@ -97,31 +113,99 @@ public class CsvReaderAppointment {
 
     // Helper to extract details from appointment string
     public String extractAppointmentDetail(String appointmentRecord, String field) {
+        // Split the record into fields
         String[] fields = appointmentRecord.split(", ");
-        switch (field) {
-            case "Date": return fields[4].split(": ")[1];
-            case "Time": return fields[5].split(": ")[1];
-            default: return "";
+
+        // Validate the number of fields
+        if (fields.length <= 5) {
+            System.out.println("Invalid appointment record: Not enough fields - " + appointmentRecord);
+            return "";
+        }
+
+        try {
+            switch (field) {
+                case "Date":
+                    // Check if the field contains "=" and split it
+                    if (fields[2].contains("=")) {
+                        return fields[2].split("=")[1].trim().replace("'", "");
+                    } else {
+                        System.out.println("Invalid Date format in record: " + appointmentRecord);
+                        return "";
+                    }
+                case "StartTime":
+                    // Check if the field contains "=" and split it
+                    if (fields[3].contains("=")) {
+                        return fields[3].split("=")[1].trim().replace("'", "");
+                    } else {
+                        System.out.println("Invalid StartTime format in record: " + appointmentRecord);
+                        return "";
+                    }
+                case "EndTime":
+                    // Check if the field contains "=" and split it
+                    if (fields[4].contains("=")) {
+                        return fields[4].split("=")[1].trim().replace("'", "");
+                    } else {
+                        System.out.println("Invalid EndTime format in record: " + appointmentRecord);
+                        return "";
+                    }
+                default:
+                    System.out.println("Unknown field requested: " + field);
+                    return "";
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error processing record: " + appointmentRecord + " - " + e.getMessage());
+            return "";
         }
     }
 
+
     // Replace appointment record
-    public boolean replaceAppointmentRecord(String patientID, String oldDate, String oldTime, String newDate, String newTime, String newStatus, String oldStatus) {
+    public boolean replaceAppointmentRecord(String patientID, String oldDate, String oldStartTime, String oldEndTime, String newDate, String newStartTime, String newStatus, String oldStatus) {
+        LocalTime newStart = LocalTime.parse(newStartTime, DateTimeFormatter.ofPattern("HHmm"));
+        LocalTime newEnd = newStart.plusMinutes(30); 
+
+        // Check for conflicts with other appointments
+        for (Appointment appointment : appointmentList) {
+            if (appointment.getPatientId().equals(patientID) &&
+                appointment.getDateOfAppointment().equals(newDate) &&
+                !appointment.getAppointmentStatus().equalsIgnoreCase("Canceled")) {
+
+                LocalTime existingStart = LocalTime.parse(appointment.getAppointmentStartTime(), DateTimeFormatter.ofPattern("HHmm"));
+                LocalTime existingEnd = LocalTime.parse(appointment.getAppointmentEndTime(), DateTimeFormatter.ofPattern("HHmm"));
+
+                // Check if the new time overlaps with an existing appointment
+                if (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)) {
+                    System.out.println("The selected time conflicts with an existing appointment: " +
+                                       "Start - " + appointment.getAppointmentStartTime() +
+                                       ", End - " + appointment.getAppointmentEndTime());
+                    return false;
+                }
+            }
+        }
+
+        // Update the matching appointment
         for (Appointment appointment : appointmentList) {
             if (appointment.getPatientId().equals(patientID) &&
                 appointment.getDateOfAppointment().equals(oldDate) &&
-                appointment.getAppointmentStartTime().equals(oldTime) &&
+                appointment.getAppointmentStartTime().equals(oldStartTime) &&
                 appointment.getAppointmentStatus().equalsIgnoreCase(oldStatus)) {
 
+                // Update the appointment details
                 appointment.setDateOfAppointment(newDate);
-                appointment.setAppointmentStartTime(newTime);
-                appointment.setAppointmentEndTime(LocalTime.parse(newTime, DateTimeFormatter.ofPattern("HHmm")).plusMinutes(30).format(DateTimeFormatter.ofPattern("HHmm")));
+                appointment.setAppointmentStartTime(newStartTime);
+                appointment.setAppointmentEndTime(newEnd.format(DateTimeFormatter.ofPattern("HHmm")));
                 appointment.setAppointmentStatus(newStatus);
+
                 return writeAppointmentFile();
             }
         }
+
         return false;
     }
+
+
+
+
 
     // Write appointment list to CSV file
     public boolean writeAppointmentFile() {
