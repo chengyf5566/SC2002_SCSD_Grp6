@@ -6,11 +6,11 @@ public class Doctor extends Staff {
 
     private List<Patient> patientList = new ArrayList<>();
     private CsvReaderPatient csvReaderPatient;
-    private final String patientFilePath = "Patient_List.csv";
+    //private final String patientFilePath = "Patient_List.csv";
 
     private List<Appointment> appointmentList;
     private CsvReaderAppointment csvReaderAppointment;
-    private final String appointmentFilePath = "Appointment_Outcome.csv";
+    //private final String appointmentFilePath = "Appointment_Outcome.csv";
     
     private List<Staff> staffList;
     private CsvReaderStaff csvReader;
@@ -43,7 +43,7 @@ public class Doctor extends Staff {
     // Method to initialize staff list  from CSV
     public void initializeStaffFromCSV() {        
         this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
-        csvReader.readAndInitializeStaff(); // Read and initialize staff from the CSV
+        csvReader.readCsv(); // Read and initialize staff from the CSV
         this.staffList = csvReader.getStaffList();  // Assign the read staff list
     }
 
@@ -58,18 +58,20 @@ public class Doctor extends Staff {
         boolean found = false;
         for (Patient patient : patientList) {
             if (patient.getPatientID().equalsIgnoreCase(patientId)) {
-                System.out.println("\n--- Medical Record for Patient ID: " + patientId + " ---");
+            	System.out.println("=====================================");
+                System.out.println("--- Medical Record for Patient ID: " + patientId + " ---");
                 System.out.println("Name: " + patient.getName());
                 System.out.println("Date of Birth: " + patient.getDateOfBirth());
                 System.out.println("Gender: " + patient.getGender());
                 System.out.println("Blood Type: " + patient.getBloodType());
                 System.out.println("Contact Number: " + patient.getContactNum());
                 System.out.println("Email: " + patient.getEmail());
-                System.out.println("Assigned Doctor: " + patient.getAssignedDoctorID() + " - " + patient.getAssignedDoctorName());
-                System.out.println("Past Diagnoses: " + patient.getPastDiagnoses());
-                System.out.println("Prescribed Medicines: " + patient.getPrescribedMedicines());
-                System.out.println("Consultation Notes: " + patient.getConsultationNotes());
-                System.out.println("Type of Service: " + patient.getTypeOfService());
+                System.out.println("Assigned Doctor Name: " + patient.getAssignedDoctorName());
+                System.out.println("Past Diagnoses: " + (patient.getPastDiagnoses().isEmpty() ? "None" : String.join(", ", patient.getPastDiagnoses())));
+                System.out.println("Prescribed Medicines: " + (patient.getPrescribedMedicines().isEmpty() ? "None" : String.join(", ", patient.getPrescribedMedicines())));
+                System.out.println("Consultation Notes: " + (patient.getConsultationNotes().isEmpty() ? "None" : String.join(", ", patient.getConsultationNotes())));
+                System.out.println("Type of Service: " + (patient.getTypeOfService().isEmpty() ? "None" : String.join(", ", patient.getTypeOfService())));
+                System.out.println("=====================================");
                 found = true;
                 break;
             }
@@ -266,7 +268,7 @@ public class Doctor extends Staff {
         }
 
         // Write updated staff data to CSV
-        csvReader.writeStaffToCSV();
+        csvReader.writeCSV();
         System.out.println("Password updated successfully.");
     }
 }

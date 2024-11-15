@@ -65,6 +65,7 @@ public class PatientMenu implements UserRoleMenu {
         Patient patientDetails = csvReaderPatient.getPatientByID(patient.getPatientID());
 
         if (patientDetails != null) {
+        	System.out.println("=====================================");
             System.out.println("Medical Record:");
             System.out.println("Name: " + patientDetails.getName());
             System.out.println("Date of Birth: " + patientDetails.getDateOfBirth());
@@ -77,6 +78,7 @@ public class PatientMenu implements UserRoleMenu {
             System.out.println("Prescribed Medicines: " + (patientDetails.getPrescribedMedicines().isEmpty() ? "None" : String.join(", ", patientDetails.getPrescribedMedicines())));
             System.out.println("Consultation Notes: " + (patientDetails.getConsultationNotes().isEmpty() ? "None" : String.join(", ", patientDetails.getConsultationNotes())));
             System.out.println("Type of Service: " + (patientDetails.getTypeOfService().isEmpty() ? "None" : String.join(", ", patientDetails.getTypeOfService())));
+            System.out.println("=====================================");
         } else {
             System.out.println("Patient details not found.");
         }

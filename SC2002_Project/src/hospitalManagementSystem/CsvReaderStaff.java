@@ -8,22 +8,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvReaderStaff {
+public class CsvReaderStaff implements CsvReader {
     
 
     private String filePath = "Staff_List.csv";
 
     // Constructor to initialize and read the staff list
     public CsvReaderStaff() {
-        readAndInitializeStaff();
-
+        readCsv();
     }
 
     // List to store staff members
     private List<Staff> staffList = new ArrayList<>();
 
     // Method to read data from CSV and create staff objects
-    public void readAndInitializeStaff() {
+    public void readCsv() {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             // Skip the header row
@@ -88,7 +87,7 @@ public class CsvReaderStaff {
     }
 
     // Method to write staff to CSV
-    public void writeStaffToCSV() {
+    public void writeCSV() {
         File file = new File(filePath);
 
         // Check if the file exists
