@@ -39,7 +39,7 @@ public class Pharmacist extends Staff {
     // Method to initialize staff list  from CSV
     public void initializeStaffFromCSV() {        
         this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
-        csvReader.readAndInitializeStaff(); // Read and initialize staff from the CSV
+        csvReader.readCsv(); // Read and initialize staff from the CSV
         this.staffList = csvReader.getStaffList();  // Assign the read staff list
     }
     
@@ -222,7 +222,7 @@ public class Pharmacist extends Staff {
         }
 
         // Write updated staff data to CSV
-        csvReader.writeStaffToCSV();
+        csvReader.writeCSV();
         System.out.println("Password updated successfully.");
     }
 }
