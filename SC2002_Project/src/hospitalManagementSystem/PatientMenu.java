@@ -133,7 +133,7 @@ public class PatientMenu implements UserRoleMenu {
         if (isScheduled) {
             System.out.println("Appointment successfully scheduled for " + date + " at " + time + ".");
         } else {
-            System.out.println("Failed to schedule appointment. The slot might be unavailable.");
+            System.out.println("Failed to schedule appointment.");
         }
 
     }

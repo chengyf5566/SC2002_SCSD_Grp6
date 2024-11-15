@@ -1,6 +1,8 @@
 package hospitalManagementSystem;
 
+import java.util.Arrays;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -76,13 +78,36 @@ public class Patient {
             LocalTime parsedTime = LocalTime.parse(time, timeFormatter);
             LocalTime endTime = parsedTime.plusMinutes(30);
 
+            // Validate that the time is within 08:00 and 21:00
+            LocalTime startBoundary = LocalTime.of(8, 0);
+            LocalTime endBoundary = LocalTime.of(21, 0);
+
+            if (parsedTime.isBefore(startBoundary) || endTime.isAfter(endBoundary)) {
+                System.out.println("The selected time must be between 08:00 and 21:00.");
+                return false;
+            }
+
             String formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd MM yyyy"));
             String formattedStartTime = parsedTime.format(DateTimeFormatter.ofPattern("HHmm"));
             String formattedEndTime = endTime.format(DateTimeFormatter.ofPattern("HHmm"));
 
             if (csvReaderAppointment.checkAvailability(assignedDoctorID, formattedDate, formattedStartTime)) {
-                return csvReaderAppointment.addAppointmentRecord(
+                boolean isAdded = csvReaderAppointment.addAppointmentRecord(
                         assignedDoctorID, assignedDoctorName, patientID, name, formattedDate, formattedStartTime, formattedEndTime, "Pending");
+
+                if (isAdded) {
+                    // Print the appointment details in the desired format
+                    System.out.println("Doctor Name = " + assignedDoctorName + 
+                                       ", Patient Name = " + name + 
+                                       ", Date of Appointment = " + formattedDate + 
+                                       ", Start Time = " + formattedStartTime + 
+                                       ", End Time = " + formattedEndTime + 
+                                       ", Status = Pending");
+                    return true;
+                } else {
+                    System.out.println("Failed to add the appointment record.");
+                    return false;
+                }
             } else {
                 System.out.println("The selected appointment slot is not available.");
                 return false;
@@ -92,6 +117,8 @@ public class Patient {
             return false;
         }
     }
+
+
 
     // Method to delete an appointment record
     public void deleteAppointmentRecord(String appointmentRecord) {
@@ -104,12 +131,36 @@ public class Patient {
     // Method to view scheduled appointments
     public List<String> viewScheduledAppointments() {
         List<String> appointments = csvReaderAppointment.getAppointmentsByPatientID(patientID, "Pending", "Confirmed");
+        List<String> formattedAppointments = new ArrayList<>();
 
         if (appointments.isEmpty()) {
             System.out.println("No pending or confirmed appointments found for Patient: " + getName());
+        } else {
+            for (String appointmentStr : appointments) {
+                // Parse the appointment string to extract the relevant fields
+                String[] parts = appointmentStr.split(", ");
+                String doctorName = parts[1].split("=")[1];
+                String patientName = parts[3].split("=")[1];
+                String dateOfAppointment = parts[4].split("=")[1];
+                String appointmentStartTime = parts[5].split("=")[1];
+                String appointmentEndTime = parts[6].split("=")[1];
+                String appointmentStatus = parts[7].split("=")[1];
+
+                // Format the extracted details
+                String formattedAppointment = "Doctor Name = " + doctorName +
+                                              ", Patient Name = " + patientName +
+                                              ", Date of Appointment = " + dateOfAppointment +
+                                              ", Start Time = " + appointmentStartTime +
+                                              ", End Time = " + appointmentEndTime +
+                                              ", Status = " + appointmentStatus;
+
+                formattedAppointments.add(formattedAppointment);
+            }
         }
-        return appointments;
+
+        return formattedAppointments;
     }
+
 
     // Method to reschedule an appointment
     public boolean rescheduleAppointment(Scanner scanner) {
@@ -126,7 +177,7 @@ public class Patient {
 
         System.out.print("Select the appointment number to reschedule: ");
         int choice = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Consume newline
 
         if (choice < 1 || choice > appointments.size()) {
             System.out.println("Invalid selection.");
@@ -135,15 +186,48 @@ public class Patient {
 
         String selectedAppointment = appointments.get(choice - 1);
         String oldDate = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "Date");
-        String oldTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "Time");
+        String oldStartTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "StartTime");
+        String oldEndTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "EndTime");
 
         System.out.print("Enter the new appointment date (DD MM YYYY): ");
         String newDate = scanner.nextLine();
         System.out.print("Enter the new appointment time (HHMM): ");
         String newTime = scanner.nextLine();
 
-        return csvReaderAppointment.replaceAppointmentRecord(patientID, oldDate, oldTime, newDate, newTime, "Pending", "Pending");
+        // Validate the new time is within the boundary of 08:00 to 21:00
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+        try {
+            LocalTime newStartTime = LocalTime.parse(newTime, timeFormatter);
+            LocalTime newEndTime = newStartTime.plusMinutes(30);
+
+            LocalTime startBoundary = LocalTime.of(8, 0);
+            LocalTime endBoundary = LocalTime.of(21, 0);
+
+            if (newStartTime.isBefore(startBoundary) || newEndTime.isAfter(endBoundary)) {
+                System.out.println("The selected time must be between 08:00 and 21:00.");
+                return false;
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid time format. Please use HHMM format.");
+            return false;
+        }
+
+        boolean success = csvReaderAppointment.replaceAppointmentRecord(
+            patientID, oldDate, oldStartTime, oldEndTime, newDate, newTime, "Pending", "Pending"
+        );
+
+        if (success) {
+            System.out.println("Appointment successfully rescheduled.");
+        } else {
+            System.out.println("Failed to reschedule appointment. The selected time might conflict with another appointment.");
+        }
+
+        return success;
     }
+
+
+
+
 
     // Method to cancel an appointment
     public boolean cancelAppointment(Scanner scanner) {
@@ -169,20 +253,52 @@ public class Patient {
 
         String selectedAppointment = appointments.get(choice - 1);
         String oldDate = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "Date");
-        String oldTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "Time");
+        String oldStartTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "StartTime");
+        String oldEndTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "EndTime");
 
-        return csvReaderAppointment.replaceAppointmentRecord(patientID, oldDate, oldTime, oldDate, oldTime, "Canceled", "Pending");
+        return csvReaderAppointment.replaceAppointmentRecord(patientID, oldDate, oldStartTime, oldEndTime, oldDate, oldStartTime, "Pending", "Pending");
     }
 
     // Method to view past appointment records
     public List<String> viewPastAppointmentRecords() {
         List<String> pastAppointments = csvReaderAppointment.getAppointmentsByPatientID(patientID, "Completed", "Canceled");
+        List<String> formattedAppointments = new ArrayList<>();
 
         if (pastAppointments.isEmpty()) {
             System.out.println("No past appointment records found for Patient: " + getName());
+        } else {
+            for (String appointmentStr : pastAppointments) {
+                // Parse the appointment string to extract the relevant fields
+                String[] parts = appointmentStr.split(", ");
+                String doctorName = parts[1].split("=")[1];
+                String patientName = parts[3].split("=")[1];
+                String dateOfAppointment = parts[4].split("=")[1];
+                String appointmentStartTime = parts[5].split("=")[1];
+                String appointmentEndTime = parts[6].split("=")[1];
+                String appointmentStatus = parts[7].split("=")[1];
+                String typeOfService = parts[8].split("=")[1];
+                String prescribedMedications = parts[9].split("=")[1];
+                String diagnosis = parts[11].split("=")[1];
+
+                // Format the extracted details
+                String formattedAppointment = "Doctor Name = " + doctorName +
+                                              ", Patient Name = " + patientName +
+                                              ", Date of Appointment = " + dateOfAppointment +
+                                              ", Start Time = " + appointmentStartTime +
+                                              ", End Time = " + appointmentEndTime +
+                                              ", Status = " + appointmentStatus +
+                                              ", Type of Service = " + typeOfService +
+                                              ", Prescribed Medications = " + prescribedMedications +
+                                              ", Diagnosis = " + diagnosis;
+
+                formattedAppointments.add(formattedAppointment);
+            }
         }
-        return pastAppointments;
+
+        return formattedAppointments;
     }
+
+
 
     // Getters
     public String getPatientID() { return patientID; }
