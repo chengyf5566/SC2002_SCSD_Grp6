@@ -17,9 +17,9 @@ public class CsvReaderPatient implements CsvReader {  // Missing class declarati
     private List<Patient> patientList = new ArrayList<>();
     private boolean isInitialized = false;
 
-    //public CsvReaderPatient() {
-      //  readAndInitializePatient();  // Load patient data at initialization
-    //}
+    public CsvReaderPatient() {
+    	readCsv();  // Load patient data at initialization
+    }
 
     public void readCsv() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
