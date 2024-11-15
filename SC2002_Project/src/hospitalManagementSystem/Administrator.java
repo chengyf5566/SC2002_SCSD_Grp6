@@ -36,21 +36,21 @@ public class Administrator extends Staff {
     
     public void initializeInventoryFromCSV() {
         this.csvReaderInventory = new CsvReaderInventory();
-        csvReaderInventory.readAndInitializeInventory();
+        csvReaderInventory.readCsv();
         this.medicationList = csvReaderInventory.getMedicationList();
     }
     
     // Method to initialize appointment outcome from CSV
     public void readAndInitializeAppointments() {
         this.csvReaderAppointment = new CsvReaderAppointment();
-        csvReaderAppointment.readAndInitializeAppointments();
+        csvReaderAppointment.readCsv();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
     }
   
     // Method to initialize patient list from CSV
     public void readAndInitializePatient() {
         this.csvReaderPatient = new CsvReaderPatient();
-        csvReaderPatient.readAndInitializePatient();
+        csvReaderPatient.readCsv();
         this.patientList = csvReaderPatient.getPatientList();
     }
 
@@ -234,7 +234,7 @@ public class Administrator extends Staff {
         Medication newMedication = new Medication(name, initialStock, currentStock, lowStockAlert, "No", 0);
         medicationList.add(newMedication);
         System.out.println("Medication added successfully.");
-        csvReaderInventory.writeInventoryToCSV();
+        csvReaderInventory.writeCSV();
     }
 
     private void removeMedication(Scanner scanner) {
@@ -243,7 +243,7 @@ public class Administrator extends Staff {
 
         boolean removed = medicationList.removeIf(med -> med.getMedicineName().equalsIgnoreCase(name));
         if (removed) {
-            csvReaderInventory.writeInventoryToCSV();
+            csvReaderInventory.writeCSV();
             System.out.println("Medication removed successfully.");
         } else {
             System.out.println("No medication found with this name.");
@@ -274,7 +274,7 @@ public class Administrator extends Staff {
 	        System.out.println("Low stock alert level updated successfully.");
 	
 	        // Write the updated inventory to CSV
-	        csvReaderInventory.writeInventoryToCSV();
+	        csvReaderInventory.writeCSV();
 	    } else {
 	        System.out.println("No medication found with this name.");
 	    }
@@ -304,7 +304,7 @@ public class Administrator extends Staff {
 
 
 	    // Write the updated inventory to CSV
-	    csvReaderInventory.writeInventoryToCSV();
+	    csvReaderInventory.writeCSV();
 	}
       
     public void viewAppointments() {
@@ -387,7 +387,7 @@ public class Administrator extends Staff {
             System.out.println("New Patient added successfully.");
 
             // Save the updated patient list to the CSV file
-            csvReaderPatient.writePatientDataToCSV();
+            csvReaderPatient.writeCSV();
         }
     }
 
@@ -399,7 +399,7 @@ public class Administrator extends Staff {
         if (removed) {
 
             // Save the updated patient list to the CSV file
-            csvReaderPatient.writePatientDataToCSV();
+            csvReaderPatient.writeCSV();
             System.out.println("Patient removed and list updated in CSV.");
         } else {
             System.out.println("No patient found with ID: " + patientID);

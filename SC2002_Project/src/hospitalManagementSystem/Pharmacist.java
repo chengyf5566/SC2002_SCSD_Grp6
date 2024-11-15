@@ -18,14 +18,14 @@ public class Pharmacist extends Staff {
     // Method to initialize medication inventory from CSV
     public void initializeInventoryFromCSV() {
         this.csvReaderInventory = new CsvReaderInventory();
-        csvReaderInventory.readAndInitializeInventory();
+        csvReaderInventory.readCsv();
         this.medicationList = csvReaderInventory.getMedicationList();
     }
     
     // Method to initialize appointment outcome from CSV
     public void readAndInitializeAppointments() {
         this.csvReaderAppointment = new CsvReaderAppointment();
-        csvReaderAppointment.readAndInitializeAppointments();
+        csvReaderAppointment.readCsv();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
         
         /*
@@ -112,7 +112,7 @@ public class Pharmacist extends Staff {
         System.out.println("Replenish request updated for " + medicationToUpdate.getMedicineName());
 
         // Write the updated inventory to CSV
-        csvReaderInventory.writeInventoryToCSV();
+        csvReaderInventory.writeCSV();
     }
 
     
@@ -193,13 +193,13 @@ public class Pharmacist extends Staff {
         selectedAppointment.setPrescribedMedicationsStatus("Dispensed");
 
         // Update the appointment CSV with the new status
-        csvReaderAppointment.writeAppointmentFile();
+        csvReaderAppointment.writeCSV();
 
         // Step 5: Decrease Stock Level in Inventory
         selectedMedication.setCurrentStock(selectedMedication.getCurrentStock() - dispenseAmount);
 
         // Write updated inventory back to CSV
-        csvReaderInventory.writeInventoryToCSV();
+        csvReaderInventory.writeCSV();
 
         System.out.println("Medication dispensed successfully for Patient ID: " + selectedAppointment.getPatientId());
         System.out.println("Updated stock for " + selectedMedication.getMedicineName() + ": " + selectedMedication.getCurrentStock());

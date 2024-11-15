@@ -19,8 +19,8 @@ public class PatientMenu implements UserRoleMenu {
     @Override
     public void displayMenu(Scanner scanner) {
     	// Initialize csv files
-    	//patient.readAndInitializePatient();
-    	//patient.readAndInitializeAppointments();
+    	patient.readAndInitializePatient();
+    	patient.readAndInitializeAppointments();
 
         boolean exit = false;
         while (!exit) {
@@ -61,6 +61,7 @@ public class PatientMenu implements UserRoleMenu {
     }
 
     private void viewMedicalRecord() {
+    	//System.out.println(patient.getPatientID());
         Patient patientDetails = csvReaderPatient.getPatientByID(patient.getPatientID());
 
         if (patientDetails != null) {
@@ -100,7 +101,7 @@ public class PatientMenu implements UserRoleMenu {
             }
         }
 
-        csvReaderPatient.writePatientDataToCSV();
+        csvReaderPatient.writeCSV();
         System.out.println("Personal information updated successfully.");
     }
 
@@ -119,7 +120,7 @@ public class PatientMenu implements UserRoleMenu {
             }
         }
 
-        csvReaderPatient.writePatientDataToCSV();
+        csvReaderPatient.writeCSV();
         System.out.println("Password updated successfully.");
     }
 

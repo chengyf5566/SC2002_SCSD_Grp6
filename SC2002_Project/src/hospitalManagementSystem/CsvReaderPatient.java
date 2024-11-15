@@ -11,17 +11,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public class CsvReaderPatient {  // Missing class declaration
+public class CsvReaderPatient implements CsvReader {  // Missing class declaration
 
     private final String filePath = "Patient_List.csv"; 
     private List<Patient> patientList = new ArrayList<>();
     private boolean isInitialized = false;
 
-    public CsvReaderPatient() {
-        readAndInitializePatient();  // Load patient data at initialization
-    }
+    //public CsvReaderPatient() {
+      //  readAndInitializePatient();  // Load patient data at initialization
+    //}
 
-    public void readAndInitializePatient() {
+    public void readCsv() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             // Skip BOM if present
             if (br.ready()) {
@@ -105,7 +105,7 @@ public class CsvReaderPatient {  // Missing class declaration
         return patientList;
     }
 
-    public void writePatientDataToCSV() {
+    public void writeCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the header row
             writer.write("Patient ID,Password,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Doctor ID," +

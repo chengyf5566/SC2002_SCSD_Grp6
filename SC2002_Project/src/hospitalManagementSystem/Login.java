@@ -6,9 +6,10 @@ public class Login {
 
     // Method to authenticate a user by checking both the Staff and Patient lists
     public static String authenticate(String userID, String password, List<Staff> staffList, List<Patient> patientList) {
-        // Check if the userID exists in staffList
+    	// Check if the userID exists in staffList
         for (Staff staff : staffList) {
-            if (staff.getUserID().equals(userID)) {
+        	System.out.println("Checking staff: " + staff.getUserID());  // Debug print
+            if (staff.getUserID().equals(userID)) {          	
                 // If a match is found, check the password
                 if (staff.getPassword().equals(password)) {
                     return "staff"; // Return "staff" if valid staff
@@ -18,6 +19,7 @@ public class Login {
 
         // Check if the userID exists in patientList
         for (Patient patient : patientList) {
+        	 System.out.println("Checking patient: " + patient.getPatientID());  // Debug print
             if (patient.getPatientID().equals(userID)) {
                 // If a match is found, check the password
                 if (patient.getPatientPassword().equals(password)) {
