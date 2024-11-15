@@ -27,6 +27,10 @@ public class CsvReaderStaff implements CsvReader {
     // Method to read data from CSV and create staff objects
     public void readCsv() {
         String line;
+        
+        // Clear the existing staff list to avoid duplicates
+        staffList.clear();
+        
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             // Skip the header row
             br.readLine();
@@ -35,13 +39,12 @@ public class CsvReaderStaff implements CsvReader {
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
 
-                // Check if the record contains all 6 expected columns
                 if (values.length < 6) {
                     System.out.println("Incomplete record: " + line);
                     continue;
                 }
 
-                // Extract and trim the values from the CSV
+                // Extract the details
                 String userID = values[0].trim();
                 String password = values[1].trim();
                 String name = values[2].trim();
@@ -49,7 +52,6 @@ public class CsvReaderStaff implements CsvReader {
                 String gender = values[4].trim();
                 int age;
 
-                // Try parsing the age and handle invalid data
                 try {
                     age = Integer.parseInt(values[5].trim());
                 } catch (NumberFormatException e) {
@@ -57,7 +59,7 @@ public class CsvReaderStaff implements CsvReader {
                     continue;
                 }
 
-                // Create specific Staff objects based on role
+                // Create a Staff object based on the role
                 Staff staff = null;
                 switch (role.toLowerCase()) {
                     case "doctor":
@@ -74,10 +76,8 @@ public class CsvReaderStaff implements CsvReader {
                         continue;
                 }
 
-                // Add the created staff member to the staff list
-                if (staff != null) {
-                    staffList.add(staff);
-                }
+                 staffList.add(staff);
+            
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,15 +93,14 @@ public class CsvReaderStaff implements CsvReader {
     public void writeCSV() {
         File file = new File(filePath);
 
-        // Check if the file exists
+        // Ensure that the file exists or handle the case when it's missing
         if (!file.exists()) {
             System.out.println("File does not exist at path: " + filePath);
-            return; // Do not attempt to create new directories or files
+            return;  // Exit if file is missing
         }
 
-        // Proceed with writing to the existing file
-        try (FileWriter writer = new FileWriter(file)) {
-            // Write the header
+        try (FileWriter writer = new FileWriter(file, false)) {  // 'false' ensures overwriting, not appending
+            // Write header
             writer.write("UserID,Password,Name,Role,Gender,Age\n");
 
             // Write each staff member's data
@@ -113,8 +112,7 @@ public class CsvReaderStaff implements CsvReader {
                         + staff.getGender() + ","
                         + staff.getAge() + "\n");
             }
-
-            System.out.println("Staff list updated in CSV.");
+            System.out.println("Staff data updated in CSV.");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -51,6 +51,7 @@ public class DoctorMenu implements UserRoleMenu {
                     break;
                 case 5:
                 	doctor.changePassword(scanner);
+                	exit = true;
                     break;
                 case 6:
                     System.out.println("Logging out...");

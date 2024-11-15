@@ -32,6 +32,10 @@ public class CsvReaderPatient implements CsvReader {  // Missing class declarati
             }
 
             String line;
+            
+            // Clear the existing patient list to avoid duplicates
+            patientList.clear();
+            
             boolean isHeader = true;
             while ((line = br.readLine()) != null) {
                 line = line.trim();  // Remove any extra spaces or newlines
@@ -44,39 +48,45 @@ public class CsvReaderPatient implements CsvReader {  // Missing class declarati
                     continue;
                 }
 
-                String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Split by comma, but skip commas inside quotes
+                // Split by commas, but skip commas inside quotes, allowing empty fields
+                String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); 
 
                 // Ensure the record has the expected number of columns (14 in this case)
-                if (values.length == 14) {
-                    // Extract and clean the values
-                    String patientID = cleanString(values[0]);
-                    String password = cleanString(values[1]);
-                    String name = cleanString(values[2]);
-                    String dobString = cleanString(values[3]); // Date as string in format dd/MM/yyyy
-                    String gender = cleanString(values[4]);
-                    String bloodType = cleanString(values[5]);
-                    String contactNumber = cleanString(values[6]);
-                    String email = cleanString(values[7]);
-                    String assignedDoctorID = cleanString(values[8]);
-                    String assignedDoctorName = cleanString(values[9]);
+                // Adjust to allow for missing values in optional columns (e.g., pastDiagnoses, prescribedMedicines)
+                String[] fixedValues = new String[14];
+                System.arraycopy(values, 0, fixedValues, 0, values.length); 
 
-                    // Handle lists (split by space or comma as needed)
-                    List<String> pastDiagnoses = new ArrayList<>(Arrays.asList(cleanString(values[10]).split(" ")));
-                    List<String> prescribedMedicines = new ArrayList<>(Arrays.asList(cleanString(values[11]).split(" ")));
-                    List<String> consultationNotes = new ArrayList<>(Arrays.asList(cleanString(values[12]).split(" ")));
-                    List<String> typeOfService = new ArrayList<>(Arrays.asList(cleanString(values[13]).split(" ")));
-
-
-                    // Create a Patient object with the data
-                    Patient patient = new Patient(patientID, password, name, dobString, gender, bloodType,
-                            contactNumber, email, assignedDoctorID, assignedDoctorName,
-                            pastDiagnoses, prescribedMedicines, consultationNotes, typeOfService);
-
-                    // Add patient to the patientList
-                    patientList.add(patient);
-                } else {
-                    System.out.println("Skipping invalid line: " + line);  // Debugging
+                // Fill missing values with empty strings if not enough columns
+                for (int i = values.length; i < 14; i++) {
+                    fixedValues[i] = "";
                 }
+
+                // Extract and clean the values
+                String patientID = cleanString(fixedValues[0]);
+                String password = cleanString(fixedValues[1]);
+                String name = cleanString(fixedValues[2]);
+                String dobString = cleanString(fixedValues[3]); // Date as string in format dd/MM/yyyy
+                String gender = cleanString(fixedValues[4]);
+                String bloodType = cleanString(fixedValues[5]);
+                String contactNumber = cleanString(fixedValues[6]);
+                String email = cleanString(fixedValues[7]);
+                String assignedDoctorID = cleanString(fixedValues[8]);
+                String assignedDoctorName = cleanString(fixedValues[9]);
+
+                // Handle lists (split by space or comma as needed), defaulting to empty lists if data is missing
+                List<String> pastDiagnoses = new ArrayList<>(Arrays.asList(cleanString(fixedValues[10]).split(" ")));
+                List<String> prescribedMedicines = new ArrayList<>(Arrays.asList(cleanString(fixedValues[11]).split(" ")));
+                List<String> consultationNotes = new ArrayList<>(Arrays.asList(cleanString(fixedValues[12]).split(" ")));
+                List<String> typeOfService = new ArrayList<>(Arrays.asList(cleanString(fixedValues[13]).split(" ")));
+
+
+                // Create a Patient object with the data
+                Patient patient = new Patient(patientID, password, name, dobString, gender, bloodType,
+                        contactNumber, email, assignedDoctorID, assignedDoctorName,
+                        pastDiagnoses, prescribedMedicines, consultationNotes, typeOfService);
+
+                // Add patient to the patientList
+                patientList.add(patient);
             }
             isInitialized = true; // Mark as initialized to avoid re-reading
         } catch (IOException e) {

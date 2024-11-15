@@ -423,6 +423,7 @@ public class Administrator extends Staff {
             System.out.println("No patients available in the list.");
         } else {
             System.out.println("Current Patient List:");
+            System.out.println("========================");
             patientList.forEach(patient -> System.out.println("Patient ID: " + patient.getPatientID() +
                     "\nName: " + patient.getName() +
                     "\nGender: " + patient.getGender() +
@@ -440,6 +441,7 @@ public class Administrator extends Staff {
         }
     }
     
+    //change password method
     public void changePassword(Scanner scanner) {
         System.out.print("Enter new password: ");
         String newPassword = scanner.nextLine();
@@ -459,7 +461,5 @@ public class Administrator extends Staff {
         csvReader.writeCSV();
         System.out.println("Password updated successfully.");
     }
-    
-
 
 }
