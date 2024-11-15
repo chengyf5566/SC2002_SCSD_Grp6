@@ -3,21 +3,55 @@ package hospitalManagementSystem;
 import java.util.List;
 import java.util.Scanner;
 
-public class LoginMenu {
+public class LoginMenu implements UserRoleMenu {
 
-    private List<Staff> staffList;
-    private List<Patient> patientList;
+
     private boolean authenticated = false;
     private String userID;
     private String password;
-
+    
+    
+    private List<Staff> staffList;
+    private List<Patient> patientList;
     // Constructor to initialize the LoginMenu with staff and patient lists
     public LoginMenu(List<Staff> staffList, List<Patient> patientList) {
         this.staffList = staffList;
         this.patientList = patientList;
     }
-
+    
+    /*
+    // Constructor to initialize the LoginMenu with staff and patient lists
+    public LoginMenu() {
+        // Initialize staffList and patientList by reading data from CSV files
+        this.staffList = new ArrayList<>();
+        this.patientList = new ArrayList<>();
+        
+        // Initialize staff and patient data from CSV
+        initializeStaffFromCSV();
+        readAndInitializePatient();
+    }
+    
+    // Method to initialize patient list from CSV
+    private List<Patient> patientList;
+    private CsvReaderPatient csvReaderPatient;
+    public void readAndInitializePatient() {
+        this.csvReaderPatient = new CsvReaderPatient();
+        csvReaderPatient.readCsv();
+        this.patientList = csvReaderPatient.getPatientList();
+    }
+    
+    // Method to initialize staff list from CSV
+    private List<Staff> staffList;
+    private CsvReaderStaff csvReader;
+    public void initializeStaffFromCSV() {        
+        this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
+        csvReader.readAndInitializeStaff(); // Read and initialize staff from the CSV
+        this.staffList = csvReader.getStaffList();  // Assign the read staff list
+    }
+    */
+    
     // Method to display the login menu and handle the login process
+    @Override
     public void displayMenu(Scanner scanner) {
         while (true) {  // Loop indefinitely to handle re-login after logout
             authenticated = false;

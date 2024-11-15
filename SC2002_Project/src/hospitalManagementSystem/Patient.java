@@ -26,7 +26,7 @@ public class Patient {
 
     private CsvReaderAppointment csvReaderAppointment = new CsvReaderAppointment(); // For appointment handling
     
-    /*
+    
     private List<Appointment> appointmentList;
 
     private List<Patient> patientList;
@@ -36,17 +36,23 @@ public class Patient {
     // Method to initialize appointment outcome from CSV
     public void readAndInitializeAppointments() {
         this.csvReaderAppointment = new CsvReaderAppointment();
-        csvReaderAppointment.readAndInitializeAppointments();
+        csvReaderAppointment.readCsv();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
+        
+        // Debugging: Print out the appointments after initialization
+        System.out.println("Appointments loaded: " + appointmentList.size());
+        for (Appointment appointment : appointmentList) {
+            System.out.println(appointment); // Assuming the toString method in Appointment prints useful details
+        } 
     }
   
     // Method to initialize patient list from CSV
     public void readAndInitializePatient() {
         this.csvReaderPatient = new CsvReaderPatient();
-        csvReaderPatient.readAndInitializePatient();
+        csvReaderPatient.readCsv();
         this.patientList = csvReaderPatient.getPatientList();
     }
-    */
+   
 
     public Patient(String patientID, String patientPassword, String name, String dateOfBirth, String gender,
                    String bloodType, String contactNum, String email, String assignedDoctor,
@@ -225,10 +231,6 @@ public class Patient {
         return success;
     }
 
-
-
-
-
     // Method to cancel an appointment
     public boolean cancelAppointment(Scanner scanner) {
         List<String> appointments = viewScheduledAppointments();
@@ -256,7 +258,28 @@ public class Patient {
         String oldStartTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "StartTime");
         String oldEndTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "EndTime");
 
-        return csvReaderAppointment.replaceAppointmentRecord(patientID, oldDate, oldStartTime, oldEndTime, oldDate, oldStartTime, "Pending", "Pending");
+        // Find the matching appointment to cancel
+        for (Appointment appointment : appointmentList) {
+            if (appointment.getPatientId().equals(patientID) &&
+                appointment.getDateOfAppointment().equals(oldDate) &&
+                appointment.getAppointmentStartTime().equals(oldStartTime) &&
+                appointment.getAppointmentEndTime().equals(oldEndTime)) {
+
+                // Set the appointment fields to empty for start and end time and change the status to "Cancelled"
+                appointment.setAppointmentStartTime("");
+                appointment.setAppointmentEndTime("");
+                appointment.setAppointmentStatus("Cancelled");
+
+                // Persist the updated appointment list to the CSV
+                csvReaderAppointment.writeCSV();
+
+                System.out.println("Appointment canceled successfully.");
+                return true;
+            }
+        }
+
+        System.out.println("Appointment not found.");
+        return false;
     }
 
     // Method to view past appointment records
@@ -280,16 +303,16 @@ public class Patient {
                 String prescribedMedications = parts[9].split("=")[1];
                 String diagnosis = parts[11].split("=")[1];
 
-                // Format the extracted details
-                String formattedAppointment = "Doctor Name = " + doctorName +
-                                              ", Patient Name = " + patientName +
-                                              ", Date of Appointment = " + dateOfAppointment +
-                                              ", Start Time = " + appointmentStartTime +
-                                              ", End Time = " + appointmentEndTime +
-                                              ", Status = " + appointmentStatus +
-                                              ", Type of Service = " + typeOfService +
-                                              ", Prescribed Medications = " + prescribedMedications +
-                                              ", Diagnosis = " + diagnosis;
+                // Format the extracted details with each piece of information on a new line
+                String formattedAppointment = "Doctor Name: " + doctorName + "\n" +
+                                              "Patient Name: " + patientName + "\n" +
+                                              "Date of Appointment: " + dateOfAppointment + "\n" +
+                                              "Start Time: " + appointmentStartTime + "\n" +
+                                              "End Time: " + appointmentEndTime + "\n" +
+                                              "Status: " + appointmentStatus + "\n" +
+                                              "Type of Service: " + typeOfService + "\n" +
+                                              "Prescribed Medications: " + prescribedMedications + "\n" +
+                                              "Diagnosis: " + diagnosis + "\n";
 
                 formattedAppointments.add(formattedAppointment);
             }
@@ -297,6 +320,7 @@ public class Patient {
 
         return formattedAppointments;
     }
+
 
 
 

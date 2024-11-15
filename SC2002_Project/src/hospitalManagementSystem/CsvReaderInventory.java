@@ -4,17 +4,17 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvReaderInventory {
+public class CsvReaderInventory implements CsvReader {
 
     private final String filePath = "Medicine_List.csv"; // Path to the medication CSV file
     private List<Medication> medicationList = new ArrayList<>();
 
-    public CsvReaderInventory() {
-        readAndInitializeInventory();  // Load inventory data at initialization
-    }
+   //public CsvReaderInventory() {
+    //	readCsv();  // Load inventory data at initialization
+    //}
 
     // Method to read data from CSV and create Medication objects
-    public void readAndInitializeInventory() {
+    public void readCsv() {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             // Skip the header row
@@ -67,7 +67,7 @@ public class CsvReaderInventory {
 
 
     // Method to write medication data to CSV
-    public void writeInventoryToCSV() {
+    public void writeCSV() {
         File file = new File(filePath);
 
         // Check if the file exists
