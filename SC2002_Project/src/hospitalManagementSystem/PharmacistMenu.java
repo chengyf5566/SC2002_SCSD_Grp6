@@ -13,6 +13,11 @@ public class PharmacistMenu implements UserRoleMenu {
 
     @Override
     public void displayMenu(Scanner scanner) {
+    	// Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
+    	pharmacist.initializeInventoryFromCSV();
+    	pharmacist.readAndInitializeAppointments();
+    	pharmacist.initializeStaffFromCSV();
+    	
         boolean exit = false;
 
         while (!exit) {
@@ -20,7 +25,8 @@ public class PharmacistMenu implements UserRoleMenu {
             System.out.println("1. View Appointment Outcome Record");
             System.out.println("2. Dispense Medication");
             System.out.println("3. Manage Inventory Stock");
-            System.out.println("4. Logout");
+            System.out.println("4. Change Password");
+            System.out.println("5. Logout");
 
             System.out.print("Select Option: ");
             int input = scanner.nextInt();
@@ -38,6 +44,9 @@ public class PharmacistMenu implements UserRoleMenu {
                 pharmacist.manageInventoryStock(scanner); 
                     break;
                 case 4:
+                    pharmacist.changePassword(scanner); 
+                        break;
+                case 5:
                     System.out.println("Logout\n");
                     exit = true;
                     break;

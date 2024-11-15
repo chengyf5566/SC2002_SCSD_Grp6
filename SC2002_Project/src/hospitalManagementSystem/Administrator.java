@@ -427,4 +427,27 @@ public class Administrator extends Staff {
                     "\n" + "=".repeat(30)));
         }
     }
+    
+    public void changePassword(Scanner scanner) {
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.nextLine();
+
+        // Set the new password for the current administrator
+        this.setPassword(newPassword);
+
+        // Update the password in the staff list and save to CSV
+        for (Staff staff : staffList) {
+            if (staff.getUserID().equals(this.getUserID())) { // Assuming getUserID() is accessible
+                staff.setPassword(newPassword); // Assuming setPassword() is accessible
+                break;
+            }
+        }
+
+        // Write updated staff data to CSV
+        csvReader.writeStaffToCSV();
+        System.out.println("Password updated successfully.");
+    }
+    
+
+
 }

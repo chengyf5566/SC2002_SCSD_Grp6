@@ -11,12 +11,17 @@ public class PatientMenu implements UserRoleMenu {
     // Constructor to initialize Patient and CsvReaderPatient
     public PatientMenu(Patient patient) {
         this.patient = patient;
-        this.csvReaderPatient = new CsvReaderPatient();
+        this.csvReaderPatient = new CsvReaderPatient(); //this can remove? or will break
 
     }
-
+    
+   
     @Override
     public void displayMenu(Scanner scanner) {
+    	// Initialize csv files
+    	//patient.readAndInitializePatient();
+    	//patient.readAndInitializeAppointments();
+
         boolean exit = false;
         while (!exit) {
             System.out.println("\nPatient Menu:");
@@ -37,7 +42,10 @@ public class PatientMenu implements UserRoleMenu {
             switch (input) {
                 case 1 -> viewMedicalRecord();
                 case 2 -> updatePersonalInformation(scanner);
-                case 3 -> changePassword(scanner);
+                case 3 -> {
+                	changePassword(scanner);
+                	 exit = true;
+                }
                 case 4 -> scheduleAppointment(scanner);
                 case 5 -> rescheduleAppointment(scanner);
                 case 6 -> cancelAppointment(scanner);

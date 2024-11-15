@@ -12,6 +12,9 @@ public class Pharmacist extends Staff {
     private List<Appointment> appointmentList;
     private CsvReaderAppointment csvReaderAppointment;
     
+    private List<Staff> staffList;
+    private CsvReaderStaff csvReader;
+    
     // Method to initialize medication inventory from CSV
     public void initializeInventoryFromCSV() {
         this.csvReaderInventory = new CsvReaderInventory();
@@ -25,11 +28,19 @@ public class Pharmacist extends Staff {
         csvReaderAppointment.readAndInitializeAppointments();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
         
+        /*
         // Debugging: Print out the appointments after initialization
         System.out.println("Appointments loaded: " + appointmentList.size());
         for (Appointment appointment : appointmentList) {
             System.out.println(appointment); // Assuming the toString method in Appointment prints useful details
-        }
+        } */
+    }
+    
+    // Method to initialize staff list  from CSV
+    public void initializeStaffFromCSV() {        
+        this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
+        csvReader.readAndInitializeStaff(); // Read and initialize staff from the CSV
+        this.staffList = csvReader.getStaffList();  // Assign the read staff list
     }
     
     public void manageInventoryStock(Scanner scanner) {
@@ -192,5 +203,26 @@ public class Pharmacist extends Staff {
 
         System.out.println("Medication dispensed successfully for Patient ID: " + selectedAppointment.getPatientId());
         System.out.println("Updated stock for " + selectedMedication.getMedicineName() + ": " + selectedMedication.getCurrentStock());
+    }
+    
+    //change password method
+    public void changePassword(Scanner scanner) {
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.nextLine();
+
+        // Set the new password for the current administrator
+        this.setPassword(newPassword);
+
+        // Update the password in the staff list and save to CSV
+        for (Staff staff : staffList) {
+            if (staff.getUserID().equals(this.getUserID())) { // Assuming getUserID() is accessible
+                staff.setPassword(newPassword); // Assuming setPassword() is accessible
+                break;
+            }
+        }
+
+        // Write updated staff data to CSV
+        csvReader.writeStaffToCSV();
+        System.out.println("Password updated successfully.");
     }
 }

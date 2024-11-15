@@ -1,5 +1,6 @@
 package hospitalManagementSystem;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class AdministratorMenu implements UserRoleMenu {
@@ -12,6 +13,14 @@ public class AdministratorMenu implements UserRoleMenu {
     
 	@Override
     public void displayMenu(Scanner scanner) {
+		
+		// Initialize csv files
+		administrator.readAndInitializePatient();
+		administrator.readAndInitializeAppointments();
+		administrator.initializeStaffFromCSV();
+		administrator.initializeInventoryFromCSV();
+		
+		
         boolean exit = false;
         while (!exit) {
             System.out.println("\nAdministrator Menu:");
@@ -19,7 +28,8 @@ public class AdministratorMenu implements UserRoleMenu {
             System.out.println("2. View and Manage Hospital Patients");
             System.out.println("3. View Appointments details");
             System.out.println("4. View and Manage Medication Inventory");
-            System.out.println("5. Logout");
+            System.out.println("5. Change Password");
+            System.out.println("6. Logout");
 
             System.out.print("Select Option: ");
             int input = scanner.nextInt();
@@ -39,6 +49,9 @@ public class AdministratorMenu implements UserRoleMenu {
                 	administrator.manageMedicationInventory(scanner);
                 	break;
                 case 5: 
+                	administrator.changePassword(scanner);
+                	break;
+                case 6: 
                 	System.out.println("Logout\n"); 
                 	exit = true; 
                 	break;
@@ -47,6 +60,8 @@ public class AdministratorMenu implements UserRoleMenu {
             }
         }
     }
+	
+
 	
 	//example usage
 	public static void main(String[] args) {

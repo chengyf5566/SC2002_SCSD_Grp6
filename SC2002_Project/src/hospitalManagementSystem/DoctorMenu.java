@@ -14,6 +14,12 @@ public class DoctorMenu implements UserRoleMenu {
     
     @Override
     public void displayMenu(Scanner scanner) {
+    	
+    	// Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
+        doctor.readAndInitializePatient();
+        doctor.readAndInitializeAppointments();
+        doctor.initializeStaffFromCSV();
+        
     	boolean exit = false;
 
         while (!exit) {
@@ -23,7 +29,8 @@ public class DoctorMenu implements UserRoleMenu {
             System.out.println("2. View Scheduled Appointments (Doctor)");
             System.out.println("3. Confirm or Cancel Appointment Requests From Patient");
             System.out.println("4. Record Patient Appointment Outcome");
-            System.out.println("5. Logout");
+            System.out.println("5. Change Password");
+            System.out.println("6. Logout");
             System.out.print("Select an option (1-5): ");
             
             int choice = scanner.nextInt();
@@ -43,6 +50,9 @@ public class DoctorMenu implements UserRoleMenu {
                 	doctor.recordAppointmentOutcome();
                     break;
                 case 5:
+                	doctor.changePassword(scanner);
+                    break;
+                case 6:
                     System.out.println("Logging out...");
                     exit = true;
                     break;
