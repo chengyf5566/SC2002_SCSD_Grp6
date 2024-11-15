@@ -45,6 +45,7 @@ public class PharmacistMenu implements UserRoleMenu {
                     break;
                 case 4:
                     pharmacist.changePassword(scanner); 
+                    exit = true; 
                         break;
                 case 5:
                     System.out.println("Logout\n");

@@ -212,7 +212,7 @@ public class Pharmacist extends Staff {
         System.out.print("Enter new password: ");
         String newPassword = scanner.nextLine();
 
-        // Set the new password for the current administrator
+        // Set the new password for the current pharmacist
         this.setPassword(newPassword);
 
         // Update the password in the staff list and save to CSV

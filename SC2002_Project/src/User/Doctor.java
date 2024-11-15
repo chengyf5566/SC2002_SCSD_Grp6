@@ -254,11 +254,12 @@ public class Doctor extends Staff {
         System.out.println("Appointment outcome recorded successfully for Patient ID " + patientId);
     }
     
+    //change password method
     public void changePassword(Scanner scanner) {
         System.out.print("Enter new password: ");
         String newPassword = scanner.nextLine();
 
-        // Set the new password for the current administrator
+        // Set the new password for the current doctor
         this.setPassword(newPassword);
 
         // Update the password in the staff list and save to CSV

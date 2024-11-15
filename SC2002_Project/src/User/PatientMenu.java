@@ -112,7 +112,7 @@ public class PatientMenu implements UserRoleMenu {
     private void changePassword(Scanner scanner) {
         System.out.print("Enter new password: ");
         String newPassword = scanner.nextLine();
-
+        newPassword = PasswordHashing.hashPassword(newPassword);
         patient.setPatientPassword(newPassword);
 
         List<Patient> patients = csvReaderPatient.getPatientList();

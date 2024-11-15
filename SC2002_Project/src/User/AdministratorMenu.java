@@ -50,6 +50,7 @@ public class AdministratorMenu implements UserRoleMenu {
                 	break;
                 case 5: 
                 	administrator.changePassword(scanner);
+                	exit = true; 
                 	break;
                 case 6: 
                 	System.out.println("Logout\n"); 
