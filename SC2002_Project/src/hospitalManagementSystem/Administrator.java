@@ -92,6 +92,7 @@ public class Administrator extends Staff {
         
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
+        password = PasswordHashing.hashPassword(password);
         System.out.print("Enter Role (Doctor/Pharmacist/Administrator): ");
         String role = scanner.nextLine();
         System.out.print("Enter Gender: ");
@@ -358,6 +359,7 @@ public class Administrator extends Staff {
 
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
+        password = PasswordHashing.hashPassword(password);
         System.out.print("Enter Patient Name: ");
         String name = scanner.nextLine();
         System.out.print("Enter Patient's Date Of Birth (DD MM YYYY): ");
