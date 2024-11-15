@@ -64,6 +64,7 @@ public class LoginMenu implements UserRoleMenu {
                 userID = scanner.nextLine();
                 System.out.print("Please Enter Password: ");
                 password = scanner.nextLine();
+                password = PasswordHashing.hashPassword(password);
 
                 // Authenticate the user and get the role
                 Login login = new Login();

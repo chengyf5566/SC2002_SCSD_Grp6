@@ -11,7 +11,7 @@ import java.util.List;
 public class CsvReaderStaff {
     
 
-    private String filePath = "Staff_List.csv";
+    private String filePath = "C:\\Users\\User\\OneDrive\\Documents\\GitHub\\SC2002_SCSD_Grp6\\SC2002_Project\\Staff_List.csv";
 
     // Constructor to initialize and read the staff list
     public CsvReaderStaff() {
