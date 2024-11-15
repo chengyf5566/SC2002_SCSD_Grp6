@@ -1,5 +1,7 @@
-package User;
+package Utility;
 
+import User.Patient;
+import User.Staff;
 import java.util.List;
 
 public class Login {
