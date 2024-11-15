@@ -23,6 +23,28 @@ public class Patient {
     private List<String> typeOfService;
 
     private CsvReaderAppointment csvReaderAppointment = new CsvReaderAppointment(); // For appointment handling
+    
+    /*
+    private List<Appointment> appointmentList;
+
+    private List<Patient> patientList;
+    private CsvReaderPatient csvReaderPatient;
+
+    
+    // Method to initialize appointment outcome from CSV
+    public void readAndInitializeAppointments() {
+        this.csvReaderAppointment = new CsvReaderAppointment();
+        csvReaderAppointment.readAndInitializeAppointments();
+        this.appointmentList = csvReaderAppointment.getAppointmentList();
+    }
+  
+    // Method to initialize patient list from CSV
+    public void readAndInitializePatient() {
+        this.csvReaderPatient = new CsvReaderPatient();
+        csvReaderPatient.readAndInitializePatient();
+        this.patientList = csvReaderPatient.getPatientList();
+    }
+    */
 
     public Patient(String patientID, String patientPassword, String name, String dateOfBirth, String gender,
                    String bloodType, String contactNum, String email, String assignedDoctor,
@@ -225,4 +247,7 @@ public class Patient {
                "Consultation Notes: " + (notes.isEmpty() ? "None" : notes) + "\n" +
                "Type of Service: " + (services.isEmpty() ? "None" : services);
     }
+    
+
+
 }

@@ -24,10 +24,11 @@ public class LoginMenu {
 
             // Authentication loop
             while (!authenticated) {
+            	System.out.println("--- Welcome to Hospital Management App---");
                 System.out.println("--- Login Menu ---");
-                System.out.print("Enter User ID: ");
+                System.out.print("Please Enter User ID: ");
                 userID = scanner.nextLine();
-                System.out.print("Enter Password: ");
+                System.out.print("Please Enter Password: ");
                 password = scanner.nextLine();
 
                 // Authenticate the user and get the role
