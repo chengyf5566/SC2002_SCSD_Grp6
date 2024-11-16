@@ -11,9 +11,6 @@ public class CsvReaderAppointment implements CsvReader{
     public String filePath_Appointment = "Appointment_Outcome.csv";
     public List<Appointment> appointmentList = new ArrayList<>();
 
-    //public CsvReaderAppointment() {
-    	//readCsv();
-    //}
 
     // Read and initialize appointments from CSV
     public void readCsv() {
@@ -40,7 +37,7 @@ public class CsvReaderAppointment implements CsvReader{
                     continue;
                 }
 
-                String[] fullData = new String[13];
+                String[] fullData = new String[14];
                 for (int i = 0; i < fullData.length; i++) {
                     fullData[i] = (i < data.length) ? cleanString(data[i]) : "";
                 }
@@ -48,7 +45,7 @@ public class CsvReaderAppointment implements CsvReader{
                 Appointment appointment = new Appointment(
                     fullData[0], fullData[1], fullData[2], fullData[3],
                     fullData[4], fullData[5], fullData[6], fullData[7],
-                    fullData[8], fullData[9], fullData[10], fullData[11], fullData[12]
+                    fullData[8], fullData[9], fullData[10], fullData[11], fullData[12], fullData[13]
                 );
                 appointmentList.add(appointment);
             }
@@ -56,8 +53,43 @@ public class CsvReaderAppointment implements CsvReader{
             e.printStackTrace();
         }
     }
+    
+    // Write appointment list to CSV file
+    public void writeCSV() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath_Appointment))) {
+            writer.write("Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consultation Notes\n");
+            for (Appointment appointment : appointmentList) {
+                writer.write(appointment.getDoctorId() + ","
+                        + appointment.getDoctorName() + ","
+                        + appointment.getPatientId() + ","
+                        + appointment.getPatientName() + ","
+                        + appointment.getDateOfAppointment() + ","
+                        + appointment.getAppointmentStartTime() + ","
+                        + appointment.getAppointmentEndTime() + ","
+                        + appointment.getAppointmentStatus() + ","
+                        + appointment.getTypeOfService() + ","
+                        + appointment.getPrescribedMedications() + ","
+                        + appointment.getPrescribedMedicationsQuantity() + ","
+                        + appointment.getPrescribedMedicationsStatus() + ","
+                        + appointment.getDiagnosis() + ","
+                        + appointment.getConsultationNotes() + "\n");
+            }
+            System.out.println("Appointment list updated in CSV.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    // Check if a specific appointment slot is available
+    // Helper method to clean strings
+    private String cleanString(String input) {
+        return input.replaceAll("\"", "").trim();
+    }
+
+    public List<Appointment> getAppointmentList() {
+        return appointmentList;
+    }
+    
+////////////////////////////Check if a specific appointment slot is available////////////////////////////  
     public boolean checkAvailability(String doctorID, String date, String time) {
         LocalTime requestedTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"));
 
@@ -77,16 +109,17 @@ public class CsvReaderAppointment implements CsvReader{
         return true;
     }
 
-    // Add an appointment record
+////////////////////////////add appointment////////////////////////////  
     public boolean addAppointmentRecord(String doctorID, String doctorName, String patientID, String patientName,
                                      String date, String startTime, String endTime, String status) {
-        Appointment newAppointment = new Appointment(doctorID, doctorName, patientID, patientName, date, startTime, endTime, status, "", "", "", "", "");
+        Appointment newAppointment = new Appointment(doctorID, doctorName, patientID, patientName, date, startTime, endTime, status, "", "", "", "", "", "");
         appointmentList.add(newAppointment);
         writeCSV();
         return true;
     }
 
-    // Delete an appointment record by exact match
+    
+////////////////////////////Delete an appointment record by exact match////////////////////////////  
     public boolean deleteAppointmentRecord(String appointmentRecord) {
         boolean isRemoved = appointmentList.removeIf(app -> app.toString().trim().equals(appointmentRecord.trim()));
         if (isRemoved) {
@@ -98,7 +131,8 @@ public class CsvReaderAppointment implements CsvReader{
         }
     }
 
-    // Get a list of appointments by patient ID with specific statuses
+    
+////////////////////////////Get a list of appointments by patient ID with specific statuses////////////////////////////  
     public List<String> getAppointmentsByPatientID(String patientID, String... statuses) {
         List<String> result = new ArrayList<>();
         for (Appointment appointment : appointmentList) {
@@ -112,7 +146,8 @@ public class CsvReaderAppointment implements CsvReader{
         return result;
     }
 
-    // Helper to extract details from appointment string
+    
+//////////////////////////// Helper to extract details from appointment string////////////////////////////  
     public String extractAppointmentDetail(String appointmentRecord, String field) {
         String[] fields = appointmentRecord.split(", ");
 
@@ -154,11 +189,13 @@ public class CsvReaderAppointment implements CsvReader{
         }
     }
 
-    // Replace appointment record
+////////////////////////////replace appointment record//////////////////////////// 
     public boolean replaceAppointmentRecord(String patientID, String oldDate, String oldStartTime, String oldEndTime, String newDate, String newStartTime, String newStatus, String oldStatus) {
+        // Convert new start and end times to LocalTime
         LocalTime newStart = LocalTime.parse(newStartTime, DateTimeFormatter.ofPattern("HHmm"));
         LocalTime newEnd = newStart.plusMinutes(30);
 
+        //Check for conflicts with existing appointments
         for (Appointment appointment : appointmentList) {
             if (appointment.getPatientId().equals(patientID) &&
                 appointment.getDateOfAppointment().equals(newDate) &&
@@ -167,66 +204,42 @@ public class CsvReaderAppointment implements CsvReader{
                 LocalTime existingStart = LocalTime.parse(appointment.getAppointmentStartTime(), DateTimeFormatter.ofPattern("HHmm"));
                 LocalTime existingEnd = LocalTime.parse(appointment.getAppointmentEndTime(), DateTimeFormatter.ofPattern("HHmm"));
 
+                // Check if the new appointment conflicts with the existing one
                 if (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)) {
                     System.out.println("The selected time conflicts with an existing appointment: " +
                                        "Start - " + appointment.getAppointmentStartTime() +
                                        ", End - " + appointment.getAppointmentEndTime());
-                    return false;
+                    return false;  // Conflict found, don't proceed with replacement
                 }
             }
         }
 
+        //Find the appointment to replace (old appointment)
         for (Appointment appointment : appointmentList) {
             if (appointment.getPatientId().equals(patientID) &&
                 appointment.getDateOfAppointment().equals(oldDate) &&
                 appointment.getAppointmentStartTime().equals(oldStartTime) &&
                 appointment.getAppointmentStatus().equalsIgnoreCase(oldStatus)) {
 
+                // Found the appointment to replace, update its details
                 appointment.setDateOfAppointment(newDate);
                 appointment.setAppointmentStartTime(newStartTime);
                 appointment.setAppointmentEndTime(newEnd.format(DateTimeFormatter.ofPattern("HHmm")));
                 appointment.setAppointmentStatus(newStatus);
 
+                // Write changes to CSV or database
                 writeCSV();
+                System.out.println("Appointment successfully rescheduled.");
                 return true;
             }
         }
 
+
+
+        // No matching appointment found to replace
         System.out.println("No matching appointment found to replace.");
         return false;
     }
 
-    // Write appointment list to CSV file
-    public void writeCSV() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath_Appointment))) {
-            writer.write("Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consultation Notes\n");
-            for (Appointment appointment : appointmentList) {
-                writer.write(appointment.getDoctorId() + ","
-                        + appointment.getDoctorName() + ","
-                        + appointment.getPatientId() + ","
-                        + appointment.getPatientName() + ","
-                        + appointment.getDateOfAppointment() + ","
-                        + appointment.getAppointmentStartTime() + ","
-                        + appointment.getAppointmentEndTime() + ","
-                        + appointment.getAppointmentStatus() + ","
-                        + appointment.getTypeOfService() + ","
-                        + appointment.getPrescribedMedications() + ","
-                        + appointment.getPrescribedMedicationsStatus() + ","
-                        + appointment.getDiagnosis() + ","
-                        + appointment.getConsultationNotes() + "\n");
-            }
-            System.out.println("Appointment list updated in CSV.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    // Helper method to clean strings
-    private String cleanString(String input) {
-        return input.replaceAll("\"", "").trim();
-    }
-
-    public List<Appointment> getAppointmentList() {
-        return appointmentList;
-    }
 }

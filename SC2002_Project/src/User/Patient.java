@@ -75,7 +75,7 @@ public class Patient {
         this.typeOfService = typeOfService != null ? new ArrayList<>(typeOfService) : new ArrayList<>();
     }
 
-    // Method to schedule an appointment
+////////////////////////////schedule appointment////////////////////////////  
     public boolean scheduleAppointment(String date, String time) {
         try {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MM yyyy");
@@ -127,7 +127,7 @@ public class Patient {
 
 
 
-    // Method to delete an appointment record
+////////////////////////////delete appointment record////////////////////////////  
     public void deleteAppointmentRecord(String appointmentRecord) {
         boolean isDeleted = csvReaderAppointment.deleteAppointmentRecord(appointmentRecord);
         if (!isDeleted) {
@@ -135,7 +135,8 @@ public class Patient {
         }
     }
 
-    // Method to view scheduled appointments
+    
+////////////////////////////view scheduled appointment////////////////////////////  
     public List<String> viewScheduledAppointments() {
         List<String> appointments = csvReaderAppointment.getAppointmentsByPatientID(patientID, "Pending", "Confirmed");
         List<String> formattedAppointments = new ArrayList<>();
@@ -153,13 +154,14 @@ public class Patient {
                 String appointmentEndTime = parts[6].split("=")[1];
                 String appointmentStatus = parts[7].split("=")[1];
 
-                // Format the extracted details
-                String formattedAppointment = "Doctor Name = " + doctorName +
-                                              ", Patient Name = " + patientName +
-                                              ", Date of Appointment = " + dateOfAppointment +
-                                              ", Start Time = " + appointmentStartTime +
-                                              ", End Time = " + appointmentEndTime +
-                                              ", Status = " + appointmentStatus;
+                // Format the extracted details to display each piece of information on a new line
+                String formattedAppointment = "Doctor Name: " + doctorName + "\n" +
+                                              "Patient Name: " + patientName + "\n" +
+                                              "Date of Appointment: " + dateOfAppointment + "\n" +
+                                              "Start Time: " + appointmentStartTime + "\n" +
+                                              "End Time: " + appointmentEndTime + "\n" +
+                                              "Status: " + appointmentStatus + "\n"+
+                                              "====================";
 
                 formattedAppointments.add(formattedAppointment);
             }
@@ -169,7 +171,7 @@ public class Patient {
     }
 
 
-    // Method to reschedule an appointment
+////////////////////////////re-schedule appointment////////////////////////////  
     public boolean rescheduleAppointment(Scanner scanner) {
         List<String> appointments = viewScheduledAppointments();
         if (appointments.isEmpty()) {
@@ -182,13 +184,26 @@ public class Patient {
             System.out.println((i + 1) + ". " + appointments.get(i));
         }
 
-        System.out.print("Select the appointment number to reschedule: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int choice = -1;
+        boolean validChoice = false;
 
-        if (choice < 1 || choice > appointments.size()) {
-            System.out.println("Invalid selection.");
-            return false;
+        // Reprompt until the user selects a valid numeric choice within the range
+        while (!validChoice) {
+            System.out.print("Select the appointment number to reschedule: ");
+            
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline character
+                
+                if (choice >= 1 && choice <= appointments.size()) {
+                    validChoice = true; // Valid input
+                } else {
+                    System.out.println("Invalid selection. Please select a number between 1 and " + appointments.size() + ".");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
         }
 
         String selectedAppointment = appointments.get(choice - 1);
@@ -196,29 +211,61 @@ public class Patient {
         String oldStartTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "StartTime");
         String oldEndTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "EndTime");
 
-        System.out.print("Enter the new appointment date (DD MM YYYY): ");
-        String newDate = scanner.nextLine();
-        System.out.print("Enter the new appointment time (HHMM): ");
-        String newTime = scanner.nextLine();
-
-        // Validate the new time is within the boundary of 08:00 to 21:00
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
-        try {
-            LocalTime newStartTime = LocalTime.parse(newTime, timeFormatter);
-            LocalTime newEndTime = newStartTime.plusMinutes(30);
-
-            LocalTime startBoundary = LocalTime.of(8, 0);
-            LocalTime endBoundary = LocalTime.of(21, 0);
-
-            if (newStartTime.isBefore(startBoundary) || newEndTime.isAfter(endBoundary)) {
-                System.out.println("The selected time must be between 08:00 and 21:00.");
-                return false;
+        // Validate new date format
+        String newDate = "";
+        boolean validDate = false;
+        while (!validDate) {
+            System.out.print("Enter the new appointment date (DD MM YYYY): ");
+            newDate = scanner.nextLine();
+            
+            // Simple regex to validate date format
+            if (newDate.matches("\\d{2} \\d{2} \\d{4}")) {
+                validDate = true;
+            } else {
+                System.out.println("Invalid date format. Please use DD MM YYYY.");
             }
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid time format. Please use HHMM format.");
-            return false;
         }
 
+        // Validate new time format (HHMM) and check if it's within boundary
+        String newTime = "";
+        boolean validTime = false;
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+
+        while (!validTime) {
+            System.out.print("Enter the new appointment time (HHMM): ");
+            newTime = scanner.nextLine();
+
+            try {
+                LocalTime newStartTime = LocalTime.parse(newTime, timeFormatter);
+                LocalTime newEndTime = newStartTime.plusMinutes(30);
+
+                LocalTime startBoundary = LocalTime.of(8, 0);
+                LocalTime endBoundary = LocalTime.of(21, 0);
+
+                if (newStartTime.isBefore(startBoundary) || newEndTime.isAfter(endBoundary)) {
+                    System.out.println("The selected time must be between 08:00 and 21:00.");
+                } else {
+                    validTime = true;
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid time format. Please use HHMM format.");
+            }
+        }
+        
+        // Debugging: Print out the values before calling the method
+        System.out.println("Debug Info:");
+        System.out.println("Patient ID: " + patientID);
+        System.out.println("Old Date: " + oldDate);
+        System.out.println("Old Start Time: " + oldStartTime);
+        System.out.println("Old End Time: " + oldEndTime);
+        System.out.println("New Date: " + newDate);
+        System.out.println("New Time: " + newTime);
+        System.out.println("New Status: Pending");
+        System.out.println("New Appointment Status: Pending");
+        
+        
+        
+        // If all validations pass, update the appointment
         boolean success = csvReaderAppointment.replaceAppointmentRecord(
             patientID, oldDate, oldStartTime, oldEndTime, newDate, newTime, "Pending", "Pending"
         );
@@ -232,7 +279,9 @@ public class Patient {
         return success;
     }
 
-    // Method to cancel an appointment
+
+
+////////////////////////////cancel appointment////////////////////////////  
     public boolean cancelAppointment(Scanner scanner) {
         List<String> appointments = viewScheduledAppointments();
         if (appointments.isEmpty()) {
@@ -245,13 +294,21 @@ public class Patient {
             System.out.println((i + 1) + ". " + appointments.get(i));
         }
 
-        System.out.print("Select the appointment number to cancel: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        if (choice < 1 || choice > appointments.size()) {
-            System.out.println("Invalid selection.");
-            return false;
+        int choice = -1;
+        // Repeat until a valid choice is entered
+        while (choice < 1 || choice > appointments.size()) {
+            System.out.print("Select the appointment number to cancel: ");
+            // Check if the input is a valid number
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine();  // Consume the newline
+                if (choice < 1 || choice > appointments.size()) {
+                    System.out.println("Invalid selection. Please select a valid appointment number.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a numeric value.");
+                scanner.nextLine();  // Consume the invalid input
+            }
         }
 
         String selectedAppointment = appointments.get(choice - 1);
@@ -283,7 +340,8 @@ public class Patient {
         return false;
     }
 
-    // Method to view past appointment records
+
+////////////////////////////view past appointment record////////////////////////////  
     public List<String> viewPastAppointmentRecords() {
         List<String> pastAppointments = csvReaderAppointment.getAppointmentsByPatientID(patientID, "Completed", "Canceled");
         List<String> formattedAppointments = new ArrayList<>();
@@ -291,6 +349,8 @@ public class Patient {
         if (pastAppointments.isEmpty()) {
             System.out.println("No past appointment records found for Patient: " + getName());
         } else {
+            formattedAppointments.add("Past Appointment Outcome Records:\n========================");
+
             for (String appointmentStr : pastAppointments) {
                 // Parse the appointment string to extract the relevant fields
                 String[] parts = appointmentStr.split(", ");
@@ -304,16 +364,17 @@ public class Patient {
                 String prescribedMedications = parts[9].split("=")[1];
                 String diagnosis = parts[11].split("=")[1];
 
-                // Format the extracted details with each piece of information on a new line
-                String formattedAppointment = "Doctor Name: " + doctorName + "\n" +
-                                              "Patient Name: " + patientName + "\n" +
-                                              "Date of Appointment: " + dateOfAppointment + "\n" +
-                                              "Start Time: " + appointmentStartTime + "\n" +
-                                              "End Time: " + appointmentEndTime + "\n" +
-                                              "Status: " + appointmentStatus + "\n" +
-                                              "Type of Service: " + typeOfService + "\n" +
-                                              "Prescribed Medications: " + prescribedMedications + "\n" +
-                                              "Diagnosis: " + diagnosis + "\n";
+                // Format the extracted details with the new structure
+                String formattedAppointment = "\nDoctor Name: '" + doctorName + "'\n" +
+                                              "Patient Name: '" + patientName + "'\n" +
+                                              "Date of Appointment: '" + dateOfAppointment + "'\n" +
+                                              "Start Time: '" + appointmentStartTime + "'\n" +
+                                              "End Time: '" + appointmentEndTime + "'\n" +
+                                              "Status: '" + appointmentStatus + "'\n" +
+                                              "Type of Service: '" + typeOfService + "'\n" +
+                                              "Prescribed Medications: '" + prescribedMedications + "'\n" +
+                                              "Diagnosis: '" + diagnosis + "'\n" +
+                                              "=========================";
 
                 formattedAppointments.add(formattedAppointment);
             }
@@ -321,6 +382,7 @@ public class Patient {
 
         return formattedAppointments;
     }
+
 
 
 

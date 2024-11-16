@@ -11,6 +11,7 @@ public class Appointment {
     private String appointmentStatus;
     private String typeOfService;
     private String prescribedMedications;
+    private String prescribedMedicationsQuantity;
     private String prescribedMedicationsStatus;
     private String diagnosis;
     private String consultationNotes;
@@ -18,7 +19,8 @@ public class Appointment {
     public Appointment(String doctorId, String doctorName, String patientId, String patientName,
                        String dateOfAppointment, String appointmentStartTime, String appointmentEndTime,
                        String appointmentStatus, String typeOfService, String prescribedMedications,
-                       String prescribedMedicationsStatus, String diagnosis, String consultationNotes) {
+                       String prescribedMedicationsQuantity, String prescribedMedicationsStatus,
+                       String diagnosis, String consultationNotes) {
         this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.patientId = patientId;
@@ -29,6 +31,7 @@ public class Appointment {
         this.appointmentStatus = appointmentStatus;
         this.typeOfService = typeOfService;
         this.prescribedMedications = prescribedMedications;
+        this.prescribedMedicationsQuantity = prescribedMedicationsQuantity;
         this.prescribedMedicationsStatus = prescribedMedicationsStatus;
         this.diagnosis = diagnosis;
         this.consultationNotes = consultationNotes;
@@ -75,6 +78,10 @@ public class Appointment {
         return prescribedMedications;
     }
 
+    public String getPrescribedMedicationsQuantity() {
+        return prescribedMedicationsQuantity;
+    }
+    
     public String getPrescribedMedicationsStatus() {
         return prescribedMedicationsStatus;
     }
@@ -87,7 +94,7 @@ public class Appointment {
         return consultationNotes;
     }
 
- // Setter methods for each field
+    // Setter methods for each field
     public void setDoctorId(String doctorId) {
         this.doctorId = doctorId;
     }
@@ -128,6 +135,10 @@ public class Appointment {
         this.prescribedMedications = prescribedMedications;
     }
 
+    public void setPrescribedMedicationsQuantity(String prescribedMedicationsQuantity) {
+        this.prescribedMedicationsQuantity = prescribedMedicationsQuantity; 
+    }
+
     public void setPrescribedMedicationsStatus(String prescribedMedicationsStatus) {
         this.prescribedMedicationsStatus = prescribedMedicationsStatus;
     }
@@ -139,7 +150,7 @@ public class Appointment {
     public void setConsultationNotes(String consultationNotes) {
         this.consultationNotes = consultationNotes;
     }
-    
+
     @Override
     public String toString() {
         return "Appointment{" +
@@ -153,6 +164,7 @@ public class Appointment {
                 ", appointmentStatus='" + appointmentStatus + '\'' +
                 ", typeOfService='" + typeOfService + '\'' +
                 ", prescribedMedications='" + prescribedMedications + '\'' +
+                ", prescribedMedicationsQuantity=" + prescribedMedicationsQuantity + // Include new field
                 ", prescribedMedicationsStatus='" + prescribedMedicationsStatus + '\'' +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", consultationNotes='" + consultationNotes + '\'' +

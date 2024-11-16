@@ -1,11 +1,11 @@
 Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consultation Notes
-D001,John Smith,P1001,Alice Brown,01 12 2024,1400,1430,Completed,X-Ray,FluMedicine,Dispensed,Pneumonia,ChestPain
-D002,Megan,P1002,Bob Stone,02 12 2024,1400,1430,Completed,X-Ray,FluMedicine,Dispensed,Pneumonia,ChestPain
-D003,John Wick,P1003,Charlie White,03 12 2024,1400,1430,Completed,consultation,panadol,Dispensed,headache,headache
-D001,John Smith,P1002,Bob Stone,04 12 2024,1400,1430,Completed,Consultation,Charcoal,Dispensed,FoodPoisoning,Stomachache
-D002,Megan,P1003,Charlie White,05 12 2024,1400,1430,Cancelled,,,,,
-D002,Megan,P1001,Alice Brown,02 12 2024,1400,1430,Completed,Consultation,Chemo,Pending,Cancer,Cancer
-D001,John Smith,P1001,Alice Brown,31 12 2024,1700,1730,Pending,,,,,
-D001,John Smith,P1001,Alice Brown,30 12 2024,,,Cancelled,,,,,
-D001,John Smith,P1001,Alice Brown,31 12 2024,,,Cancelled,,,,,
-D001,John Smith,P1001,Alice Brown,12 01 2025,1630,1700,Pending,,,,,
+D001,John Smith,P1001,Alice Brown,01 12 2024,1400,1430,Completed,X-Ray,FluMedicine,10,Dispensed,Pneumonia,ChestPain
+D002,Megan,P1002,Bob Stone,02 12 2024,1400,1430,Completed,X-Ray,FluMedicine,10,Dispensed,Pneumonia,ChestPain
+D003,John Wick,P1003,Charlie White,03 12 2024,1400,1430,Completed,consultation,panadol,10,Dispensed,headache,headache
+D001,John Smith,P1002,Bob Stone,04 12 2024,1400,1430,Completed,Consultation,Charcoal,10,Dispensed,FoodPoisoning,Stomachache
+D002,Megan,P1003,Charlie White,05 12 2024,1400,1430,Cancelled,,,,,,
+D002,Megan,P1001,Alice Brown,02 12 2024,1400,1430,Completed,Consultation,Chemo,10,Pending,Cancer,Cancer
+D001,John Smith,P1002,Bob Stone,20 12 2024,1500,1530,Completed,consultation,Paracetamol,20,Dispensed,cough,
+D001,John Smith,P1002,Bob Stone,30 12 2024,1500,1530,Completed,consultation,Ibuprofen,10,Pending,severe cough,cough every night
+D002,Megan,P1001,Alice Brown,22 01 2025,1500,1530,Confirmed,,,,,,
+D001,John Smith,P1001,Alice Brown,02 02 2025,800,830,Completed,consultation,Paracetamol,10,Dispensed,fever,37.9 degree

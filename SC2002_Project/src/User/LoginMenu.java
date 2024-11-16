@@ -21,36 +21,6 @@ public class LoginMenu implements UserRoleMenu {
         this.patientList = patientList;
     }
     
-    /*
-    // Constructor to initialize the LoginMenu with staff and patient lists
-    public LoginMenu() {
-        // Initialize staffList and patientList by reading data from CSV files
-        this.staffList = new ArrayList<>();
-        this.patientList = new ArrayList<>();
-        
-        // Initialize staff and patient data from CSV
-        initializeStaffFromCSV();
-        readAndInitializePatient();
-    }
-    
-    // Method to initialize patient list from CSV
-    private List<Patient> patientList;
-    private CsvReaderPatient csvReaderPatient;
-    public void readAndInitializePatient() {
-        this.csvReaderPatient = new CsvReaderPatient();
-        csvReaderPatient.readCsv();
-        this.patientList = csvReaderPatient.getPatientList();
-    }
-    
-    // Method to initialize staff list from CSV
-    private List<Staff> staffList;
-    private CsvReaderStaff csvReader;
-    public void initializeStaffFromCSV() {        
-        this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
-        csvReader.readAndInitializeStaff(); // Read and initialize staff from the CSV
-        this.staffList = csvReader.getStaffList();  // Assign the read staff list
-    }
-    */
     
     // Method to display the login menu and handle the login process
     @Override
@@ -60,12 +30,28 @@ public class LoginMenu implements UserRoleMenu {
 
             // Authentication loop
             while (!authenticated) {
-            	System.out.println("--- Welcome to Hospital Management App---");
+                System.out.println("--- Welcome to Hospital Management App ---");
                 System.out.println("--- Login Menu ---");
+
+                // Ask for user ID and ensure it's not empty
                 System.out.print("Please Enter User ID: ");
-                userID = scanner.nextLine();
+                userID = scanner.nextLine().trim();
+                while (userID.isEmpty()) {
+                    System.out.println("User ID cannot be empty. Please try again.");
+                    System.out.print("Please Enter User ID: ");
+                    userID = scanner.nextLine().trim();
+                }
+
+                // Ask for password and ensure it's not empty
                 System.out.print("Please Enter Password: ");
-                password = scanner.nextLine();
+                password = scanner.nextLine().trim();
+                while (password.isEmpty()) {
+                    System.out.println("Password cannot be empty. Please try again.");
+                    System.out.print("Please Enter Password: ");
+                    password = scanner.nextLine().trim();
+                }
+
+                // Hash the password
                 password = PasswordHashing.hashPassword(password);
 
                 // Authenticate the user and get the role
@@ -86,7 +72,7 @@ public class LoginMenu implements UserRoleMenu {
         }
     }
 
-    // Method to handle user role-based navigation after successful login
+////////////////////////////handleRoleMenu////////////////////////////  
     private void handleRoleMenu(Scanner scanner, String userType, String userID) {
         UserRoleMenu menu = null;
 
@@ -127,7 +113,7 @@ public class LoginMenu implements UserRoleMenu {
         }
     }
 
-    // Method to find and return the Patient by userID
+////////////////////////////find patient////////////////////////////  
     private Patient findPatient(String userID) {
         for (Patient patient : patientList) {
             if (patient.getPatientID().equals(userID)) {
@@ -137,7 +123,7 @@ public class LoginMenu implements UserRoleMenu {
         return null;
     }
 
-    // Method to find and return the Staff member (if it is a Doctor, Pharmacist, etc.)
+////////////////////////////find staff////////////////////////////  
     private Staff findStaff(String userID) {
         for (Staff staff : staffList) {
             if (staff.getUserID().equals(userID)) {
@@ -147,7 +133,7 @@ public class LoginMenu implements UserRoleMenu {
         return null;
     }
 
-    // Method to fetch the user's name based on their userID and role
+////////////////////////////get user name////////////////////////////  
     private String getUserName(String userID, String userType) {
         if (userType.equals("staff")) {
             // Look for staff in staffList

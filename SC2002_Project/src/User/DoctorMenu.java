@@ -14,13 +14,14 @@ public class DoctorMenu implements UserRoleMenu {
     
     @Override
     public void displayMenu(Scanner scanner) {
-    	
-    	// Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
+
+        // Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
         doctor.readAndInitializePatient();
         doctor.readAndInitializeAppointments();
         doctor.initializeStaffFromCSV();
+        doctor.initializeInventoryFromCSV();
         
-    	boolean exit = false;
+        boolean exit = false;
 
         while (!exit) {
             // Display the menu
@@ -31,59 +32,54 @@ public class DoctorMenu implements UserRoleMenu {
             System.out.println("4. Record Patient Appointment Outcome");
             System.out.println("5. Change Password");
             System.out.println("6. Logout");
-            System.out.print("Select an option (1-5): ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline character left by nextInt()
 
+            int choice = 0;
+
+            // Ensure valid input for the menu choice
+            boolean validInput = false;
+            while (!validInput) {
+                System.out.print("Select an option (1-6): ");
+                if (scanner.hasNextInt()) {
+                    choice = scanner.nextInt();
+                    scanner.nextLine(); // Consume the newline character left by nextInt()
+                    if (choice >= 1 && choice <= 6) {
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid choice, please select a number between 1 and 6.");
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    scanner.nextLine(); // Consume the invalid input
+                }
+            }
+
+            // Handle the selected option
             switch (choice) {
                 case 1:
-                	doctor.viewPatientMedicalRecords();
+                    doctor.viewPatientMedicalRecords();
                     break;
                 case 2:
-                	doctor.viewDoctorAppointmentRecord();
+                    doctor.viewDoctorAppointmentRecord();
                     break;
                 case 3:
-                	doctor.acceptOrDeclineAppointmentSchedule();
+                    doctor.acceptOrDeclineAppointmentSchedule();
                     break;
                 case 4:
-                	doctor.recordAppointmentOutcome();
+                    doctor.recordAppointmentOutcome();
                     break;
                 case 5:
-                	doctor.changePassword(scanner);
-                	exit = true;
+                    doctor.changePassword(scanner);
+                    exit = true;
                     break;
                 case 6:
                     System.out.println("Logging out...");
                     exit = true;
                     break;
                 default:
-                    System.out.println("Invalid choice, please select between 1 and 5.");
+                    // This block won't be reached due to the validInput check above
                     break;
             }
         }
     }
-    
-    //test usage
-    public static void main(String[] args) {
-        // Initialize necessary objects
-        Scanner scanner = new Scanner(System.in);
 
-        // Create a sample Doctor object (you may need to load data from CSV files here)
-        Doctor doctor = new Doctor("D001", "password123", "Doctor", "Male", "Dr. Smith", 40);
-
-        // Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
-        doctor.readAndInitializePatient();
-        doctor.readAndInitializeAppointments();
-
-        // Now we create the DoctorMenu object and pass the doctor object to it
-        DoctorMenu doctorMenu = new DoctorMenu(doctor);
-
-        // Display the doctor menu and allow the doctor to interact
-        doctorMenu.displayMenu(scanner);
-        
-        // Close scanner after use
-        scanner.close();
-    }
-   
 }
