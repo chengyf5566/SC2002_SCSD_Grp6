@@ -1,10 +1,10 @@
 package User;
 public class Staff extends User {
-    private int age; // Only the age field is specific to Staff
+    private int age; 
 
     public Staff(String userID, String password, String role, String gender, String name, int age) {
-        super(userID, password, role, gender, name); // Delegate other fields to the User constructor
-        this.age = age; // Initialize the age field
+        super(userID, password, role, gender, name); 
+        this.age = age; 
     }
 
 
@@ -62,7 +62,7 @@ public class Staff extends User {
 
 
     @Override
-    public String toString() { // Method automatically invoked when printing staff object
+    public String toString() { 
         return getUserID() + "/" + getPassword() + "/" + getName() + "/" + getRole() + "/" + getGender() + "/" + age;
     }
 }

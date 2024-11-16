@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.Date;
 
 public class DoctorMenu implements UserRoleMenu {
-	private Doctor doctor; // Assuming doctor object is passed to this class
+	private Doctor doctor; 
 	
 	// Constructor to initialize the administrator object
     public DoctorMenu(Doctor doctor) {
@@ -15,7 +15,7 @@ public class DoctorMenu implements UserRoleMenu {
     @Override
     public void displayMenu(Scanner scanner) {
 
-        // Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
+        // Initialize csv
         doctor.readAndInitializePatient();
         doctor.readAndInitializeAppointments();
         doctor.initializeStaffFromCSV();
@@ -24,7 +24,6 @@ public class DoctorMenu implements UserRoleMenu {
         boolean exit = false;
 
         while (!exit) {
-            // Display the menu
             System.out.println("\n--- Doctor Menu ---");
             System.out.println("1. View Patient Medical Records");
             System.out.println("2. View Scheduled Appointments (Doctor)");
@@ -35,13 +34,12 @@ public class DoctorMenu implements UserRoleMenu {
 
             int choice = 0;
 
-            // Ensure valid input for the menu choice
             boolean validInput = false;
             while (!validInput) {
                 System.out.print("Select an option (1-6): ");
                 if (scanner.hasNextInt()) {
                     choice = scanner.nextInt();
-                    scanner.nextLine(); // Consume the newline character left by nextInt()
+                    scanner.nextLine(); 
                     if (choice >= 1 && choice <= 6) {
                         validInput = true;
                     } else {
@@ -49,11 +47,10 @@ public class DoctorMenu implements UserRoleMenu {
                     }
                 } else {
                     System.out.println("Invalid input. Please enter a valid number.");
-                    scanner.nextLine(); // Consume the invalid input
+                    scanner.nextLine(); 
                 }
             }
 
-            // Handle the selected option
             switch (choice) {
                 case 1:
                     doctor.viewPatientMedicalRecords();
@@ -76,7 +73,6 @@ public class DoctorMenu implements UserRoleMenu {
                     exit = true;
                     break;
                 default:
-                    // This block won't be reached due to the validInput check above
                     break;
             }
         }

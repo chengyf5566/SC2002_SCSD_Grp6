@@ -31,26 +31,24 @@ public class PharmacistMenu implements UserRoleMenu {
             int input = -1;
             boolean validInput = false;
 
-            // Reprompt for valid input until it's correct
             while (!validInput) {
                 System.out.print("Select Option: ");
                 
                 if (scanner.hasNextInt()) {
                     input = scanner.nextInt();
-                    scanner.nextLine();  // Consume the newline character
+                    scanner.nextLine();  
                     
                     if (input >= 1 && input <= 5) {
-                        validInput = true; // Valid input
+                        validInput = true; 
                     } else {
                         System.out.println("Invalid option. Please select a number between 1 and 5.");
                     }
                 } else {
                     System.out.println("Invalid input. Please enter a valid number.");
-                    scanner.nextLine(); // Consume the invalid input
+                    scanner.nextLine(); 
                 }
             }
 
-            // Handle the selected option
             switch (input) {
                 case 1:
                     pharmacist.viewAppointments(); 
