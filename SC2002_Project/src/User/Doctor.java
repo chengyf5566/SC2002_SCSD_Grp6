@@ -37,13 +37,6 @@ public class Doctor extends Staff {
         this.csvReaderAppointment = new CsvReaderAppointment();
         csvReaderAppointment.readCsv();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
-
-        
-        // Debugging: Print out the appointments after initialization
-        System.out.println("Appointments loaded: " + appointmentList.size());
-        for (Appointment appointment : appointmentList) {
-            System.out.println(appointment); // Assuming the toString method in Appointment prints useful details
-        } 
     }
     
     // Method to initialize staff list  from CSV
