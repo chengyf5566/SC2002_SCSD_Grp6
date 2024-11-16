@@ -156,10 +156,10 @@ public class Pharmacist extends Staff {
             if (scanner.hasNextInt()) {
                 replenishAmount = scanner.nextInt();
                 scanner.nextLine(); 
-                if (replenishAmount >= 0) {
+                if (replenishAmount > 0) {
                     validReplenishAmount = true; 
                 } else {
-                    System.out.println("Replenish amount cannot be negative. Please enter a valid amount.");
+                    System.out.println("Replenish amount cannot be negative or zero. Please enter a valid amount.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid number for replenish amount.");
