@@ -15,14 +15,15 @@ public class PatientMenu implements UserRoleMenu {
     // Constructor to initialize Patient and CsvReaderPatient
     public PatientMenu(Patient patient) {
         this.patient = patient;
-        this.csvReaderPatient = new CsvReaderPatient(); //this can remove? or will break
+        this.csvReaderPatient = new CsvReaderPatient(); 
 
     }
     
    
     @Override
     public void displayMenu(Scanner scanner) {
-        // Initialize csv files
+    	
+        // Initialize csv
         patient.readAndInitializePatient();
         patient.readAndInitializeAppointments();
 
@@ -39,28 +40,27 @@ public class PatientMenu implements UserRoleMenu {
             System.out.println("8. View Past Appointment Outcome Records");
             System.out.println("9. Logout");
 
-            int input = -1; // Initialize to a default value that is invalid
-            while (input < 1 || input > 9) {  // Validate that input is between 1 and 9
+            int input = -1; 
+            while (input < 1 || input > 9) {  
                 System.out.print("Select Option: ");
-                if (scanner.hasNextInt()) {  // Check if the input is an integer
+                if (scanner.hasNextInt()) {  
                     input = scanner.nextInt();
-                    scanner.nextLine(); // Clear the buffer
+                    scanner.nextLine(); 
                     if (input < 1 || input > 9) {
                         System.out.println("Invalid option. Please select a number between 1 and 9.");
                     }
                 } else {
                     System.out.println("Invalid input. Please enter a numeric value.");
-                    scanner.nextLine(); // Clear the invalid input
+                    scanner.nextLine(); 
                 }
             }
 
-            // Switch statement to process valid input
             switch (input) {
                 case 1 -> viewMedicalRecord();
                 case 2 -> updatePersonalInformation(scanner);
                 case 3 -> {
                     changePassword(scanner);
-                    exit = true; // Exit the loop after changing password
+                    exit = true; 
                 }
                 case 4 -> scheduleAppointment(scanner);
                 case 5 -> rescheduleAppointment(scanner);
@@ -69,7 +69,7 @@ public class PatientMenu implements UserRoleMenu {
                 case 8 -> viewPastAppointmentOutcomeRecords();
                 case 9 -> {
                     System.out.println("Logout\n");
-                    exit = true; // Exit the loop after logout
+                    exit = true; 
                 }
                 default -> System.out.println("Invalid option. Try again.");
             }
@@ -78,7 +78,6 @@ public class PatientMenu implements UserRoleMenu {
 
 ////////////////////////////view medical record////////////////////////////  
     private void viewMedicalRecord() {
-    	//System.out.println(patient.getPatientID());
         Patient patientDetails = csvReaderPatient.getPatientByID(patient.getPatientID());
 
         if (patientDetails != null) {
@@ -103,31 +102,28 @@ public class PatientMenu implements UserRoleMenu {
 
 ////////////////////////////update personal information (contact no. and email)////////////////////////////  
     private void updatePersonalInformation(Scanner scanner) {
-        // Handle contact number input (cannot be empty)
         String newContactNumber = "";
         while (newContactNumber.isEmpty()) {
             System.out.print("Enter new contact number: ");
-            newContactNumber = scanner.nextLine().trim();  // Remove leading/trailing spaces
+            newContactNumber = scanner.nextLine().trim();  
             if (newContactNumber.isEmpty()) {
                 System.out.println("Contact number cannot be empty. Please try again.");
             }
         }
 
-        // Handle email input (cannot be empty)
+
         String newEmail = "";
         while (newEmail.isEmpty()) {
             System.out.print("Enter new email address: ");
-            newEmail = scanner.nextLine().trim();  // Remove leading/trailing spaces
+            newEmail = scanner.nextLine().trim(); 
             if (newEmail.isEmpty()) {
                 System.out.println("Email address cannot be empty. Please try again.");
             }
         }
 
-        // Set the new contact number and email in the Patient object
         patient.setContactNum(newContactNumber);
         patient.setEmail(newEmail);
 
-        // Update the patient's information in the list
         List<Patient> patients = csvReaderPatient.getPatientList();
         for (Patient p : patients) {
             if (p.getPatientID().equals(patient.getPatientID())) {
@@ -137,7 +133,6 @@ public class PatientMenu implements UserRoleMenu {
             }
         }
 
-        // Save the updated patient list to the CSV
         csvReaderPatient.writeCSV();
         System.out.println("Personal information updated successfully.");
     }
@@ -145,21 +140,18 @@ public class PatientMenu implements UserRoleMenu {
 
 ////////////////////////////change password//////////////////////////// 
     private void changePassword(Scanner scanner) {
-        // Handle password input (cannot be empty)
         String newPassword = "";
         while (newPassword.isEmpty()) {
             System.out.print("Enter new password: ");
-            newPassword = scanner.nextLine().trim();  // Remove leading/trailing spaces
+            newPassword = scanner.nextLine().trim();  
             if (newPassword.isEmpty()) {
                 System.out.println("Password cannot be empty. Please try again.");
             }
         }
 
-        // Hash the new password
         newPassword = PasswordHashing.hashPassword(newPassword);
         patient.setPatientPassword(newPassword);
 
-        // Update the patient's password in the list
         List<Patient> patients = csvReaderPatient.getPatientList();
         for (Patient p : patients) {
             if (p.getPatientID().equals(patient.getPatientID())) {
@@ -168,7 +160,6 @@ public class PatientMenu implements UserRoleMenu {
             }
         }
 
-        // Save the updated patient list to the CSV
         csvReaderPatient.writeCSV();
         System.out.println("Password updated successfully.");
     }
@@ -182,7 +173,7 @@ public class PatientMenu implements UserRoleMenu {
         // Handle date input (must be in DD MM YYYY format)
         while (date.isEmpty() || !date.matches("\\d{2} \\d{2} \\d{4}")) {
             System.out.print("Enter the desired appointment date (DD MM YYYY): ");
-            date = scanner.nextLine().trim();  // Remove leading/trailing spaces
+            date = scanner.nextLine().trim();  
             if (date.isEmpty()) {
                 System.out.println("Date cannot be empty. Please try again.");
             } else if (!date.matches("\\d{2} \\d{2} \\d{4}")) {
@@ -193,7 +184,7 @@ public class PatientMenu implements UserRoleMenu {
         // Handle time input (must be in HHMM format)
         while (time.isEmpty() || !time.matches("\\d{4}")) {
             System.out.print("Enter the desired appointment time (HHMM): ");
-            time = scanner.nextLine().trim();  // Remove leading/trailing spaces
+            time = scanner.nextLine().trim();  
             if (time.isEmpty()) {
                 System.out.println("Time cannot be empty. Please try again.");
             } else if (!time.matches("\\d{4}")) {
@@ -203,25 +194,24 @@ public class PatientMenu implements UserRoleMenu {
                 int minute = Integer.parseInt(time.substring(2, 4));
                 if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
                     System.out.println("Invalid time. Please enter a valid time (HHMM).");
-                    time = "";  // Reset time if invalid
+                    time = "";  
                 } else {
-                    // Validate that the time is within 08:00 and 21:00
+                    // Validate that the time is within 08:00 and 21:00 , doctor working hours
                     LocalTime parsedTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"));
                     LocalTime startBoundary = LocalTime.of(8, 0);
                     LocalTime endBoundary = LocalTime.of(21, 0);
 
-                    // Calculate end time for the appointment
+                    //each appointment is 30 minutes
                     LocalTime endTime = parsedTime.plusMinutes(30);
 
                     if (parsedTime.isBefore(startBoundary) || endTime.isAfter(endBoundary)) {
                         System.out.println("The selected time must be between 08:00 and 21:00, and the appointment must end by 21:00.");
-                        time = "";  // Reset time if out of range
+                        time = "";  
                     }
                 }
             }
         }
 
-        // Schedule appointment if valid date and time
         boolean isScheduled = patient.scheduleAppointment(date, time);
         if (isScheduled) {
             System.out.println("Appointment successfully scheduled for " + date + " at " + time + ".");
@@ -263,7 +253,6 @@ public class PatientMenu implements UserRoleMenu {
 
 ////////////////////////////view past appointment//////////////////////////// 
     private void viewPastAppointmentOutcomeRecords() {
-        //System.out.println("Past Appointment Outcome Records:");
         List<String> pastRecords = patient.viewPastAppointmentRecords();
 
         if (pastRecords.isEmpty()) {

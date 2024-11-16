@@ -33,9 +33,9 @@ public class Administrator extends Staff {
 
     // Method to initialize staff list  from CSV
     public void initializeStaffFromCSV() {        
-        this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
-        csvReader.readCsv(); // Read and initialize staff from the CSV
-        this.staffList = csvReader.getStaffList();  // Assign the read staff list
+        this.csvReader = new CsvReaderStaff();   
+        csvReader.readCsv(); 
+        this.staffList = csvReader.getStaffList();  
     }
     
     public void initializeInventoryFromCSV() {
@@ -72,20 +72,20 @@ public class Administrator extends Staff {
             int choice = -1;
             boolean validChoice = false;
 
-            // Input exception handling for invalid input
+
             while (!validChoice) {
                 System.out.print("Select Option: ");
                 try {
                     choice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine(); 
                     if (choice < 1 || choice > 5) {
                         System.out.println("Invalid option. Please select a number between 1 and 5.");
                     } else {
-                        validChoice = true; // If input is valid, exit the loop
+                        validChoice = true; 
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid input. Please enter a valid number.");
-                    scanner.nextLine(); // Clear the invalid input
+                    scanner.nextLine(); 
                 }
             }
 
@@ -117,7 +117,7 @@ public class Administrator extends Staff {
         String password = scanner.nextLine();
         password = PasswordHashing.hashPassword(password);
 
-        // Handle Role input with exception handling
+
         String role = "";
         boolean validRole = false;
         while (!validRole) {
@@ -130,7 +130,7 @@ public class Administrator extends Staff {
             }
         }
 
-        // Handle Gender input
+   
         String gender = "";
         boolean validGender = false;
         while (!validGender) {
@@ -143,7 +143,7 @@ public class Administrator extends Staff {
             }
         }
 
-        // Handle Name input (simple validation to ensure it's not empty)
+ 
         String name = "";
         while (name.isEmpty()) {
             System.out.print("Enter Name: ");
@@ -153,14 +153,14 @@ public class Administrator extends Staff {
             }
         }
 
-        // Handle Age input with exception handling
+    
         int age = -1;
         boolean validAge = false;
         while (!validAge) {
             System.out.print("Enter Age: ");
             try {
                 age = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine(); 
                 if (age <= 0) {
                     System.out.println("Age must be a positive number.");
                 } else {
@@ -168,7 +168,7 @@ public class Administrator extends Staff {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input for age. Please enter a valid number.");
-                scanner.nextLine(); // Consume the invalid input
+                scanner.nextLine(); 
             }
         }
 
@@ -191,7 +191,6 @@ public class Administrator extends Staff {
         if (newStaff != null) {
             staffList.add(newStaff);
             System.out.println("Staff member added successfully.");
-            // Save the updated staff list to the CSV file
             csvReader.writeCSV();
         }
     }
@@ -212,12 +211,12 @@ public class Administrator extends Staff {
         while (!validInput) {
             System.out.print("\nChoose which staff member to remove: ");
             
-            // Check if the input is an integer
+       
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine(); 
 
-                // Validate the choice (check if within valid range)
+                
                 if (choice >= 1 && choice <= staffList.size()) {
                     validInput = true;
                 } else {
@@ -235,8 +234,7 @@ public class Administrator extends Staff {
 
         // Remove the staff member
         boolean removed = staffList.removeIf(staff -> staff.getUserID().equalsIgnoreCase(staffID));
-        if (removed) {
-            // Save the updated staff list to the CSV file
+        if (removed) {    
             csvReader.writeCSV();
             System.out.println("Staff member with ID " + staffID + " removed and list updated in CSV.");
         } else {
@@ -260,12 +258,11 @@ public class Administrator extends Staff {
         while (!validInput) {
             System.out.print("\nChoose which staff member to update: ");
             
-            // Check if the input is an integer
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine(); 
 
-                // Validate the choice (check if within valid range)
+
                 if (choice >= 1 && choice <= staffList.size()) {
                     validInput = true;
                 } else {
@@ -273,11 +270,10 @@ public class Administrator extends Staff {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Get the staff member to update based on the user's choice
         Staff staffToUpdate = staffList.get(choice - 1);
 
         // Ask for updated details
@@ -303,7 +299,7 @@ public class Administrator extends Staff {
             System.out.print("Enter New Age: ");
             if (scanner.hasNextInt()) {
                 newAge = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
                 if (newAge > 0) {
                     validAge = true;
                 } else {
@@ -311,15 +307,11 @@ public class Administrator extends Staff {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid age.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
         staffToUpdate.setAge(newAge);
-
-        // Confirmation message
-        System.out.println("Staff member updated successfully.");
-        
-        // After updating, write the updated list to CSV
+        System.out.println("Staff member updated successfully.");     
         csvReader.writeCSV();
     }
 
@@ -351,25 +343,25 @@ public class Administrator extends Staff {
             System.out.println("6. Approve Replenishment Request");
             System.out.println("7. Back to Main Menu");
             
-            int choice = -1;  // Default invalid choice to start
+            int choice = -1;  
             boolean validInput = false;
 
-            // Loop until valid input is given
+     
             while (!validInput) {
                 System.out.print("Select Option: ");
                 
                 if (scanner.hasNextInt()) {
                     choice = scanner.nextInt();
-                    scanner.nextLine();  // Consume the newline character
+                    scanner.nextLine();  
 
                     if (choice >= 1 && choice <= 7) {
-                        validInput = true;  // Exit loop when valid input is provided
+                        validInput = true;  
                     } else {
                         System.out.println("Invalid option. Please select a number between 1 and 7.");
                     }
                 } else {
                     System.out.println("Invalid input. Please enter a number.");
-                    scanner.nextLine();  // Consume the invalid input
+                    scanner.nextLine();  
                 }
             }
 
@@ -434,12 +426,12 @@ public class Administrator extends Staff {
             return;
         }
 
-        // Initialize variables for stock details
+
         int initialStock = -1;
         int currentStock = -1;
         int lowStockAlert = -1;
 
-        // Validate Initial Stock input
+
         while (initialStock < 0) {
             System.out.print("Enter Initial Stock (must be a positive integer): ");
             if (scanner.hasNextInt()) {
@@ -449,11 +441,10 @@ public class Administrator extends Staff {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
-
-        // Validate Current Stock input
+  
         while (currentStock < 0) {
             System.out.print("Enter Current Stock (must be a positive integer): ");
             if (scanner.hasNextInt()) {
@@ -463,11 +454,10 @@ public class Administrator extends Staff {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Validate Low Stock Alert Level input
         while (lowStockAlert < 0) {
             System.out.print("Enter Low Stock Alert Level (must be a positive integer): ");
             if (scanner.hasNextInt()) {
@@ -477,16 +467,15 @@ public class Administrator extends Staff {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // After all inputs are validated, create new medication
+
         Medication newMedication = new Medication(name, initialStock, currentStock, lowStockAlert, "No", 0);
         medicationList.add(newMedication);
         System.out.println("Medication added successfully.");
         
-        // Save the updated list to the CSV
         csvReaderInventory.writeCSV();
     }
 
@@ -509,21 +498,19 @@ public class Administrator extends Staff {
             System.out.print("Enter the number of the medication to remove: ");
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine();
                 if (choice < 1 || choice > medicationList.size()) {
                     System.out.println("Invalid choice. Please choose a valid medication number.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Get the selected medication and remove it from the list
         Medication selectedMedication = medicationList.get(choice - 1);
         medicationList.remove(selectedMedication);
 
-        // Save the updated list to the CSV file
         csvReaderInventory.writeCSV();
         System.out.println("Medication removed successfully: " + selectedMedication.getMedicineName());
     }
@@ -548,13 +535,13 @@ public class Administrator extends Staff {
             System.out.print("Enter the number of the medication to update stock levels: ");
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine();
                 if (choice < 1 || choice > medicationList.size()) {
                     System.out.println("Invalid choice. Please choose a valid medication number.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
@@ -571,21 +558,19 @@ public class Administrator extends Staff {
             System.out.print("Enter the amount to update the stock (positive number): ");
             if (scanner.hasNextInt()) {
                 amountToUpdate = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine(); 
                 if (amountToUpdate <= 0) {
                     System.out.println("Amount must be a positive number. Please try again.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a positive number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Update the current stock and initial stock levels
         selectedMedication.setCurrentStock(selectedMedication.getCurrentStock() + amountToUpdate);
         selectedMedication.setInitialStock(selectedMedication.getInitialStock() + amountToUpdate);
 
-        // Save the updated list to the CSV file
         csvReaderInventory.writeCSV();
         System.out.println("Stock updated successfully. New Current Stock: " + selectedMedication.getCurrentStock());
     }
@@ -610,13 +595,13 @@ public class Administrator extends Staff {
             System.out.print("Enter the number of the medication to update low stock alert level: ");
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine(); 
                 if (choice < 1 || choice > medicationList.size()) {
                     System.out.println("Invalid choice. Please choose a valid medication number.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine();
             }
         }
 
@@ -638,14 +623,12 @@ public class Administrator extends Staff {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid positive number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Update the low stock alert level
         selectedMedication.setLowStockLevelAlert(newAlertLevel);
 
-        // Save the updated list to the CSV file
         csvReaderInventory.writeCSV();
         System.out.println("Low stock alert level updated successfully.");
     }
@@ -656,26 +639,15 @@ public class Administrator extends Staff {
 	    // Loop through all medications to find those with replenishRequest set to "Yes"
 	    medicationList.forEach(medication -> {
 	        if ("Yes".equalsIgnoreCase(medication.getReplenishRequest())) {
-	            // Add replenish amount to current stock
 	            int newCurrentStock = medication.getCurrentStock() + medication.getReplenishRequestAmount();
 	            medication.setCurrentStock(newCurrentStock);
-
-	            // Set initial stock to the new current stock
 	            medication.setInitialStock(newCurrentStock);
-
-	            // Set replenishRequest to "No" as it has been approved
 	            medication.setReplenishRequest("No");
-
-	            // Set replenishRequestAmount to 0 as it has been restocked
 	            medication.setReplenishRequestAmount(0);
 
 	            System.out.println("Replenishment approved and stock updated for: " + medication.getMedicineName());
 	        }
 	    });
-
-
-
-	    // Write the updated inventory to CSV
 	    csvReaderInventory.writeCSV();
 	}
 
@@ -737,13 +709,13 @@ public class Administrator extends Staff {
             while (choice < 1 || choice > 4) {
                 if (scanner.hasNextInt()) {
                     choice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine(); 
                     if (choice < 1 || choice > 4) {
                         System.out.println("Invalid choice. Please select a valid option between 1 and 4.");
                     }
                 } else {
                     System.out.println("Invalid input. Please enter a number between 1 and 4.");
-                    scanner.nextLine(); // Consume invalid input
+                    scanner.nextLine(); 
                 }
             }
 
@@ -761,7 +733,6 @@ public class Administrator extends Staff {
     private void addPatient(Scanner scanner) {    	
     	String patientID;
 
-        // Prompt the user for a valid Patient ID
         while (true) {
             System.out.print("Enter new Patient ID: ");
             patientID = scanner.nextLine().trim();
@@ -769,7 +740,7 @@ public class Administrator extends Staff {
             // Check if the Patient ID is empty
             if (patientID.isEmpty()) {
                 System.out.println("Patient ID cannot be empty.");
-                continue; // Ask again if the ID is empty
+                continue; 
             }
 
             // Check if the patient already exists
@@ -777,19 +748,18 @@ public class Administrator extends Staff {
             for (Patient patient : patientList) {
                 if (patient.getPatientID().equalsIgnoreCase(patientID)) {
                     patientExists = true;
-                    break; // No need to check further once a match is found
+                    break; 
                 }
             }
 
             if (patientExists) {
                 System.out.println("A patient with this Patient ID already exists. Try a different ID.");
-                continue; // Ask again if the patient already exists
+                continue; 
             }
 
-            break; // Break out of the loop if the ID is valid and does not exist
+            break; 
         }
 
-    	
     	// Ask for password and hash it
         String password = "";
         while (password.isEmpty()) {
@@ -801,7 +771,6 @@ public class Administrator extends Staff {
         }
         password = PasswordHashing.hashPassword(password);
 
-        // Ask for patient details
         String name = "";
         while (name.isEmpty()) {
             System.out.print("Enter Patient Name: ");
@@ -856,11 +825,11 @@ public class Administrator extends Staff {
             }
         }
 
-        // Display available doctors from staffList (those with userID starting with 'D')
+
         System.out.println("\nAvailable Doctors:");
         List<Staff> doctors = new ArrayList<>();
         for (Staff staffMember : staffList) {
-            if (staffMember.getUserID().startsWith("D")) {  // Filter for doctors
+            if (staffMember.getUserID().startsWith("D")) {  
                 doctors.add(staffMember);
                 System.out.println(doctors.size() + ". " + staffMember.getName());
             }
@@ -876,31 +845,28 @@ public class Administrator extends Staff {
             System.out.print("Select Doctor by number: ");
             if (scanner.hasNextInt()) {
                 doctorChoice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine(); 
                 if (doctorChoice < 1 || doctorChoice > doctors.size()) {
                     System.out.println("Invalid choice. Please select a valid doctor number.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Get the selected doctor
+
         Staff selectedDoctor = doctors.get(doctorChoice - 1);
         String assignedDoctorID = selectedDoctor.getUserID();
         String assignedDoctorName = selectedDoctor.getName();
 
-        // Create a new patient and add to the list
         Patient newPatient = new Patient(patientID, password, name, gender, dateOfBirth, bloodType, 
                                          contactNum, email, assignedDoctorID, assignedDoctorName, 
                                          new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         if (newPatient != null) {
-            patientList.add(newPatient);  // Add new patient to the list
+            patientList.add(newPatient);  
             System.out.println("New Patient added successfully.");
-
-            // Save the updated patient list to the CSV file
             csvReaderPatient.writeCSV();
         }
     }
@@ -924,26 +890,23 @@ public class Administrator extends Staff {
         while (patientChoice < 1 || patientChoice > patientList.size()) {
             System.out.print("Enter the number corresponding to the patient to remove: ");
             
-            // Validate input
+
             if (scanner.hasNextInt()) {
                 patientChoice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine(); 
                 if (patientChoice < 1 || patientChoice > patientList.size()) {
                     System.out.println("Invalid choice. Please select a valid patient number.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Get the patient ID of the selected patient
         String selectedPatientID = patientList.get(patientChoice - 1).getPatientID();
 
-        // Remove the selected patient from the list
         boolean removed = patientList.removeIf(patient -> patient.getPatientID().equalsIgnoreCase(selectedPatientID));
         if (removed) {
-            // Save the updated patient list to the CSV file
             csvReaderPatient.writeCSV();
             System.out.println("Patient with ID " + selectedPatientID + " removed and list updated in CSV.");
         } else {
@@ -982,25 +945,22 @@ public class Administrator extends Staff {
         // Ensure password is not empty
         while (newPassword.isEmpty()) {
             System.out.print("Enter new password: ");
-            newPassword = scanner.nextLine().trim(); // Remove leading/trailing spaces
+            newPassword = scanner.nextLine().trim(); 
             
             if (newPassword.isEmpty()) {
                 System.out.println("Password cannot be empty. Please enter a valid password.");
             }
         }
 
-        // Set the new password for the current administrator
         this.setPassword(newPassword);
 
-        // Update the password in the staff list and save to CSV
         for (Staff staff : staffList) {
-            if (staff.getUserID().equals(this.getUserID())) { // Assuming getUserID() is accessible
-                staff.setPassword(newPassword); // Assuming setPassword() is accessible
+            if (staff.getUserID().equals(this.getUserID())) { 
+                staff.setPassword(newPassword); 
                 break;
             }
         }
 
-        // Write updated staff data to CSV
         csvReader.writeCSV();
         System.out.println("Password updated successfully.");
     }

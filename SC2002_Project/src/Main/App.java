@@ -10,14 +10,14 @@ public class App {
 
     public static void main(String[] args) {
         App app = new App();
-        app.initializeData();  // Initialize both staff and patient data
-        app.run();  // Run the main program loop
+        app.initializeData();  
+        app.run();  
 
     }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        LoginMenu loginMenu = new LoginMenu(staffList, patientList); // Create the LoginMenu instance
+        LoginMenu loginMenu = new LoginMenu(staffList, patientList); 
 
         // Display login menu and authenticate the user
         loginMenu.displayMenu(scanner);

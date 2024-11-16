@@ -6,28 +6,26 @@ import java.util.List;
 
 public class CsvReaderInventory implements CsvReader {
 
-    private final String filePath = "Medicine_List.csv"; // Path to the medication CSV file
+    private final String filePath = "Medicine_List.csv"; 
     private List<Medication> medicationList = new ArrayList<>();
 
 
-    // Method to read data from CSV and create Medication objects
+    // Method to read data from CSV
     public void readCsv() {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            // Skip the header row
             br.readLine();
 
-            // Read each line from the CSV file
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
 
-                // Check if the record contains all expected columns
-                if (values.length < 6) {  // 6 columns expected now
+
+                if (values.length < 6) {  
                     System.out.println("Incomplete record: " + line);
                     continue;
                 }
 
-                // Extract and trim the values from the CSV
+
                 String name = values[0].trim();
                 int initialStock;
                 int currentStock;
@@ -35,7 +33,7 @@ public class CsvReaderInventory implements CsvReader {
                 String replenishRequest = values[4].trim();
                 int replenishRequestAmount;
 
-                // Try parsing the initial stock, current stock, low stock alert levels, and replenish amount
+
                 try {
                     initialStock = Integer.parseInt(values[1].trim());
                     currentStock = Integer.parseInt(values[2].trim());
@@ -46,10 +44,10 @@ public class CsvReaderInventory implements CsvReader {
                     continue;
                 }
 
-                // Create a Medication object with the data
+
                 Medication medication = new Medication(name, initialStock, currentStock, lowStockLevelAlert, replenishRequest, replenishRequestAmount);
 
-                // Add the created medication object to the medication list
+
                 medicationList.add(medication);
             }
         } catch (IOException e) {
@@ -67,17 +65,14 @@ public class CsvReaderInventory implements CsvReader {
     public void writeCSV() {
         File file = new File(filePath);
 
-        // Check if the file exists
         if (!file.exists()) {
             System.out.println("File does not exist at path: " + filePath);
             return;
         }
 
         try (FileWriter writer = new FileWriter(file)) {
-            // Write the header
             writer.write("Medicine Name,Initial Stock,Current Stock,Low Stock Level Alert,Replenish Request,Replenish Request Amount\n");
 
-            // Write each medication's data
             for (Medication med : medicationList) {
                 writer.write(med.getMedicineName() + ","
                         + med.getInitialStock() + ","

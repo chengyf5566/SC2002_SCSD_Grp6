@@ -11,9 +11,9 @@ public class LoginMenu implements UserRoleMenu {
     private String userID;
     private String password;
     
-    
     private List<Staff> staffList;
     private List<Patient> patientList;
+    
     // Constructor to initialize the LoginMenu with staff and patient lists
     public LoginMenu(List<Staff> staffList, List<Patient> patientList) {
         this.staffList = staffList;
@@ -21,18 +21,16 @@ public class LoginMenu implements UserRoleMenu {
     }
     
     
-    // Method to display the login menu and handle the login process
+
     @Override
     public void displayMenu(Scanner scanner) {
-        while (true) {  // Loop indefinitely to handle re-login after logout
+        while (true) {  
             authenticated = false;
 
-            // Authentication loop
             while (!authenticated) {
                 System.out.println("--- Welcome to Hospital Management App ---");
                 System.out.println("--- Login Menu ---");
 
-                // Ask for user ID and ensure it's not empty
                 System.out.print("Please Enter User ID: ");
                 userID = scanner.nextLine().trim();
                 while (userID.isEmpty()) {
@@ -41,7 +39,6 @@ public class LoginMenu implements UserRoleMenu {
                     userID = scanner.nextLine().trim();
                 }
 
-                // Ask for password and ensure it's not empty
                 System.out.print("Please Enter Password: ");
                 password = scanner.nextLine().trim();
                 while (password.isEmpty()) {
@@ -53,13 +50,10 @@ public class LoginMenu implements UserRoleMenu {
                 // Hash the password
                 password = PasswordHashing.hashPassword(password);
 
-                // Authenticate the user and get the role
                 Login login = new Login();
                 String userType = login.authenticate(userID, password, staffList, patientList);
 
-                // Check the result of authentication
                 if (!userType.equals("invalid")) {
-                    // Fetch the user's name based on the role and display the greeting
                     String userName = getUserName(userID, userType);
                     System.out.println("Authentication successful. Welcome, " + userName + "!");
                     authenticated = true;
@@ -75,7 +69,6 @@ public class LoginMenu implements UserRoleMenu {
     private void handleRoleMenu(Scanner scanner, String userType, String userID) {
         UserRoleMenu menu = null;
 
-        // Determine the role and provide the corresponding menu
         switch (userType.toLowerCase()) {
             case "patient":
                 Patient patient = findPatient(userID);
@@ -106,7 +99,6 @@ public class LoginMenu implements UserRoleMenu {
                 return;
         }
 
-        // Display the role-specific menu if applicable
         if (menu != null) {
             menu.displayMenu(scanner);
         }
@@ -135,18 +127,16 @@ public class LoginMenu implements UserRoleMenu {
 ////////////////////////////get user name////////////////////////////  
     private String getUserName(String userID, String userType) {
         if (userType.equals("staff")) {
-            // Look for staff in staffList
             Staff staff = findStaff(userID);
             if (staff != null) {
-                return staff.getName(); // Return staff's name
+                return staff.getName(); 
             }
         } else if (userType.equals("patient")) {
-            // Look for patient in patientList
             Patient patient = findPatient(userID);
             if (patient != null) {
-                return patient.getName(); // Return patient's name
+                return patient.getName();
             }
         }
-        return "Unknown User"; // In case something goes wrong
+        return "Unknown User"; 
     }
 }
