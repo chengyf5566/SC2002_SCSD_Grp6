@@ -29,13 +29,6 @@ public class Pharmacist extends Staff {
         this.csvReaderAppointment = new CsvReaderAppointment();
         csvReaderAppointment.readCsv();
         this.appointmentList = csvReaderAppointment.getAppointmentList();
-        
-        /*
-        // Debugging: Print out the appointments after initialization
-        System.out.println("Appointments loaded: " + appointmentList.size());
-        for (Appointment appointment : appointmentList) {
-            System.out.println(appointment); // Assuming the toString method in Appointment prints useful details
-        } */
     }
     
     // Method to initialize staff list  from CSV
@@ -45,6 +38,12 @@ public class Pharmacist extends Staff {
         this.staffList = csvReader.getStaffList();  // Assign the read staff list
     }
     
+    // Constructor for the Pharmacist class
+    public Pharmacist(String userID, String password, String role, String gender, String name, int age) {
+        super(userID, password, role, gender, name, age);  // Pass data to Staff constructor
+    }
+    
+    //manage inventory menu 
     public void manageInventoryStock(Scanner scanner) {
         boolean exit = false;
         while (!exit) {
@@ -53,9 +52,25 @@ public class Pharmacist extends Staff {
             System.out.println("2. Set Replenish Request");
             System.out.println("3. Return to Menu");
 
-            System.out.print("Select an option: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int choice = 0;
+            boolean validInput = false;
+
+            // Ensure valid input for the menu choice
+            while (!validInput) {
+                System.out.print("Select an option: ");
+                if (scanner.hasNextInt()) {
+                    choice = scanner.nextInt();
+                    scanner.nextLine(); // Consume the newline character left by nextInt()
+                    if (choice >= 1 && choice <= 3) {
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid option. Please select a number between 1 and 3.");
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    scanner.nextLine(); // Consume the invalid input
+                }
+            }
 
             switch (choice) {
                 case 1:
@@ -69,11 +84,13 @@ public class Pharmacist extends Staff {
                     System.out.println("Exiting inventory management.");
                     break;
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    // This block won't be reached due to the validInput check above
+                    break;
             }
         }
     }
     
+////////////////////////////view medication inventory//////////////////////////// 
     public void viewMedicationInventory() {
         System.out.println("\nMedication Inventory:");
         for (Medication medication : medicationList) {
@@ -81,32 +98,68 @@ public class Pharmacist extends Staff {
         }
     }
     
+    
+////////////////////////////set replenish request//////////////////////////// 
     public void setReplenishRequest(Scanner scanner) {
         System.out.println("\n--- Medication Inventory ---");
         for (int i = 0; i < medicationList.size(); i++) {
             System.out.println((i + 1) + ". " + medicationList.get(i).getMedicineName());
         }
 
-        System.out.print("Enter the number of the medication to set replenish request: ");
-        int medicationChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline character
+        int medicationChoice = -1;
+        boolean validChoice = false;
 
-        // Validate the user's choice
-        if (medicationChoice < 1 || medicationChoice > medicationList.size()) {
-            System.out.println("Invalid selection. Please try again.");
-            return;
+        // Prompt until a valid choice is entered
+        while (!validChoice) {
+            System.out.print("Choose which medication to set replenish request: ");
+            
+            // Check if the input is a valid integer
+            if (scanner.hasNextInt()) {
+                medicationChoice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline character
+
+                // Check if the choice is within the valid range
+                if (medicationChoice >= 1 && medicationChoice <= medicationList.size()) {
+                    validChoice = true;  // Valid input
+                } else {
+                    System.out.println("Invalid selection. Please choose a number between 1 and " + medicationList.size());
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
         }
 
         // Get the selected medication based on user choice
         Medication medicationToUpdate = medicationList.get(medicationChoice - 1);
 
+        // Display the current stock and initial stock
+        System.out.println("\nCurrent Stock for " + medicationToUpdate.getMedicineName() + ": " + medicationToUpdate.getCurrentStock());
+        System.out.println("Initial Stock for " + medicationToUpdate.getMedicineName() + ": " + medicationToUpdate.getInitialStock());
+
         // Set the replenish request to "Yes"
         medicationToUpdate.setReplenishRequest("Yes");
 
         // Ask for the replenish amount
-        System.out.print("Enter Replenish Request Amount: ");
-        int replenishAmount = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        int replenishAmount = -1;
+        boolean validReplenishAmount = false;
+
+        // Ensure the replenish amount is valid (non-negative and non-empty)
+        while (!validReplenishAmount) {
+            System.out.print("Enter Replenish Request Amount: ");
+            if (scanner.hasNextInt()) {
+                replenishAmount = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+                if (replenishAmount >= 0) {
+                    validReplenishAmount = true; // Valid input
+                } else {
+                    System.out.println("Replenish amount cannot be negative. Please enter a valid amount.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid number for replenish amount.");
+                scanner.nextLine(); // Consume the invalid input
+            }
+        }
 
         // Set the replenish request amount in the medication
         medicationToUpdate.setReplenishRequestAmount(replenishAmount);
@@ -117,13 +170,9 @@ public class Pharmacist extends Staff {
         csvReaderInventory.writeCSV();
     }
 
-    
-    // Constructor for the Pharmacist class
-    public Pharmacist(String userID, String password, String role, String gender, String name, int age) {
-        super(userID, password, role, gender, name, age);  // Pass data to Staff constructor
-    }
 
-    // Method to view all appointments
+    
+////////////////////////////view all appointments//////////////////////////// 
     public void viewAppointments() {
         System.out.println("\nAppointments:");
         for (Appointment appointment : csvReaderAppointment.getAppointmentList()) {
@@ -131,6 +180,8 @@ public class Pharmacist extends Staff {
         }
     }
     
+    
+////////////////////////////dispense medication/////////////////////////// 
     public void dispenseMedication(Scanner scanner) {
         // Step 1: Display appointments with "Completed" status and "Pending" medication status
         List<Appointment> pendingAppointments = new ArrayList<>();
@@ -153,66 +204,90 @@ public class Pharmacist extends Staff {
             System.out.println((i + 1) + ". " + pendingAppointments.get(i));
         }
 
-        System.out.print("\nChoose which appointment to dispense medication for: ");
-        int appointmentChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int appointmentChoice = -1;
+        boolean validChoice = false;
 
-        if (appointmentChoice < 1 || appointmentChoice > pendingAppointments.size()) {
-            System.out.println("Invalid selection.");
-            return;
+        // Prompt until a valid choice is entered
+        while (!validChoice) {
+            System.out.print("\nChoose which appointment to dispense medication for: ");
+            
+            // Check if the input is a valid integer
+            if (scanner.hasNextInt()) {
+                appointmentChoice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline character
+
+                // Check if the choice is within the valid range
+                if (appointmentChoice >= 1 && appointmentChoice <= pendingAppointments.size()) {
+                    validChoice = true;  // Valid input
+                } else {
+                    System.out.println("Invalid selection. Please choose a number between 1 and " + pendingAppointments.size());
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
         }
 
         Appointment selectedAppointment = pendingAppointments.get(appointmentChoice - 1);
 
-        // Step 2: Choose Medication
-        System.out.println("\n--- Medication Inventory ---");
-        for (int i = 0; i < medicationList.size(); i++) {
-            System.out.println((i + 1) + ". " + medicationList.get(i).getMedicineName());
+        // Extract Prescribed Medication and Quantity from the Appointment
+        String prescribedMedicationName = selectedAppointment.getPrescribedMedications();
+        int prescribedQuantity = Integer.parseInt(selectedAppointment.getPrescribedMedicationsQuantity());
+
+        // Find the Medication in the Inventory
+        Medication selectedMedication = null;
+        for (Medication medication : medicationList) {
+            if (medication.getMedicineName().equalsIgnoreCase(prescribedMedicationName)) {
+                selectedMedication = medication;
+                break;
+            }
         }
 
-        System.out.print("\nEnter the number of the medication to dispense: ");
-        int medicationChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
-        if (medicationChoice < 1 || medicationChoice > medicationList.size()) {
-            System.out.println("Invalid selection.");
+        // Check if the medication is available in the inventory
+        if (selectedMedication == null) {
+            System.out.println("Medication " + prescribedMedicationName + " not found in inventory.");
             return;
         }
 
-        Medication selectedMedication = medicationList.get(medicationChoice - 1);
-
-        // Step 3: Choose Medication Amount
-        System.out.print("Enter the amount of " + selectedMedication.getMedicineName() + " to dispense: ");
-        int dispenseAmount = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
-        if (dispenseAmount > selectedMedication.getCurrentStock()) {
-            System.out.println("Insufficient stock to dispense this amount.");
+        //Check if sufficient stock is available
+        if (prescribedQuantity > selectedMedication.getCurrentStock()) {
+            System.out.println("Insufficient stock to dispense the prescribed amount.");
             return;
         }
 
-        // Step 4: Update Appointment Status
+        //Update Appointment Status and Dispense Medication
         selectedAppointment.setPrescribedMedicationsStatus("Dispensed");
 
-        // Update the appointment CSV with the new status
+        // Write updated appointment data back to CSV
         csvReaderAppointment.writeCSV();
 
-        // Step 5: Decrease Stock Level in Inventory
-        selectedMedication.setCurrentStock(selectedMedication.getCurrentStock() - dispenseAmount);
+        //Decrease Stock Level in Inventory
+        selectedMedication.setCurrentStock(selectedMedication.getCurrentStock() - prescribedQuantity);
 
         // Write updated inventory back to CSV
         csvReaderInventory.writeCSV();
 
+        // Output successful dispense message
         System.out.println("Medication dispensed successfully for Patient ID: " + selectedAppointment.getPatientId());
-        System.out.println("Updated stock for " + selectedMedication.getMedicineName() + ": " + selectedMedication.getCurrentStock());
+        System.out.println("Updated stock for " + prescribedMedicationName + ": " + selectedMedication.getCurrentStock());
     }
-    
-    //change password method
-    public void changePassword(Scanner scanner) {
-        System.out.print("Enter new password: ");
-        String newPassword = scanner.nextLine();
 
-        // Set the new password for the current pharmacist
+    
+////////////////////////////change password//////////////////////////// 
+    public void changePassword(Scanner scanner) {
+        String newPassword = "";
+        
+        // Ensure password is not empty
+        while (newPassword.isEmpty()) {
+            System.out.print("Enter new password: ");
+            newPassword = scanner.nextLine().trim(); // Remove leading/trailing spaces
+            
+            if (newPassword.isEmpty()) {
+                System.out.println("Password cannot be empty. Please enter a valid password.");
+            }
+        }
+
+        // Set the new password for the current administrator
         this.setPassword(newPassword);
 
         // Update the password in the staff list and save to CSV
@@ -227,4 +302,5 @@ public class Pharmacist extends Staff {
         csvReader.writeCSV();
         System.out.println("Password updated successfully.");
     }
+
 }

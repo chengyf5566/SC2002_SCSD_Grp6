@@ -17,45 +17,51 @@ public class User{
     }
     
 
-    //getters and setters
+    //Getters
     public String getUserID() {
         return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = PasswordHashing.hashPassword(password);
-    }
-
     public String getName() {  
         return name;
-    }
-
-    public void setName(String name) {  
-        this.name = name;
     }
 
     public String getRole() {
         return role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getGender() {  
         return gender;
     }
-
+    
+    
+    //Setters
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+    
+    public void setPassword(String password) {
+        this.password = PasswordHashing.hashPassword(password);
+    }
+    
+    public void setName(String name) {  
+        this.name = name;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
     public void setGender(String gender) {  
         this.gender = gender;
     }
+
+    
+    
+    
 
 }

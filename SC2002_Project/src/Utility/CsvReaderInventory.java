@@ -9,9 +9,6 @@ public class CsvReaderInventory implements CsvReader {
     private final String filePath = "Medicine_List.csv"; // Path to the medication CSV file
     private List<Medication> medicationList = new ArrayList<>();
 
-   //public CsvReaderInventory() {
-    //	readCsv();  // Load inventory data at initialization
-    //}
 
     // Method to read data from CSV and create Medication objects
     public void readCsv() {

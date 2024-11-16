@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CsvReaderPatient implements CsvReader {  // Missing class declaration
+public class CsvReaderPatient implements CsvReader {  
 
     private final String filePath = "Patient_List.csv"; 
     private List<Patient> patientList = new ArrayList<>();
@@ -93,28 +93,7 @@ public class CsvReaderPatient implements CsvReader {  // Missing class declarati
             e.printStackTrace();
         }
     }
-
-    // Method to get a patient by ID
-    public Patient getPatientByID(String patientID) {
-        for (Patient patient : patientList) {
-            if (patient.getPatientID().equals(patientID)) {
-                return patient;
-            }
-        }
-        System.out.println("No patient found with ID: " + patientID);
-        return null;
-    }
-
-    // Helper method to clean strings (strip unnecessary spaces or quotes)
-    private String cleanString(String input) {
-        return input.replaceAll("\"", "").trim();  // Remove any quotes and trim whitespace
-    }
-
-    // Getter for the patient list
-    public List<Patient> getPatientList() {
-        return patientList;
-    }
-
+  
     public void writeCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Write the header row
@@ -144,4 +123,27 @@ public class CsvReaderPatient implements CsvReader {  // Missing class declarati
             e.printStackTrace();
         }
     }
+    
+    // Helper method to clean strings (strip unnecessary spaces or quotes)
+    private String cleanString(String input) {
+        return input.replaceAll("\"", "").trim();  // Remove any quotes and trim whitespace
+    }
+
+    // Getter for the patient list
+    public List<Patient> getPatientList() {
+        return patientList;
+    }
+
+////////////////////////////Method to get a patient by ID//////////////////////////// 
+    public Patient getPatientByID(String patientID) {
+        for (Patient patient : patientList) {
+            if (patient.getPatientID().equals(patientID)) {
+                return patient;
+            }
+        }
+        System.out.println("No patient found with ID: " + patientID);
+        return null;
+    }
+
+
 }

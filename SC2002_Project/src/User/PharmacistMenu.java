@@ -13,11 +13,11 @@ public class PharmacistMenu implements UserRoleMenu {
 
     @Override
     public void displayMenu(Scanner scanner) {
-    	// Initialize the doctor with patient and appointment data (assuming you have CSV files loaded)
-    	pharmacist.initializeInventoryFromCSV();
-    	pharmacist.readAndInitializeAppointments();
-    	pharmacist.initializeStaffFromCSV();
-    	
+        // Initialize the pharmacist with inventory, appointments, and staff data
+        pharmacist.initializeInventoryFromCSV();
+        pharmacist.readAndInitializeAppointments();
+        pharmacist.initializeStaffFromCSV();
+        
         boolean exit = false;
 
         while (!exit) {
@@ -28,51 +28,51 @@ public class PharmacistMenu implements UserRoleMenu {
             System.out.println("4. Change Password");
             System.out.println("5. Logout");
 
-            System.out.print("Select Option: ");
-            int input = scanner.nextInt();
-            scanner.nextLine();
+            int input = -1;
+            boolean validInput = false;
 
+            // Reprompt for valid input until it's correct
+            while (!validInput) {
+                System.out.print("Select Option: ");
+                
+                if (scanner.hasNextInt()) {
+                    input = scanner.nextInt();
+                    scanner.nextLine();  // Consume the newline character
+                    
+                    if (input >= 1 && input <= 5) {
+                        validInput = true; // Valid input
+                    } else {
+                        System.out.println("Invalid option. Please select a number between 1 and 5.");
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    scanner.nextLine(); // Consume the invalid input
+                }
+            }
+
+            // Handle the selected option
             switch (input) {
                 case 1:
                     pharmacist.viewAppointments(); 
                     break;
                 case 2:
-
                     pharmacist.dispenseMedication(scanner); 
                     break;
                 case 3:
-                pharmacist.manageInventoryStock(scanner); 
+                    pharmacist.manageInventoryStock(scanner); 
                     break;
                 case 4:
                     pharmacist.changePassword(scanner); 
                     exit = true; 
-                        break;
+                    break;
                 case 5:
-                    System.out.println("Logout\n");
+                    System.out.println("Logging out...\n");
                     exit = true;
                     break;
                 default:
                     System.out.println("Invalid option. Try again.");
+                    break;
             }
         }
-    }
-    //example usage
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        // Example pharmacist creation
-        Pharmacist pharmacist = new Pharmacist("P001", "securePassword", "Pharmacist", "Female", "Jane Doe", 35);
-
-        // Initialize pharmacist's inventory and appointments from CSV files
-        pharmacist.initializeInventoryFromCSV();
-        pharmacist.readAndInitializeAppointments();
-
-        // Create the PharmacistMenu and pass the pharmacist instance
-        PharmacistMenu pharmacistMenu = new PharmacistMenu(pharmacist);
-
-        // Display the pharmacist's menu
-        pharmacistMenu.displayMenu(scanner);
-
-        scanner.close();
     }
 }
