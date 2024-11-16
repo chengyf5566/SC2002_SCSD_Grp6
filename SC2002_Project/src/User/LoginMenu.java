@@ -28,6 +28,9 @@ public class LoginMenu implements UserRoleMenu {
             authenticated = false;
 
             while (!authenticated) {
+            	staffList = new CsvReaderStaff().getStaffList();
+                patientList = new CsvReaderPatient().getPatientList();
+            	
                 System.out.println("--- Welcome to Hospital Management App ---");
                 System.out.println("--- Login Menu ---");
 

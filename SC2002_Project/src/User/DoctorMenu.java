@@ -14,16 +14,16 @@ public class DoctorMenu implements UserRoleMenu {
     
     @Override
     public void displayMenu(Scanner scanner) {
-
-        // Initialize csv
-        doctor.readAndInitializePatient();
-        doctor.readAndInitializeAppointments();
-        doctor.initializeStaffFromCSV();
-        doctor.initializeInventoryFromCSV();
         
         boolean exit = false;
 
         while (!exit) {
+        	// Initialize csv
+            doctor.readAndInitializePatient();
+            doctor.readAndInitializeAppointments();
+            doctor.initializeStaffFromCSV();
+            doctor.initializeInventoryFromCSV();
+            
             System.out.println("\n--- Doctor Menu ---");
             System.out.println("1. View Patient Medical Records");
             System.out.println("2. View Scheduled Appointments (Doctor)");

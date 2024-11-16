@@ -23,12 +23,14 @@ public class PatientMenu implements UserRoleMenu {
     @Override
     public void displayMenu(Scanner scanner) {
     	
-        // Initialize csv
-        patient.readAndInitializePatient();
-        patient.readAndInitializeAppointments();
+        
 
         boolean exit = false;
         while (!exit) {
+        	// Initialize csv
+            patient.readAndInitializePatient();
+            patient.readAndInitializeAppointments();
+        	
             System.out.println("\nPatient Menu:");
             System.out.println("1. View Medical Record");
             System.out.println("2. Update Personal Information");
