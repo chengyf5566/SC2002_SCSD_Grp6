@@ -93,7 +93,8 @@ public class CsvReaderAppointment implements CsvReader{
     
 ////////////////////////////Check if a specific appointment slot is available////////////////////////////  
     public boolean checkAvailability(String doctorID, String date, String time) {
-        LocalTime requestedTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"));
+        LocalTime requestedStartTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"));
+        LocalTime requestedEndTime = requestedStartTime.plusMinutes(30); // Assuming a 30-minute slot
 
         for (Appointment appointment : appointmentList) {
             if (appointment.getDoctorId().equals(doctorID) &&
@@ -103,13 +104,16 @@ public class CsvReaderAppointment implements CsvReader{
                 LocalTime appointmentStartTime = LocalTime.parse(appointment.getAppointmentStartTime(), DateTimeFormatter.ofPattern("HHmm"));
                 LocalTime appointmentEndTime = LocalTime.parse(appointment.getAppointmentEndTime(), DateTimeFormatter.ofPattern("HHmm"));
 
-                if (!requestedTime.isBefore(appointmentStartTime) && !requestedTime.isAfter(appointmentEndTime)) {
-                    return false;
+                // Check for overlap
+                if (requestedStartTime.isBefore(appointmentEndTime) && requestedEndTime.isAfter(appointmentStartTime)) {
+                    return false; // Slot overlaps with an existing appointment
                 }
             }
         }
-        return true;
+        return true; // No conflicts found
     }
+
+
 
 ////////////////////////////add appointment////////////////////////////  
     public boolean addAppointmentRecord(String doctorID, String doctorName, String patientID, String patientName,
@@ -200,24 +204,6 @@ public class CsvReaderAppointment implements CsvReader{
 
         LocalTime newStart = LocalTime.parse(newStartTime, DateTimeFormatter.ofPattern("HHmm"));
         LocalTime newEnd = newStart.plusMinutes(30);
-
-        // Check for conflicts
-        for (Appointment appointment : appointmentList) {
-            if (appointment.getPatientId().trim().equals(patientID.trim()) &&
-                appointment.getDateOfAppointment().trim().equals(newDate.trim()) &&
-                !appointment.getAppointmentStatus().equalsIgnoreCase("Canceled")) {
-
-                LocalTime existingStart = LocalTime.parse(appointment.getAppointmentStartTime().trim(), DateTimeFormatter.ofPattern("HHmm"));
-                LocalTime existingEnd = LocalTime.parse(appointment.getAppointmentEndTime().trim(), DateTimeFormatter.ofPattern("HHmm"));
-
-                if (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)) {
-                    System.out.println("Conflict detected with existing appointment: Start - " +
-                                       appointment.getAppointmentStartTime() + ", End - " +
-                                       appointment.getAppointmentEndTime());
-                    return false;
-                }
-            }
-        }
 
         // Find the appointment to replace
         for (Appointment appointment : appointmentList) {

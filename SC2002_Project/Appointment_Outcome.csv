@@ -11,5 +11,5 @@ D002,Megan,P1001,Alice Brown,25 01 2025,1000,1030,Pending,,,,,,
 D001,John Smith,P1001,Alice Brown,02 02 2025,800,830,Completed,consultation,Paracetamol,10,Dispensed,fever,37.9 degree
 D001,John Smith,P1001,Alice Brown,18 11 2024,1030,1100,Completed,Consultation,Paracetamol,1,Dispensed,Cough,to come back again
 D001,John Smith,P1002,Bob Stone,04 12 2024,1800,1830,Confirmed,,,,,,
-D001,John Smith,P1001,Alice Brown,30 01 2025,2030,2100,Pending,,,,,,
-D001,John Smith,P1001,Alice Brown,20 20 2020,2020,2050,Pending,,,,,,
+D001,John Smith,P1002,Bob Stone,30 01 2025,1200,1300,Pending,,,,,,
+D001,John Smith,P1001,Alice Brown,30 01 2025,1300,1330,Pending,,,,,,

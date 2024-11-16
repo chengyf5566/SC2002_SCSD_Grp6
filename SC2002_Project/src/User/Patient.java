@@ -238,12 +238,22 @@ public class Patient {
 
                 LocalTime startBoundary = LocalTime.of(8, 0);
                 LocalTime endBoundary = LocalTime.of(21, 0);
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MM yyyy");
+                LocalDate parsedDate = LocalDate.parse(newDate, dateFormatter);
+                String formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd MM yyyy"));
+                String formattedStartTime = newStartTime.format(DateTimeFormatter.ofPattern("HHmm"));
 
                 // Ensure the start and end times are within 08:00 and 21:00, and the appointment ends by 21:00
                 if (newStartTime.isBefore(startBoundary) || newEndTime.isAfter(endBoundary)) {
                     System.out.println("The selected time must be between 08:00 and 21:00, and the appointment must end by 21:00.");
-                } else {
-                    validTime = true;
+                }
+                else {
+                	if(csvReaderAppointment.checkAvailability(assignedDoctorID, formattedDate, formattedStartTime)) {
+                		validTime = true;
+                    }
+                	else{
+                		System.out.println("The selected time slot is unavalible.");
+                	}
                 }
 
                 // If the user selects 2100, reprompt
