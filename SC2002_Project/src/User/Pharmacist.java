@@ -92,11 +92,27 @@ public class Pharmacist extends Staff {
     
 ////////////////////////////view medication inventory//////////////////////////// 
     public void viewMedicationInventory() {
-        System.out.println("\nMedication Inventory:");
+        System.out.println("\n--- Medication Inventory ---");
         for (Medication medication : medicationList) {
-            System.out.println(medication); // Assuming the Medication class has a properly overridden toString method
+            String formattedMedication = String.format(
+                "\nMedicine Name: '%s'\n" +
+                "Initial Stock: '%d'\n" +
+                "Current Stock: '%d'\n" +
+                "Low Stock Level Alert: '%d'\n" +
+                "Replenish Request: '%s'\n" +
+                "Replenish Request Amount: '%d'\n" +
+                "=========================",
+                medication.getMedicineName(),
+                medication.getInitialStock(),
+                medication.getCurrentStock(),
+                medication.getLowStockLevelAlert(),
+                medication.getReplenishRequest(),
+                medication.getReplenishRequestAmount()
+            );
+            System.out.println(formattedMedication);
         }
     }
+
     
     
 ////////////////////////////set replenish request//////////////////////////// 
@@ -174,16 +190,53 @@ public class Pharmacist extends Staff {
     
 ////////////////////////////view all appointments//////////////////////////// 
     public void viewAppointments() {
-        System.out.println("\nAppointments:");
+        System.out.println("\nAppointments with Pending Medications:");
+        boolean foundPending = false; // Flag to check if any pending records exist
+
         for (Appointment appointment : csvReaderAppointment.getAppointmentList()) {
-            System.out.println(appointment);
+            if ("Pending".equalsIgnoreCase(appointment.getPrescribedMedicationsStatus())) {
+                foundPending = true;
+
+                String formattedAppointment = String.format(
+                    "\nDoctor Name: '%s'\n" +
+                    "Patient Name: '%s'\n" +
+                    "Date of Appointment: '%s'\n" +
+                    "Start Time: '%s'\n" +
+                    "End Time: '%s'\n" +
+                    "Status: '%s'\n" +
+                    "Type of Service: '%s'\n" +
+                    "Prescribed Medications: '%s'\n" +
+                    "Medication Quantity: '%s'\n" +
+                    "Medication Status: '%s'\n" +
+                    "Diagnosis: '%s'\n" +
+                    "Consultation Notes: '%s'\n" +
+                    "=========================",
+                    appointment.getDoctorName(),
+                    appointment.getPatientName(),
+                    appointment.getDateOfAppointment(),
+                    appointment.getAppointmentStartTime(),
+                    appointment.getAppointmentEndTime(),
+                    appointment.getAppointmentStatus(),
+                    appointment.getTypeOfService(),
+                    appointment.getPrescribedMedications(),
+                    String.valueOf(appointment.getPrescribedMedicationsQuantity()),
+                    appointment.getPrescribedMedicationsStatus(),
+                    appointment.getDiagnosis(),
+                    appointment.getConsultationNotes()
+                );
+
+                System.out.println(formattedAppointment);
+            }
+        }
+
+        if (!foundPending) {
+            System.out.println("No appointments with pending medications found.");
         }
     }
     
-    
 ////////////////////////////dispense medication/////////////////////////// 
     public void dispenseMedication(Scanner scanner) {
-        // Step 1: Display appointments with "Completed" status and "Pending" medication status
+        // Step 1: Collect appointments with "Completed" status and "Pending" medication status
         List<Appointment> pendingAppointments = new ArrayList<>();
         for (Appointment appointment : appointmentList) {
             if (appointment.getAppointmentStatus().equalsIgnoreCase("Completed") &&
@@ -198,11 +251,42 @@ public class Pharmacist extends Staff {
             return;
         }
 
-        // Show pending appointments to pharmacist
-        System.out.println("\n--- Pending Appointments ---");
+        // Show pending appointments to pharmacist in the desired format
+        System.out.println("\n--- Pending Order ---");
         for (int i = 0; i < pendingAppointments.size(); i++) {
-            System.out.println((i + 1) + ". " + pendingAppointments.get(i));
+            Appointment appointment = pendingAppointments.get(i);
+            String formattedAppointment = String.format(
+                "\nAppointment #%d\n" +
+                "Doctor Name: '%s'\n" +
+                "Patient Name: '%s'\n" +
+                "Date of Appointment: '%s'\n" +
+                "Start Time: '%s'\n" +
+                "End Time: '%s'\n" +
+                "Status: '%s'\n" +
+                "Type of Service: '%s'\n" +
+                "Prescribed Medications: '%s'\n" +
+                "Medication Quantity: '%s'\n" +
+                "Medication Status: '%s'\n" +
+                "Diagnosis: '%s'\n" +
+                "Consultation Notes: '%s'\n" +
+                "=========================",
+                i + 1,  // Appointment number
+                appointment.getDoctorName(),
+                appointment.getPatientName(),
+                appointment.getDateOfAppointment(),
+                appointment.getAppointmentStartTime(),
+                appointment.getAppointmentEndTime(),
+                appointment.getAppointmentStatus(),
+                appointment.getTypeOfService(),
+                appointment.getPrescribedMedications(),
+                String.valueOf(appointment.getPrescribedMedicationsQuantity()),
+                appointment.getPrescribedMedicationsStatus(),
+                appointment.getDiagnosis(),
+                appointment.getConsultationNotes()
+            );
+            System.out.println(formattedAppointment);
         }
+
 
         int appointmentChoice = -1;
         boolean validChoice = false;

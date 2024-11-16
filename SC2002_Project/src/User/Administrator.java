@@ -392,10 +392,28 @@ public class Administrator extends Staff {
         if (medicationList.isEmpty()) {
             System.out.println("No medication in inventory.");
         } else {
-            System.out.println("\nMedication Inventory:");
-            medicationList.forEach(System.out::println);
+            System.out.println("\n--- Medication Inventory ---");
+            medicationList.forEach(medication -> {
+                String formattedMedication = String.format(
+                    "\nMedicine Name: '%s'\n" +
+                    "Initial Stock: '%d'\n" +
+                    "Current Stock: '%d'\n" +
+                    "Low Stock Level Alert: '%d'\n" +
+                    "Replenish Request: '%s'\n" +
+                    "Replenish Request Amount: '%d'\n" +
+                    "=========================",
+                    medication.getMedicineName(),
+                    medication.getInitialStock(),
+                    medication.getCurrentStock(),
+                    medication.getLowStockLevelAlert(),
+                    medication.getReplenishRequest(),
+                    medication.getReplenishRequestAmount()
+                );
+                System.out.println(formattedMedication);
+            });
         }
     }
+
 
     
 ////////////////////////////add medication////////////////////////////    
@@ -663,14 +681,44 @@ public class Administrator extends Staff {
 
 	
 ////////////////////////////view appointments////////////////////////////
-    public void viewAppointments() {
-        if (appointmentList.isEmpty()) {
-            System.out.println("No appointments available.");
-        } else {
-            System.out.println("\nAppointments:");
-            appointmentList.forEach(System.out::println);
-        }
-    }
+	public void viewAppointments() {
+	    System.out.println("\nAppointments:");
+	    for (Appointment appointment : csvReaderAppointment.getAppointmentList()) {
+	        try {
+	            String formattedAppointment = String.format(
+	                "\nDoctor Name: '%s'\n" +
+	                "Patient Name: '%s'\n" +
+	                "Date of Appointment: '%s'\n" +
+	                "Start Time: '%s'\n" +
+	                "End Time: '%s'\n" +
+	                "Status: '%s'\n" +
+	                "Type of Service: '%s'\n" +
+	                "Prescribed Medications: '%s'\n" +
+	                "Medication Quantity: '%s'\n" +  // Changed from %d to %s
+	                "Medication Status: '%s'\n" +
+	                "Diagnosis: '%s'\n" +
+	                "Consultation Notes: '%s'\n" +
+	                "=========================",
+	                appointment.getDoctorName(),
+	                appointment.getPatientName(),
+	                appointment.getDateOfAppointment(),
+	                appointment.getAppointmentStartTime(),
+	                appointment.getAppointmentEndTime(),
+	                appointment.getAppointmentStatus(),
+	                appointment.getTypeOfService(),
+	                appointment.getPrescribedMedications(),
+	                String.valueOf(appointment.getPrescribedMedicationsQuantity()), // Ensure it's a string
+	                appointment.getPrescribedMedicationsStatus(),
+	                appointment.getDiagnosis(),
+	                appointment.getConsultationNotes()
+	            );
+	            System.out.println(formattedAppointment);
+	        } catch (Exception e) {
+	            System.err.println("Error formatting appointment: " + e.getMessage());
+	        }
+	    }
+	}
+
 
 ////////////////////////////patient management menu////////////////////////////
     public void manageHospitalPatient(Scanner scanner) {

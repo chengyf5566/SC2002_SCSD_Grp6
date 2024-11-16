@@ -11,8 +11,7 @@ import java.time.format.DateTimeFormatter;
 public class PatientMenu implements UserRoleMenu {
     private Patient patient;
     private CsvReaderPatient csvReaderPatient;
-    private String appointmentFilePath;
-
+    
     // Constructor to initialize Patient and CsvReaderPatient
     public PatientMenu(Patient patient) {
         this.patient = patient;
