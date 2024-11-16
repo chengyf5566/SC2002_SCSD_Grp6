@@ -207,12 +207,15 @@ public class PatientMenu implements UserRoleMenu {
                     time = "";  // Reset time if invalid
                 } else {
                     // Validate that the time is within 08:00 and 21:00
-                	
                     LocalTime parsedTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"));
                     LocalTime startBoundary = LocalTime.of(8, 0);
                     LocalTime endBoundary = LocalTime.of(21, 0);
-                    if (parsedTime.isBefore(startBoundary) || parsedTime.isAfter(endBoundary)) {
-                        System.out.println("The selected time must be between 08:00 and 21:00.");
+
+                    // Calculate end time for the appointment
+                    LocalTime endTime = parsedTime.plusMinutes(30);
+
+                    if (parsedTime.isBefore(startBoundary) || endTime.isAfter(endBoundary)) {
+                        System.out.println("The selected time must be between 08:00 and 21:00, and the appointment must end by 21:00.");
                         time = "";  // Reset time if out of range
                     }
                 }

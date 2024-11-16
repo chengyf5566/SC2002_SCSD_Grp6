@@ -205,7 +205,7 @@ public class Doctor extends Staff {
                         System.out.println("\nAppointment with Patient " + appointment.getPatientName() + " has been confirmed.");
                         break; // Exit the loop if input is valid
                     } else if (decision.equals("no")) {
-                        appointment.setAppointmentStatus("Cancelled");
+                        appointment.setAppointmentStatus("Canceled");
                         System.out.println("\nAppointment with Patient " + appointment.getPatientName() + " has been cancelled.");
                         break; // Exit the loop if input is valid
                     } else {
