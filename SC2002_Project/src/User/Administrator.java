@@ -860,7 +860,7 @@ public class Administrator extends Staff {
         String assignedDoctorID = selectedDoctor.getUserID();
         String assignedDoctorName = selectedDoctor.getName();
 
-        Patient newPatient = new Patient(patientID, password, name, gender, dateOfBirth, bloodType, 
+        Patient newPatient = new Patient(patientID, password, name, dateOfBirth, gender, bloodType, 
                                          contactNum, email, assignedDoctorID, assignedDoctorName, 
                                          new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
