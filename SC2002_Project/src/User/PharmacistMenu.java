@@ -13,14 +13,15 @@ public class PharmacistMenu implements UserRoleMenu {
 
     @Override
     public void displayMenu(Scanner scanner) {
-        // Initialize the pharmacist with inventory, appointments, and staff data
-        pharmacist.initializeInventoryFromCSV();
-        pharmacist.readAndInitializeAppointments();
-        pharmacist.initializeStaffFromCSV();
         
         boolean exit = false;
 
         while (!exit) {
+        	// Initialize the pharmacist with inventory, appointments, and staff data
+            pharmacist.initializeInventoryFromCSV();
+            pharmacist.readAndInitializeAppointments();
+            pharmacist.initializeStaffFromCSV();
+        	
             System.out.println("\nPharmacist Menu:");
             System.out.println("1. View Appointment Outcome Record");
             System.out.println("2. Dispense Medication");

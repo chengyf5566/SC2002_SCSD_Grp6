@@ -15,14 +15,16 @@ public class AdministratorMenu implements UserRoleMenu {
 	@Override
     public void displayMenu(Scanner scanner) {
 
-        // Initialize csv files
-        administrator.readAndInitializePatient();
-        administrator.readAndInitializeAppointments();
-        administrator.initializeStaffFromCSV();
-        administrator.initializeInventoryFromCSV();
+        
 
         boolean exit = false;
         while (!exit) {
+        	// Initialize csv files
+            administrator.readAndInitializePatient();
+            administrator.readAndInitializeAppointments();
+            administrator.initializeStaffFromCSV();
+            administrator.initializeInventoryFromCSV();
+        	
             System.out.println("\nAdministrator Menu:");
             System.out.println("1. View and Manage Hospital Staff");
             System.out.println("2. View and Manage Hospital Patients");
