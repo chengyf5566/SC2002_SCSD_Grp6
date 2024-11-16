@@ -94,8 +94,8 @@ public class CsvReaderAppointment implements CsvReader{
 ////////////////////////////Check if a specific appointment slot is available////////////////////////////  
     public boolean checkAvailability(String doctorID, String date, String time) {
         LocalTime requestedStartTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"));
-        LocalTime requestedEndTime = requestedStartTime.plusMinutes(30); // Assuming a 30-minute slot
-
+        LocalTime requestedEndTime = requestedStartTime.plusMinutes(30);
+        
         for (Appointment appointment : appointmentList) {
             if (appointment.getDoctorId().equals(doctorID) &&
                 appointment.getDateOfAppointment().equals(date) &&
@@ -104,13 +104,12 @@ public class CsvReaderAppointment implements CsvReader{
                 LocalTime appointmentStartTime = LocalTime.parse(appointment.getAppointmentStartTime(), DateTimeFormatter.ofPattern("HHmm"));
                 LocalTime appointmentEndTime = LocalTime.parse(appointment.getAppointmentEndTime(), DateTimeFormatter.ofPattern("HHmm"));
 
-                // Check for overlap
                 if (requestedStartTime.isBefore(appointmentEndTime) && requestedEndTime.isAfter(appointmentStartTime)) {
-                    return false; // Slot overlaps with an existing appointment
+                    return false; 
                 }
             }
         }
-        return true; // No conflicts found
+        return true; 
     }
 
 
@@ -205,34 +204,27 @@ public class CsvReaderAppointment implements CsvReader{
         LocalTime newStart = LocalTime.parse(newStartTime, DateTimeFormatter.ofPattern("HHmm"));
         LocalTime newEnd = newStart.plusMinutes(30);
 
-        // Find the appointment to replace
         for (Appointment appointment : appointmentList) {
             if (appointment.getPatientId().trim().equals(patientID.trim()) &&
                 appointment.getDateOfAppointment().trim().equals(oldDate.trim()) &&
-                appointment.getAppointmentStartTime().trim().equals(oldStartTime.trim())) {
+                appointment.getAppointmentStartTime().trim().equals(oldStartTime.trim())) {              
 
-                //System.out.println("Expected Status: '" + oldStatus + "', Found Status: '" + appointment.getAppointmentStatus() + "'");
-
-                // Match only 'Confirmed' or 'Pending'
                 if (!appointment.getAppointmentStatus().equalsIgnoreCase("Confirmed") &&
                     !appointment.getAppointmentStatus().equalsIgnoreCase("Pending")) {
                     System.out.println("Invalid status for replacement: " + appointment.getAppointmentStatus());
                     return false;
                 }
 
-                // Update appointment details
                 appointment.setDateOfAppointment(newDate.trim());
                 appointment.setAppointmentStartTime(newStartTime.trim());
                 appointment.setAppointmentEndTime(newEnd.format(DateTimeFormatter.ofPattern("HHmm")));
                 appointment.setAppointmentStatus(newStatus.trim());
 
                 writeCSV();
-                //System.out.println("Appointment successfully rescheduled.");
                 return true;
             }
         }
 
-        // No matching appointment found
         System.out.println("No matching appointment found to replace.");
         return false;
     }

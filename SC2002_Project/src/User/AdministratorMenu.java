@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 
 public class AdministratorMenu implements UserRoleMenu {
-    private Administrator administrator; // Assuming administrator object is passed to this class
+    private Administrator administrator; 
 
     // Constructor to initialize the administrator object
     public AdministratorMenu(Administrator administrator) {
@@ -34,27 +34,25 @@ public class AdministratorMenu implements UserRoleMenu {
             int input = -1;
             boolean validInput = false;
 
-            // Input exception handling for invalid input
             while (!validInput) {
                 System.out.print("Select Option: ");
                 try {
                     input = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine(); 
                     if (input < 1 || input > 6) {
                         System.out.println("Invalid option. Please select a number between 1 and 6.");
                     } else {
-                        validInput = true; // If input is valid, exit the loop
+                        validInput = true; 
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid input. Please enter a number.");
-                    scanner.nextLine(); // Clear the invalid input
+                    scanner.nextLine(); 
                 }
             }
 
-            // Process valid input
             switch (input) {
                 case 1: 
-                    administrator.manageHospitalStaff(scanner); // method for managing hospital staff
+                    administrator.manageHospitalStaff(scanner); 
                     break;
                 case 2: 
                     administrator.manageHospitalPatient(scanner);

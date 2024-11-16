@@ -25,7 +25,7 @@ public class Patient {
     private List<String> consultationNotes;
     private List<String> typeOfService;
 
-    private CsvReaderAppointment csvReaderAppointment = new CsvReaderAppointment(); // For appointment handling
+    private CsvReaderAppointment csvReaderAppointment = new CsvReaderAppointment(); 
     
     
     private List<Appointment> appointmentList;
@@ -79,7 +79,7 @@ public class Patient {
             LocalTime parsedTime = LocalTime.parse(time, timeFormatter);
             LocalTime endTime = parsedTime.plusMinutes(30);
 
-            // Validate that the time is within 08:00 and 21:00
+            // Validate that the time is within 08:00 and 21:00 , working hours for doctors
             LocalTime startBoundary = LocalTime.of(8, 0);
             LocalTime endBoundary = LocalTime.of(21, 0);
 
@@ -97,7 +97,6 @@ public class Patient {
                         assignedDoctorID, assignedDoctorName, patientID, name, formattedDate, formattedStartTime, formattedEndTime, "Pending");
 
                 if (isAdded) {
-                    // Print the appointment details in the desired format
                     System.out.println("Doctor Name = " + assignedDoctorName + 
                                        ", Patient Name = " + name + 
                                        ", Date of Appointment = " + formattedDate + 
@@ -139,7 +138,6 @@ public class Patient {
             System.out.println("No pending or confirmed appointments found for Patient: " + getName());
         } else {
             for (String appointmentStr : appointments) {
-                // Parse the appointment string to extract the relevant fields
                 String[] parts = appointmentStr.split(", ");
                 String doctorName = parts[1].split("=")[1];
                 String patientName = parts[3].split("=")[1];
@@ -148,7 +146,6 @@ public class Patient {
                 String appointmentEndTime = parts[6].split("=")[1];
                 String appointmentStatus = parts[7].split("=")[1];
 
-                // Format the extracted details to display each piece of information on a new line
                 String formattedAppointment = "Doctor Name='" + doctorName + "', "
                                               + "Patient Name='" + patientName + "', "
                                               + "Date of Appointment='" + dateOfAppointment + "', "
@@ -184,22 +181,21 @@ public class Patient {
         int choice = -1;
         boolean validChoice = false;
 
-        // Reprompt until the user selects a valid numeric choice within the range
         while (!validChoice) {
             System.out.print("Select the appointment number to reschedule: ");
             
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine(); 
                 
                 if (choice >= 1 && choice <= appointments.size()) {
-                    validChoice = true; // Valid input
+                    validChoice = true; 
                 } else {
                     System.out.println("Invalid selection. Please select a number between 1 and " + appointments.size() + ".");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid number.");
-                scanner.nextLine(); // Consume the invalid input
+                scanner.nextLine(); 
             }
         }
 
@@ -208,14 +204,12 @@ public class Patient {
         String oldStartTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "StartTime");
         String oldEndTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "EndTime");
 
-        // Validate new date format
         String newDate = "";
         boolean validDate = false;
         while (!validDate) {
             System.out.print("Enter the new appointment date (DD MM YYYY): ");
             newDate = scanner.nextLine();
             
-            // Simple regex to validate date format
             if (newDate.matches("\\d{2} \\d{2} \\d{4}")) {
                 validDate = true;
             } else {
@@ -223,7 +217,6 @@ public class Patient {
             }
         }
 
-        // Validate new time format (HHMM) and check if it's within boundary
         String newTime = "";
         boolean validTime = false;
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
@@ -243,7 +236,6 @@ public class Patient {
                 String formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd MM yyyy"));
                 String formattedStartTime = newStartTime.format(DateTimeFormatter.ofPattern("HHmm"));
 
-                // Ensure the start and end times are within 08:00 and 21:00, and the appointment ends by 21:00
                 if (newStartTime.isBefore(startBoundary) || newEndTime.isAfter(endBoundary)) {
                     System.out.println("The selected time must be between 08:00 and 21:00, and the appointment must end by 21:00.");
                 }
@@ -256,10 +248,9 @@ public class Patient {
                 	}
                 }
 
-                // If the user selects 2100, reprompt
                 if (newStartTime.equals(LocalTime.of(21, 0))) {
                     System.out.println("The appointment must end by 21:00, please select a time earlier than 2100.");
-                    validTime = false; // Reset to reprompt
+                    validTime = false; 
                 }
 
             } catch (DateTimeParseException e) {
@@ -267,7 +258,6 @@ public class Patient {
             }
         }
 
-        // If all validations pass, update the appointment
         boolean success = csvReaderAppointment.replaceAppointmentRecord(
             patientID, oldDate, oldStartTime, oldEndTime, newDate, newTime, "Pending", "Pending"
         );
@@ -291,19 +281,16 @@ public class Patient {
         }
 
         int choice = -1;
-        // Repeat until a valid choice is entered
         while (choice < 1 || choice > appointments.size()) {
-            System.out.print("Select the appointment number to cancel: ");
-            // Check if the input is a valid number
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine();  // Consume the newline
+                scanner.nextLine();  
                 if (choice < 1 || choice > appointments.size()) {
                     System.out.println("Invalid selection. Please select a valid appointment number.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a numeric value.");
-                scanner.nextLine();  // Consume the invalid input
+                scanner.nextLine();  
             }
         }
 
@@ -312,19 +299,16 @@ public class Patient {
         String oldStartTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "StartTime");
         String oldEndTime = csvReaderAppointment.extractAppointmentDetail(selectedAppointment, "EndTime");
 
-        // Find the matching appointment to cancel
         for (Appointment appointment : appointmentList) {
             if (appointment.getPatientId().equals(patientID) &&
                 appointment.getDateOfAppointment().equals(oldDate) &&
                 appointment.getAppointmentStartTime().equals(oldStartTime) &&
                 appointment.getAppointmentEndTime().equals(oldEndTime)) {
 
-                // Set the appointment fields to empty for start and end time and change the status to "Cancelled"
                 appointment.setAppointmentStartTime("");
                 appointment.setAppointmentEndTime("");
                 appointment.setAppointmentStatus("Cancelled");
 
-                // Persist the updated appointment list to the CSV
                 csvReaderAppointment.writeCSV();
 
                 System.out.println("Appointment canceled successfully.");
@@ -348,7 +332,6 @@ public class Patient {
             formattedAppointments.add("Past Appointment Outcome Records:\n========================");
 
             for (String appointmentStr : pastAppointments) {
-                // Parse the appointment string to extract the relevant fields
                 String[] parts = appointmentStr.split(", ");
                 String doctorName = parts[1].split("=")[1];
                 String patientName = parts[3].split("=")[1];

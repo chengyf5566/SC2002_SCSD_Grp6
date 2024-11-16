@@ -21,21 +21,19 @@ public class CsvReaderStaff implements CsvReader {
         readCsv();
     }
 
-    // List to store staff members
+
     private List<Staff> staffList = new ArrayList<>();
 
-    // Method to read data from CSV and create staff objects
+    // Method to read data from CSV
     public void readCsv() {
         String line;
         
-        // Clear the existing staff list to avoid duplicates
+
         staffList.clear();
         
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            // Skip the header row
             br.readLine();
 
-            // Read each line from the CSV file
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
 
@@ -44,7 +42,6 @@ public class CsvReaderStaff implements CsvReader {
                     continue;
                 }
 
-                // Extract the details
                 String userID = values[0].trim();
                 String password = values[1].trim();
                 String name = values[2].trim();
@@ -59,7 +56,6 @@ public class CsvReaderStaff implements CsvReader {
                     continue;
                 }
 
-                // Create a Staff object based on the role
                 Staff staff = null;
                 switch (role.toLowerCase()) {
                     case "doctor":
@@ -93,17 +89,16 @@ public class CsvReaderStaff implements CsvReader {
     public void writeCSV() {
         File file = new File(filePath);
 
-        // Ensure that the file exists or handle the case when it's missing
         if (!file.exists()) {
             System.out.println("File does not exist at path: " + filePath);
-            return;  // Exit if file is missing
+            return;  
         }
 
-        try (FileWriter writer = new FileWriter(file, false)) {  // 'false' ensures overwriting, not appending
-            // Write header
+        try (FileWriter writer = new FileWriter(file, false)) {  
+
             writer.write("UserID,Password,Name,Role,Gender,Age\n");
 
-            // Write each staff member's data
+  
             for (Staff staff : staffList) {
                 writer.write(staff.getUserID() + ","
                         + staff.getPassword() + ","

@@ -9,11 +9,10 @@ public class Doctor extends Staff {
 
     private List<Patient> patientList = new ArrayList<>();
     private CsvReaderPatient csvReaderPatient;
-    //private final String patientFilePath = "Patient_List.csv";
 
     private List<Appointment> appointmentList;
     private CsvReaderAppointment csvReaderAppointment;
-    //private final String appointmentFilePath = "Appointment_Outcome.csv";
+
     
     private List<Staff> staffList;
     private CsvReaderStaff csvReader;
@@ -22,14 +21,14 @@ public class Doctor extends Staff {
     private CsvReaderInventory csvReaderInventory;
 
     public Doctor(String userID, String password, String role, String gender, String name, int age) {
-        super(userID, password, role, gender, name, age);  // Pass data to Staff constructor
+        super(userID, password, role, gender, name, age);  
     }
 
     // Method to initialize patient from CSV
     public void readAndInitializePatient() {
         this.csvReaderPatient = new CsvReaderPatient();
         csvReaderPatient.readCsv();
-        this.patientList = csvReaderPatient.getPatientList();  // Assign the read patient list
+        this.patientList = csvReaderPatient.getPatientList();  
     }
 
     // Method to initialize appointment outcome from CSV
@@ -41,9 +40,9 @@ public class Doctor extends Staff {
     
     // Method to initialize staff list  from CSV
     public void initializeStaffFromCSV() {        
-        this.csvReader = new CsvReaderStaff(); // Initialize the class-level csvReader with the given file path        
-        csvReader.readCsv(); // Read and initialize staff from the CSV
-        this.staffList = csvReader.getStaffList();  // Assign the read staff list
+        this.csvReader = new CsvReaderStaff();     
+        csvReader.readCsv(); 
+        this.staffList = csvReader.getStaffList();  
     }
     
     public void initializeInventoryFromCSV() {
@@ -55,7 +54,7 @@ public class Doctor extends Staff {
 ////////////////////////////view patient medical records////////////////////////////
     public void viewPatientMedicalRecords() {
         Scanner scanner = new Scanner(System.in);
-        String doctorId = this.getUserID(); // Use the logged-in doctor's ID
+        String doctorId = this.getUserID(); 
 
         // Display the list of patients assigned to the doctor
         System.out.println("\n--- Patients under Doctor ID: " + doctorId + " ---");
@@ -66,13 +65,11 @@ public class Doctor extends Staff {
             }
         }
 
-        // If no patients found for the doctor
         if (patientsUnderDoctor.isEmpty()) {
             System.out.println("No patients assigned under Doctor ID: " + doctorId);
             return;
         }
 
-        // Show the list of patients assigned to the doctor
         for (int i = 0; i < patientsUnderDoctor.size(); i++) {
             Patient patient = patientsUnderDoctor.get(i);
             System.out.println((i + 1) + ". Patient ID: " + patient.getPatientID() + " | Name: " + patient.getName());
@@ -81,30 +78,28 @@ public class Doctor extends Staff {
         int patientChoice = -1;
         boolean validChoice = false;
 
-        // Prompt the user until a valid patient number is selected
+
         while (!validChoice) {
             System.out.print("\nEnter the number of the patient to view their medical records: ");
             
             if (scanner.hasNextInt()) {
                 patientChoice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+                scanner.nextLine(); 
 
-                // Validate the patient's choice
                 if (patientChoice >= 1 && patientChoice <= patientsUnderDoctor.size()) {
-                    validChoice = true;  // Valid input
+                    validChoice = true; 
                 } else {
                     System.out.println("Invalid selection. Please enter a number between 1 and " + patientsUnderDoctor.size() + ".");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid number.");
-                scanner.nextLine(); // Consume invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Get the selected patient
+
         Patient selectedPatient = patientsUnderDoctor.get(patientChoice - 1);
 
-        // Display the selected patient's medical records
         System.out.println("=====================================");
         System.out.println("--- Medical Record for Patient ID: " + selectedPatient.getPatientID() + " ---");
         System.out.println("Name: " + selectedPatient.getName());
@@ -160,7 +155,7 @@ public class Doctor extends Staff {
 ////////////////////////////accept Or decline AppointmentSchedule////////////////////////////  
     public void acceptOrDeclineAppointmentSchedule() {
         Scanner scanner = new Scanner(System.in);
-        String doctorId = this.getUserID(); // Use the logged-in doctor's ID
+        String doctorId = this.getUserID(); 
 
         boolean foundPendingAppointments = false;
 
@@ -187,7 +182,6 @@ public class Doctor extends Staff {
                 System.out.println("Consultation Notes: " + appointment.getConsultationNotes());
                 System.out.println("--------------------------------------------------");
 
-                // Input handling for "yes/no"
                 String decision = "";
                 while (true) {
                     System.out.print("Do you want to confirm this appointment? (yes/no): ");
@@ -196,11 +190,11 @@ public class Doctor extends Staff {
                     if (decision.equals("yes")) {
                         appointment.setAppointmentStatus("Confirmed");
                         System.out.println("\nAppointment with Patient " + appointment.getPatientName() + " has been confirmed.");
-                        break; // Exit the loop if input is valid
+                        break; 
                     } else if (decision.equals("no")) {
                         appointment.setAppointmentStatus("Canceled");
                         System.out.println("\nAppointment with Patient " + appointment.getPatientName() + " has been cancelled.");
-                        break; // Exit the loop if input is valid
+                        break; 
                     } else {
                         System.out.println("Invalid choice. Please enter 'yes' or 'no'.");
                     }
@@ -211,17 +205,13 @@ public class Doctor extends Staff {
         if (!foundPendingAppointments) {
             System.out.println("No pending appointments found for Doctor ID " + doctorId);
         }
-
-        // After updating the status, write the changes back to the CSV
         csvReaderAppointment.writeCSV();
     }
 
 ////////////////////////////record appointment outcome////////////////////////////  
     public void recordAppointmentOutcome() {
         Scanner scanner = new Scanner(System.in);
-
-        // Get Doctor ID (assuming this is the logged-in doctor's ID)
-        String doctorId = this.getUserID(); // Use the logged-in doctor's ID
+        String doctorId = this.getUserID(); 
 
         // List all confirmed appointments for the doctor
         List<Appointment> confirmedAppointments = new ArrayList<>();
@@ -232,7 +222,7 @@ public class Doctor extends Staff {
             }
         }
 
-        // If no confirmed appointments are found, print a message and exit
+        // If no confirmed appointments are found
         if (confirmedAppointments.isEmpty()) {
             System.out.println("No confirmed appointments available to update for Doctor ID " + doctorId + ".");
             return;
@@ -243,30 +233,26 @@ public class Doctor extends Staff {
             System.out.println((i + 1) + ". " + confirmedAppointments.get(i));
         }
 
-        // Repeated prompt until valid selection is made
         int appointmentChoice = -1;
         while (appointmentChoice < 1 || appointmentChoice > confirmedAppointments.size()) {
             System.out.print("\nChoose which appointment to record the outcome for: ");
-            // Ensure the input is valid and not empty
             if (scanner.hasNextInt()) {
                 appointmentChoice = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
+                scanner.nextLine(); 
                 if (appointmentChoice < 1 || appointmentChoice > confirmedAppointments.size()) {
                     System.out.println("Invalid selection. Please select a valid appointment.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume the invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Get the selected appointment
         Appointment appointmentToUpdate = confirmedAppointments.get(appointmentChoice - 1);
 
         String patientId = appointmentToUpdate.getPatientId();
         Patient patientToUpdate = null;
 
-        // Find the patient for the selected appointment
         for (Patient patient : patientList) {
             if (patient.getPatientID().equalsIgnoreCase(patientId)) {
                 patientToUpdate = patient;
@@ -279,7 +265,6 @@ public class Doctor extends Staff {
             return;
         }
 
-        // Ask for type of service
         System.out.print("Enter type of service: ");
         String typeOfService = scanner.nextLine().trim();
         while (typeOfService.isEmpty()) {
@@ -288,7 +273,6 @@ public class Doctor extends Staff {
             typeOfService = scanner.nextLine().trim();
         }
 
-        // Ask for diagnosis
         System.out.print("Enter diagnosis: ");
         String diagnosis = scanner.nextLine().trim();
         while (diagnosis.isEmpty()) {
@@ -297,7 +281,6 @@ public class Doctor extends Staff {
             diagnosis = scanner.nextLine().trim();
         }
         
-        // Ask for consultation notes
         System.out.print("Enter consultation notes: ");
         String consultationNotes = scanner.nextLine().trim();  // Changed from "diagnosis" to "consultationNotes"
         while (consultationNotes.isEmpty()) {
@@ -306,48 +289,44 @@ public class Doctor extends Staff {
             consultationNotes = scanner.nextLine().trim();  // Re-prompt for consultation notes
         }
 
-        // Display available medications
         System.out.println("\nAvailable Medications:");
         for (int i = 0; i < medicationList.size(); i++) {
             Medication medication = medicationList.get(i);
             System.out.println((i + 1) + ". " + medication.getMedicineName() + " (Available: " + medication.getCurrentStock() + ")");
         }
 
-        // Repeated prompt for medication choice until valid input
         int medicationChoice = -1;
         while (medicationChoice < 1 || medicationChoice > medicationList.size()) {
             System.out.print("\nChoose a medication to prescribe (enter number): ");
             if (scanner.hasNextInt()) {
                 medicationChoice = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
+                scanner.nextLine(); 
                 if (medicationChoice < 1 || medicationChoice > medicationList.size()) {
                     System.out.println("Invalid medication choice. Please select a valid medication.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid medication number.");
-                scanner.nextLine(); // Consume the invalid input
+                scanner.nextLine(); 
             }
         }
 
         Medication selectedMedication = medicationList.get(medicationChoice - 1);
 
-        // Repeated prompt for quantity until valid input
         int prescribedQuantity = -1;
         while (prescribedQuantity <= 0 || prescribedQuantity > selectedMedication.getCurrentStock()) {
             System.out.print("Enter quantity to prescribe: ");
             if (scanner.hasNextInt()) {
                 prescribedQuantity = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
+                scanner.nextLine();
                 if (prescribedQuantity <= 0 || prescribedQuantity > selectedMedication.getCurrentStock()) {
                     System.out.println("Invalid quantity. Not enough stock or invalid input.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid quantity.");
-                scanner.nextLine(); // Consume the invalid input
+                scanner.nextLine(); 
             }
         }
 
-        // Update the appointment with prescribed medications and quantity
         appointmentToUpdate.setAppointmentStatus("Completed");
         appointmentToUpdate.setTypeOfService(typeOfService);
         appointmentToUpdate.setPrescribedMedications(selectedMedication.getMedicineName());
@@ -356,13 +335,11 @@ public class Doctor extends Staff {
         appointmentToUpdate.setDiagnosis(diagnosis);
         appointmentToUpdate.setConsultationNotes(consultationNotes);
 
-        // Update patient records
         patientToUpdate.getPastDiagnoses().add(diagnosis);
         patientToUpdate.getPrescribedMedicines().add(selectedMedication.getMedicineName());
         patientToUpdate.getConsultationNotes().add(appointmentToUpdate.getConsultationNotes());
         patientToUpdate.getTypeOfService().add(typeOfService);
 
-        // Write the updated appointment and patient records to CSV
         csvReaderAppointment.writeCSV();
         csvReaderPatient.writeCSV();
 
@@ -374,28 +351,24 @@ public class Doctor extends Staff {
     public void changePassword(Scanner scanner) {
         String newPassword = "";
         
-        // Ensure password is not empty
         while (newPassword.isEmpty()) {
             System.out.print("Enter new password: ");
-            newPassword = scanner.nextLine().trim(); // Remove leading/trailing spaces
+            newPassword = scanner.nextLine().trim(); 
             
             if (newPassword.isEmpty()) {
                 System.out.println("Password cannot be empty. Please enter a valid password.");
             }
         }
 
-        // Set the new password for the current administrator
         this.setPassword(newPassword);
 
-        // Update the password in the staff list and save to CSV
+
         for (Staff staff : staffList) {
-            if (staff.getUserID().equals(this.getUserID())) { // Assuming getUserID() is accessible
-                staff.setPassword(newPassword); // Assuming setPassword() is accessible
+            if (staff.getUserID().equals(this.getUserID())) { 
+                staff.setPassword(newPassword); 
                 break;
             }
         }
-
-        // Write updated staff data to CSV
         csvReader.writeCSV();
         System.out.println("Password updated successfully.");
     }
