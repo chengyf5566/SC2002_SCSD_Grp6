@@ -97,12 +97,14 @@ public class Patient {
                         assignedDoctorID, assignedDoctorName, patientID, name, formattedDate, formattedStartTime, formattedEndTime, "Pending");
 
                 if (isAdded) {
+                	System.out.println("====================");
                     System.out.println("Doctor Name = " + assignedDoctorName + 
-                                       ", Patient Name = " + name + 
-                                       ", Date of Appointment = " + formattedDate + 
-                                       ", Start Time = " + formattedStartTime + 
-                                       ", End Time = " + formattedEndTime + 
-                                       ", Status = Pending");
+                                       "\nPatient Name = " + name + 
+                                       "\nDate of Appointment = " + formattedDate + 
+                                       "\nStart Time = " + formattedStartTime + 
+                                       "\nEnd Time = " + formattedEndTime + 
+                                       "\nStatus = Pending");
+                    System.out.println("====================");
                     return true;
                 } else {
                     System.out.println("Failed to add the appointment record.");
@@ -274,11 +276,13 @@ public class Patient {
             System.out.println("No appointments to cancel.");
             return false;
         }
-
+        
+        System.out.println("====================");
         System.out.println("\nCurrent Scheduled Appointments:");
         for (int i = 0; i < appointments.size(); i++) {
             System.out.println((i + 1) + ". " + appointments.get(i));
         }
+        System.out.println("====================");
 
         int choice = -1;
         while (choice < 1 || choice > appointments.size()) {
