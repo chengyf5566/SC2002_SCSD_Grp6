@@ -57,7 +57,9 @@ public class CsvReaderAppointment implements CsvReader{
     // Write appointment list to CSV file
     public void writeCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath_Appointment))) {
-            writer.write("Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Status,Diagnosis,Consultation Notes\n");
+        	writer.write("Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,"
+                    + "Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Quantity,"
+                    + "Prescribed Medications Status,Diagnosis,Consultation Notes\n");
             for (Appointment appointment : appointmentList) {
                 writer.write(appointment.getDoctorId() + ","
                         + appointment.getDoctorName() + ","
