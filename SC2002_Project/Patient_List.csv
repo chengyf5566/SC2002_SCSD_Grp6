@@ -1,6 +1,5 @@
 Patient ID,Password,Name,Date of Birth,Gender,Blood Type,Contact Number,Email,Assigned Doctor ID,Assigned Doctor Name,Past Diagnoses,Prescribed Medicine,Consultation Notes,Type of Service
-P1001,password,Lee,12 01 1980,M,O-,9876,"lee@gmail,com",D001,House,Cough,Benadryl,Coughing every night,Consultation
-P1002,password,Bruce,13 02 1975,M,B+,9123,bruce@gmail.com,D002,Lin,Headache,Aspirin,Headache for hours,Consultation
-P1003,password,Eva,14 03 1985,F,O+,9456,eva@gmail.com,D003,Tan,Flu,Decongestant,Runny nose,Consultation and X-Ray
-P1234,password,Chen,21 12 2000,M,O+,9999,chen@gmail.com,D011,Strange,,,,
-P1010,password,ChengXuan,01 07 1991,M,A+,9000,TA@NTU.com,D011,Strange,Allergies,Cetirizine,Runny nose,Consultation
+P1001,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8,Lee,12 01 1980,M,O-,9876,"lee@gmail,com",D001,House,Cough,Benadryl,Coughing every night,Consultation
+P1002,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8,Bruce,13 02 1975,M,B+,9123,bruce@gmail.com,D002,Lin,Headache,Aspirin,Headache for hours,Consultation
+P1003,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8,Eva,14 03 1985,F,O+,9456,eva@gmail.com,D003,Tan,Flu,Decongestant,Runny nose,Consultation and X-Ray
+P1234,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8,Chen,21 12 2000,M,O+,9999,chen@gmail.com,D011,Strange,,,,
