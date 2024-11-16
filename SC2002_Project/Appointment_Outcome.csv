@@ -9,3 +9,5 @@ D001,John Smith,P1002,Bob Stone,20 12 2024,1500,1530,Completed,consultation,Para
 D001,John Smith,P1002,Bob Stone,30 12 2024,1500,1530,Completed,consultation,Ibuprofen,10,Pending,severe cough,cough every night
 D002,Megan,P1001,Alice Brown,22 01 2025,1500,1530,Confirmed,,,,,,
 D001,John Smith,P1001,Alice Brown,02 02 2025,800,830,Completed,consultation,Paracetamol,10,Dispensed,fever,37.9 degree
+D001,John Smith,P1001,Alice Brown,18 11 2024,1030,1100,Completed,Consultation,Paracetamol,1,Dispensed,Cough,to come back again
+D001,John Smith,P1002,Bob Stone,04 12 2024,1800,1830,Confirmed,,,,,,
