@@ -1,9 +1,8 @@
 Doctor ID,Doctor Name,Patient ID,Patient Name,Appointment Date,Appointment Start Time,Appointment End Time,Appointment Status,Type of Service,Prescribed Medications,Prescribed Medications Quantity,Prescribed Medications Status,Diagnosis,Consultation Notes
 D001,House,P1001,Lee ,01 12 2024,800,830,Confirmed,,,,,,
-D002,Lin,P1002,bruce,02 12 2024,900,930,Completed,Consultation,Aspirin,20,pending,Headache,Stress from school
-D003,tan,P1003,eva,03 12 2024,,,Canceled,,,,,,
+D002,Lin,P1002,bruce,02 12 2024,900,930,Completed,Consultation,Aspirin,20,Pending,Headache,Stress from school
+D003,tan,P1003,Eva,03 12 2024,,,Canceled,,,,,,
 D001,House,P1001,Lee ,10 12 2024,1200,1230,Pending,,,,,,
-D002,Lin,P1002,bruce,11 12 2024,1430,1500,Pending,,,,,,
-D003,Tan,P1003,eva,12 12 2024,1845,1915,Pending,,,,,,
-D011,Strange,P1003,eva,30 03 2025,1200,1230,Confirmed,,,,,,
-D011,Strange,P1010,ChengXuan,30 03 2025,1030,1100,Pending,,,,,,
+D002,Lin,P1002,Bruce,11 12 2024,1430,1500,Pending,,,,,,
+D003,Tan,P1003,Eva,12 12 2024,1845,1915,Pending,,,,,,
+D011,Strange,P1003,Eva,30 03 2025,1200,1230,Confirmed,,,,,,
