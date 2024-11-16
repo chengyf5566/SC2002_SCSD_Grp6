@@ -189,59 +189,65 @@ public class CsvReaderAppointment implements CsvReader{
             System.out.println("Error processing record: " + appointmentRecord + " - " + e.getMessage());
             return "";
         }
-    }
-
+    } 
 ////////////////////////////replace appointment record//////////////////////////// 
     public boolean replaceAppointmentRecord(String patientID, String oldDate, String oldStartTime, String oldEndTime, String newDate, String newStartTime, String newStatus, String oldStatus) {
-        // Convert new start and end times to LocalTime
+        // Validate oldStatus
+        if (!oldStatus.equalsIgnoreCase("Confirmed") && !oldStatus.equalsIgnoreCase("Pending")) {
+            System.out.println("Invalid oldStatus provided: " + oldStatus);
+            return false;
+        }
+
         LocalTime newStart = LocalTime.parse(newStartTime, DateTimeFormatter.ofPattern("HHmm"));
         LocalTime newEnd = newStart.plusMinutes(30);
 
-        //Check for conflicts with existing appointments
+        // Check for conflicts
         for (Appointment appointment : appointmentList) {
-            if (appointment.getPatientId().equals(patientID) &&
-                appointment.getDateOfAppointment().equals(newDate) &&
+            if (appointment.getPatientId().trim().equals(patientID.trim()) &&
+                appointment.getDateOfAppointment().trim().equals(newDate.trim()) &&
                 !appointment.getAppointmentStatus().equalsIgnoreCase("Canceled")) {
 
-                LocalTime existingStart = LocalTime.parse(appointment.getAppointmentStartTime(), DateTimeFormatter.ofPattern("HHmm"));
-                LocalTime existingEnd = LocalTime.parse(appointment.getAppointmentEndTime(), DateTimeFormatter.ofPattern("HHmm"));
+                LocalTime existingStart = LocalTime.parse(appointment.getAppointmentStartTime().trim(), DateTimeFormatter.ofPattern("HHmm"));
+                LocalTime existingEnd = LocalTime.parse(appointment.getAppointmentEndTime().trim(), DateTimeFormatter.ofPattern("HHmm"));
 
-                // Check if the new appointment conflicts with the existing one
                 if (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)) {
-                    System.out.println("The selected time conflicts with an existing appointment: " +
-                                       "Start - " + appointment.getAppointmentStartTime() +
-                                       ", End - " + appointment.getAppointmentEndTime());
-                    return false;  // Conflict found, don't proceed with replacement
+                    System.out.println("Conflict detected with existing appointment: Start - " +
+                                       appointment.getAppointmentStartTime() + ", End - " +
+                                       appointment.getAppointmentEndTime());
+                    return false;
                 }
             }
         }
 
-        //Find the appointment to replace (old appointment)
+        // Find the appointment to replace
         for (Appointment appointment : appointmentList) {
-            if (appointment.getPatientId().equals(patientID) &&
-                appointment.getDateOfAppointment().equals(oldDate) &&
-                appointment.getAppointmentStartTime().equals(oldStartTime) &&
-                appointment.getAppointmentStatus().equalsIgnoreCase(oldStatus)) {
+            if (appointment.getPatientId().trim().equals(patientID.trim()) &&
+                appointment.getDateOfAppointment().trim().equals(oldDate.trim()) &&
+                appointment.getAppointmentStartTime().trim().equals(oldStartTime.trim())) {
 
-                // Found the appointment to replace, update its details
-                appointment.setDateOfAppointment(newDate);
-                appointment.setAppointmentStartTime(newStartTime);
+                //System.out.println("Expected Status: '" + oldStatus + "', Found Status: '" + appointment.getAppointmentStatus() + "'");
+
+                // Match only 'Confirmed' or 'Pending'
+                if (!appointment.getAppointmentStatus().equalsIgnoreCase("Confirmed") &&
+                    !appointment.getAppointmentStatus().equalsIgnoreCase("Pending")) {
+                    System.out.println("Invalid status for replacement: " + appointment.getAppointmentStatus());
+                    return false;
+                }
+
+                // Update appointment details
+                appointment.setDateOfAppointment(newDate.trim());
+                appointment.setAppointmentStartTime(newStartTime.trim());
                 appointment.setAppointmentEndTime(newEnd.format(DateTimeFormatter.ofPattern("HHmm")));
-                appointment.setAppointmentStatus(newStatus);
+                appointment.setAppointmentStatus(newStatus.trim());
 
-                // Write changes to CSV or database
                 writeCSV();
-                System.out.println("Appointment successfully rescheduled.");
+                //System.out.println("Appointment successfully rescheduled.");
                 return true;
             }
         }
 
-
-
-        // No matching appointment found to replace
+        // No matching appointment found
         System.out.println("No matching appointment found to replace.");
         return false;
     }
-
-
 }

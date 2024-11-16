@@ -155,13 +155,13 @@ public class Patient {
                 String appointmentStatus = parts[7].split("=")[1];
 
                 // Format the extracted details to display each piece of information on a new line
-                String formattedAppointment = "Doctor Name: " + doctorName + "\n" +
-                                              "Patient Name: " + patientName + "\n" +
-                                              "Date of Appointment: " + dateOfAppointment + "\n" +
-                                              "Start Time: " + appointmentStartTime + "\n" +
-                                              "End Time: " + appointmentEndTime + "\n" +
-                                              "Status: " + appointmentStatus + "\n"+
-                                              "====================";
+                String formattedAppointment = "Doctor Name='" + doctorName + "', "
+                                              + "Patient Name='" + patientName + "', "
+                                              + "Date of Appointment='" + dateOfAppointment + "', "
+                                              + "Start Time='" + appointmentStartTime + "', "
+                                              + "End Time='" + appointmentEndTime + "', "
+                                              + "Status='" + appointmentStatus + "'";
+                
 
                 formattedAppointments.add(formattedAppointment);
             }
@@ -180,8 +180,11 @@ public class Patient {
         }
 
         System.out.println("\nCurrent Scheduled Appointments:");
+        System.out.println("====================");
         for (int i = 0; i < appointments.size(); i++) {
-            System.out.println((i + 1) + ". " + appointments.get(i));
+            System.out.println((i + 1) + ".");
+            System.out.println(appointments.get(i));
+            System.out.println("====================");
         }
 
         int choice = -1;
@@ -242,42 +245,31 @@ public class Patient {
                 LocalTime startBoundary = LocalTime.of(8, 0);
                 LocalTime endBoundary = LocalTime.of(21, 0);
 
+                // Ensure the start and end times are within 08:00 and 21:00, and the appointment ends by 21:00
                 if (newStartTime.isBefore(startBoundary) || newEndTime.isAfter(endBoundary)) {
-                    System.out.println("The selected time must be between 08:00 and 21:00.");
+                    System.out.println("The selected time must be between 08:00 and 21:00, and the appointment must end by 21:00.");
                 } else {
                     validTime = true;
                 }
+
+                // If the user selects 2100, reprompt
+                if (newStartTime.equals(LocalTime.of(21, 0))) {
+                    System.out.println("The appointment must end by 21:00, please select a time earlier than 2100.");
+                    validTime = false; // Reset to reprompt
+                }
+
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid time format. Please use HHMM format.");
             }
         }
-        
-        // Debugging: Print out the values before calling the method
-        System.out.println("Debug Info:");
-        System.out.println("Patient ID: " + patientID);
-        System.out.println("Old Date: " + oldDate);
-        System.out.println("Old Start Time: " + oldStartTime);
-        System.out.println("Old End Time: " + oldEndTime);
-        System.out.println("New Date: " + newDate);
-        System.out.println("New Time: " + newTime);
-        System.out.println("New Status: Pending");
-        System.out.println("New Appointment Status: Pending");
-        
-        
-        
+
         // If all validations pass, update the appointment
         boolean success = csvReaderAppointment.replaceAppointmentRecord(
             patientID, oldDate, oldStartTime, oldEndTime, newDate, newTime, "Pending", "Pending"
         );
-
-        if (success) {
-            System.out.println("Appointment successfully rescheduled.");
-        } else {
-            System.out.println("Failed to reschedule appointment. The selected time might conflict with another appointment.");
-        }
-
         return success;
     }
+
 
 
 
