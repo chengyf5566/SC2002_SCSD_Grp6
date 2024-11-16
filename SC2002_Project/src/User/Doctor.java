@@ -180,7 +180,7 @@ public class Doctor extends Staff {
                 System.out.println("Prescribed Medications Status: " + appointment.getPrescribedMedicationsStatus());
                 System.out.println("Diagnosis: " + appointment.getDiagnosis());
                 System.out.println("Consultation Notes: " + appointment.getConsultationNotes());
-                System.out.println("--------------------------------------------------");
+                System.out.println("--------------------------------------------------");	
 
                 String decision = "";
                 while (true) {
@@ -229,8 +229,25 @@ public class Doctor extends Staff {
         }
 
         System.out.println("\n--- Confirmed Appointments ---");
+        System.out.println("==============================");
         for (int i = 0; i < confirmedAppointments.size(); i++) {
-            System.out.println((i + 1) + ". " + confirmedAppointments.get(i));
+            Appointment appointment = confirmedAppointments.get(i);
+            System.out.println((i + 1) + ". ");
+            System.out.println("   Doctor ID: " + appointment.getDoctorId());
+            System.out.println("   Doctor Name: " + appointment.getDoctorName());
+            System.out.println("   Patient ID: " + appointment.getPatientId());
+            System.out.println("   Patient Name: " + appointment.getPatientName());
+            System.out.println("   Date of Appointment: " + appointment.getDateOfAppointment());
+            System.out.println("   Start Time: " + appointment.getAppointmentStartTime());
+            System.out.println("   End Time: " + appointment.getAppointmentEndTime());
+            System.out.println("   Status: " + appointment.getAppointmentStatus());
+            System.out.println("   Type of Service: " + appointment.getTypeOfService());
+            System.out.println("   Prescribed Medications: " + appointment.getPrescribedMedications());
+            System.out.println("   Medication Quantity: " + appointment.getPrescribedMedicationsQuantity());
+            System.out.println("   Medication Status: " + appointment.getPrescribedMedicationsStatus());
+            System.out.println("   Diagnosis: " + appointment.getDiagnosis());
+            System.out.println("   Consultation Notes: " + appointment.getConsultationNotes());
+            System.out.println("==============================");
         }
 
         int appointmentChoice = -1;
