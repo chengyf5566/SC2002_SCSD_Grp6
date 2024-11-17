@@ -15,15 +15,10 @@ git clone https://github.com/chengyf5566/SC2002_SCSD_Grp6.git
 
 ---
 
-### **Open the Project in Your Preferred IDE**
-- Navigate to the cloned folder.
-- Open the project in your preferred IDE. The team used **Visual Studio Code (VS Code)** for development.
-
----
-
 ### **Run the Application**
-1. Locate the `App.java` file at `SC2002_Project` -> `src` -> `Main`.
-2. Run the `App.java` file in your IDE.
+1. Open the Clone folder in your IDE.
+2. Locate the `App.java` file at `SC2002_Project` -> `src` -> `Main`.
+3. Run the `App.java` file in your IDE.
 
 ---
 
@@ -32,5 +27,8 @@ Ensure you have the following installed on your machine:
 - **Java Development Kit (JDK)** Ensure that JDK version 22 is installed
 
 ---
+
+## **NOTES**
+If you encounter an error reading data files, ensure the path in the CSV Reader classes matches your data file paths.
 
 ---
