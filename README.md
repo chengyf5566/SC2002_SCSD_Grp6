@@ -1,6 +1,6 @@
 # SC2002 Project: Hospital Management System (HMS)
 
-This repository contains the source code and implementation for the **Hospital Management System (HMS)**, developed as part of the SC2002 module. Follow the instructions below to set up and run the project on your local machine.
+This repository contains the source code for the **Hospital Management System (HMS)**, developed as part of the SC2002 NTU module project.
 
 ---
 
@@ -29,6 +29,7 @@ Ensure you have the following installed on your machine:
 ---
 
 ## **NOTES**
-If you encounter an error reading data files, ensure the path in the CSV Reader classes matches your data file paths.
+-If you encounter an error reading data files, ensure the path in the CSV Reader classes matches your data file paths.
+-Ensure all data files are ##closed## before executing the code to prevent read/write conflicts.
 
 ---
