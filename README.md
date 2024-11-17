@@ -29,7 +29,7 @@ Ensure you have the following installed on your machine:
 ---
 
 ## **NOTES**
--If you encounter an error reading data files, ensure the path in the CSV Reader classes matches your data file paths.
--Ensure all data files are ##closed## before executing the code to prevent read/write conflicts.
+- If you encounter an error reading data files, ensure the path in the CSV Reader classes matches your data file paths.
+- Ensure all data files are **closed** before executing the code to prevent read/write conflicts.
 
 ---
